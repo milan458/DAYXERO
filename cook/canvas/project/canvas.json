@@ -229,10 +229,10 @@
       "x": 1880,
       "y": 0,
       "w": 390,
-      "h": 900,
+      "h": 844,
       "page": "evidence",
       "radius": 44,
-      "title": "5 \u00b7 NRT, rewritten (scrolls; tweak product)"
+      "title": "5 \u00b7 NRT, rewritten (tweak product)"
     },
     "EvQuitDay.dc.html": {
       "x": 2350,
@@ -247,7 +247,7 @@
       "x": 2820,
       "y": 0,
       "w": 390,
-      "h": 1090,
+      "h": 1060,
       "page": "evidence",
       "radius": 44,
       "title": "7 \u00b7 Your plan, with what it is built on (scrolls)"
@@ -264,7 +264,7 @@
     "EvidenceDark.dc.html": {
       "x": 0,
       "y": 1240,
-      "w": 3680,
+      "w": 4150,
       "h": 1120,
       "page": "evidence",
       "title": "Dark mode"
@@ -276,6 +276,23 @@
       "h": 210,
       "page": "parts",
       "title": "Evidence card (two groups of 100)"
+    },
+    "EvPregnancy.dc.html": {
+      "x": 3760,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "evidence",
+      "radius": 44,
+      "title": "5b \u00b7 Pregnant or breastfeeding (new step, right after NRT)"
+    },
+    "EvIllo.dc.html": {
+      "x": 2306,
+      "y": 420,
+      "w": 64,
+      "h": 64,
+      "page": "parts",
+      "title": "Evidence objects (tweak kind)"
     }
   },
   "createdOnFiles": {
@@ -301,7 +318,7 @@
       "y": -300,
       "text": "Evidence story: two new screens and the six that change",
       "kind": "title1",
-      "maxW": 3680,
+      "maxW": 4150,
       "page": "evidence"
     }
   },
@@ -337,8 +354,10 @@
     "EvQuitDay.dc.html",
     "EvPlan.dc.html",
     "EvSources.dc.html",
+    "EvPregnancy.dc.html",
     "EvidenceDark.dc.html",
-    "EvCard.dc.html"
+    "EvCard.dc.html",
+    "EvIllo.dc.html"
   ],
   "pages": [
     {

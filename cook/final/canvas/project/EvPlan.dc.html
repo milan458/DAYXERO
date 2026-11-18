@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Your plan with what it is built on</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 1060px; box-sizing: border-box; background: {{t.g}}; color: {{t.fg}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; display: flex; flex-direction: column">
+
+  <div style="position: relative; height: 300px; flex: none; overflow: hidden">
+    <sc-if value="{{light}}" hint-placeholder-val="{{true}}"><dc-import name="Horizon2" scene="dawn" clarity="100" clouds="false" sun-x="262" sun-r="0" sun-dy="-20" w="390" h="300" fit="xMidYMax slice" animate="true" hint-size="390px,300px"></dc-import></sc-if>
+    <sc-if value="{{dark}}" hint-placeholder-val="{{false}}"><dc-import name="NightSky" theme="dark" dawn="true" warm="true" stars="false" hills="true" sun-scale="0" sun-lift="12" sun-at="0.67" fade="false" w="390" h="300" animate="true" hint-size="390px,300px"></dc-import></sc-if>
+    <div style="position: absolute; left: 192px; top: 58px; width: 140px; height: 140px; border-radius: 50%; background: #FFC93C; box-shadow: inset 0 0 0 5px #F29A2E, inset 0 0 0 11px #FFD966, {{coinGlow}}; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #8A4A08"><span style="font-size: 12px; font-weight: 700; letter-spacing: 1px">DAY</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 46px; line-height: 0.9; letter-spacing: -1px">0</span></div>
+    <div style="position: absolute; width: 88px; height: 14px; border-radius: 50%; background: radial-gradient(closest-side, {{shadow}}, rgba(20,10,30,0)); left: 66px; top: 250px"></div>
+    <div style="position: absolute; width: 116px; height: 116px; left: 52px; top: 142px; {{xeroFx}}"><dc-import name="Xero" mood="cheer" stage="1" animate="true" size="116" hint-size="116px,116px"></dc-import></div>
+    <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 56px; background: {{blend}}"></div>
+    <svg width="390" height="30" viewBox="0 0 390 30" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 0; bottom: -1px; display: block"><path d="M0 16 C110 3 250 4 390 14 L390 30 L0 30 Z" fill="{{t.g}}"></path></svg>
+  </div>
+
+  <div style="display: flex; flex-direction: column; flex-grow: 1; padding: 6px 22px 0 22px">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; line-height: 1.06; letter-spacing: -1px">Your plan is <span style="position: relative; display: inline-block">ready<svg width="100%" height="12" viewBox="0 0 200 16" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 0; bottom: -9px; overflow: visible"><path d="M3 10 C40 4 90 5 122 7 C152 9 178 11 197 4" fill="none" stroke="{{t.mark}}" stroke-width="4" stroke-linecap="round"></path></svg></span></h1>
+    <p style="margin: 14px 0 0 0; font-size: 16px; font-weight: 500; line-height: 1.5; color: {{t.muted}}; text-wrap: pretty">Seven prep days, then your Quit Day on <b style="color: {{t.fg}}; font-weight: 700">Wed, Nov 25</b>. About <b style="color: {{t.fg}}; font-weight: 700">$1,825</b> back in your pocket in a year.</p>
+
+    <div style="margin-top: 18px; background: {{t.card}}; box-shadow: {{t.ring}}; border-radius: 20px; padding: 16px">
+      <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.2px">What it’s built on</div>
+      <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px">
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+          <div style="display: flex; align-items: flex-start; gap: 12px">
+            <div style="width: 36px; height: 36px; flex: none"><dc-import name="EvIllo" kind="{{r.k}}" theme="{{theme}}" size="36" hint-size="36px,36px"></dc-import></div>
+            <div style="min-width: 0; padding-top: 1px"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: -0.2px">{{r.t}}</div><div style="margin-top: 1px; font-size: 14px; font-weight: 500; line-height: 1.4; color: {{t.muted}}; text-wrap: pretty">{{r.d}}</div></div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="height: 1px; margin: 14px 0 10px 0; background: {{t.line}}"></div>
+      <p style="margin: 0; font-size: 14px; font-weight: 500; line-height: 1.45; color: {{t.muted}}">These methods were studied in trials. DayXero itself hasn’t been.</p>
+      <a href="#" style="margin-top: 2px; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; font-size: 14px; font-weight: 600; color: {{t.fg}}; text-decoration: underline; text-underline-offset: 2px">See the research</a>
+    </div>
+
+    <div style="margin-top: 12px; background: {{t.card}}; box-shadow: {{t.ring}}; border-radius: 20px; padding: 12px 16px; display: flex; align-items: center; gap: 14px">
+      <div style="position: relative; width: 56px; height: 56px; flex: none; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; color: #5A2E06"><svg width="56" height="56" viewBox="0 0 42 42" aria-hidden="true" style="position: absolute; left: 0; top: 0"><circle cx="21" cy="21" r="15" fill="#FFC93C"></circle><circle cx="21" cy="21" r="16.5" fill="none" stroke="#FFC93C" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.01 8.63"></circle><circle cx="21" cy="21" r="12.5" fill="none" stroke="#F29A2E" stroke-width="1.5"></circle></svg><span style="position: relative">1</span></div>
+      <div style="min-width: 0"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: -0.2px">Prep stamps</div><div style="margin-top: 1px; font-size: 14px; font-weight: 500; color: {{t.muted}}">One a day. Your first is waiting.</div></div>
+    </div>
+  </div>
+
+  <div style="padding: 0 22px 34px 22px; flex: none">
+    <button style="width: 100%; height: 58px; border-radius: 999px; border: 0; background: {{t.btn}}; color: {{t.btnFg}}; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px; box-shadow: {{t.btnShadow}}">Start my prep week</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1060}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const t = dark
+      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', card2: '#212A41', well: '#232C45', stamp: '#3B4873', line: 'rgba(255,255,255,0.12)', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', mark: '#FF8A65', coral: '#E0603F', sel: '#FFF8EE', selFg: '#0E1322', off: 'rgba(255,255,255,0.45)', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
+      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', card2: '#FFE7D0', well: '#FFEBDD', stamp: '#FFDCC6', line: 'rgba(30,26,58,0.12)', ring: 'none', mark: '#FF7A55', coral: '#D9492A', sel: '#1E1A3A', selFg: '#FFF8EE', off: 'rgba(30,26,58,0.42)', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
+    const patch = 'M7 4 h10 a3 3 0 0 1 3 3 v10 a3 3 0 0 1 -3 3 H7 a3 3 0 0 1 -3 -3 V7 a3 3 0 0 1 3 -3 Z M9 12 h6 M12 9 v6';
+    const chat = 'M4 5 h16 v11 H9 l-5 4 Z';
+    const moon = 'M20 14 A8 8 0 1 1 10 4 A6 6 0 0 0 20 14 Z';
+    const sun = 'M12 8 a4 4 0 1 0 0.01 0 M12 2 v2 M12 20 v2 M2 12 h2 M20 12 h2 M4.9 4.9 l1.4 1.4 M17.7 17.7 l1.4 1.4 M4.9 19.1 l1.4 -1.4 M17.7 6.3 l1.4 -1.4';
+    const med = { bg: t.well, fg: t.fg }, sup = med;
+    const rows = [
+      { k: 'patch', t: 'Nicotine replacement', d: 'In trials, quit rates rose 50 to 60%.' },
+      { k: 'plan', t: 'Your when-then plans', d: 'For coffee and for stress.' },
+      { k: 'bubble', t: 'A check-in every day', d: 'A morning pledge and a night check-in.' },
+      { k: 'sun', t: 'A clean stop on Quit Day', d: 'First goal: 28 days. The NHS says that makes you 5 times more likely to stay quit.' }
+    ];
+    const stamps = [1, 2, 3, 4, 5, 6, 7].map((n) => ({ n: String(n), s: n === 1 ? `background: ${t.btn}; color: ${t.btnFg}` : `box-shadow: inset 0 0 0 1.5px ${t.off}; color: ${t.muted}` }));
+    const g = dark ? '14,19,34' : '255,195,138';
+    return { t, theme: dark ? 'dark' : 'light', light: !dark, dark, rows, stamps, coinGlow: dark ? '0 0 0 10px rgba(255,201,60,0.10), 0 0 44px 12px rgba(255,170,80,0.32)' : '0 0 0 12px rgba(255,248,238,0.34), 0 0 44px 16px rgba(255,240,200,0.7)',
+      shadow: dark ? 'rgba(0,0,0,0.55)' : 'rgba(80,20,10,0.35)', blend: `linear-gradient(rgba(${g},0), rgba(${g},0.85))`,
+      xeroFx: dark ? 'filter: brightness(0.96) drop-shadow(4px -2px 8px rgba(255,170,90,0.45))' : 'filter: drop-shadow(0 0 2.5px rgba(255,248,238,0.95)) drop-shadow(0 6px 10px rgba(120,30,10,0.22))' };
+  }
+}
+</script>
+</body>
+</html>

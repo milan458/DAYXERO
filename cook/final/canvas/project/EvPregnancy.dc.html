@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pregnant or breastfeeding</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.g}}; color: {{t.fg}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; display: flex; flex-direction: column">
+
+  <div style="height: 52px; margin-top: 50px; padding: 0 26px 0 16px; display: flex; align-items: center; gap: 12px; flex: none">
+    <button aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; border: 0; padding: 0; background: {{t.navBtn}}; color: {{t.fg}}; display: flex; align-items: center; justify-content: center; flex: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 L8 12 L15 19"></path></svg></button>
+    <div role="progressbar" aria-label="Setup progress" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" style="flex-grow: 1; position: relative; height: 8px; border-radius: 99px; background: {{t.navTrack}}">
+      <div style="height: 8px; width: 72%; border-radius: 99px; background: {{t.fg}}"></div>
+      <div style="position: absolute; top: -3px; left: calc(72% - 7px); width: 14px; height: 14px; box-sizing: border-box; border-radius: 99px; background: #FFC93C; box-shadow: inset 0 0 0 2px #F29A2E, 0 0 10px 3px rgba(255,201,60,0.5)"></div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; flex-grow: 1; padding: 16px 22px 0 22px">
+    <div style="display: flex; align-items: flex-end; gap: 8px">
+      <h1 style="margin: 0; flex-grow: 1; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; line-height: 1.06; letter-spacing: -1px">Pregnant or<br>breastfeeding?</h1>
+      <div style="width: 84px; height: 84px; flex: none; margin: 0 4px -6px 0"><dc-import name="Xero" mood="calm" stage="1" animate="true" size="84" hint-size="84px,84px"></dc-import></div>
+    </div>
+    <p style="margin: 10px 0 0 0; font-size: 16px; font-weight: 500; line-height: 1.5; color: {{t.muted}}">One quick question before we plan nicotine replacement.</p>
+    <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 8px">
+      <sc-for list="{{answers}}" as="o" hint-placeholder-count="3">
+        <button aria-pressed="false" style="display: flex; align-items: center; min-height: 60px; box-sizing: border-box; padding: 8px 18px; border: 0; border-radius: 20px; text-align: left; background: {{t.card}}; box-shadow: {{t.ring}}; color: {{t.fg}}; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: -0.2px">{{o.t}}</button>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 0 22px 34px 22px; flex: none">
+    <button style="width: 100%; height: 58px; border-radius: 999px; border: 0; background: {{t.btn}}; color: {{t.btnFg}}; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px; box-shadow: {{t.btnShadow}}">Continue</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const theme = this.props.theme ?? 'light';
+    const dark = theme === 'dark';
+    const t = dark
+      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', navBtn: 'rgba(255,255,255,0.14)', navTrack: 'rgba(255,255,255,0.2)', sel: '#FFF8EE', selFg: '#0E1322', selSub: '#4A5068', badge: '#F26A45', badgeFg: '#FFF8EE', well: '#232C45', radioOff: 'rgba(255,255,255,0.42)', solid: '#1B2439', line: 'rgba(255,255,255,0.14)', barA: '#FF8A65', barX: '#FFC6B0', barXFg: '#5A1D0A', barB: 'rgba(255,255,255,0.3)', off: 'rgba(255,255,255,0.4)', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
+      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', ring: 'none', navBtn: 'rgba(255,255,255,0.72)', navTrack: 'rgba(30,26,58,0.24)', sel: '#1E1A3A', selFg: '#FFF8EE', selSub: '#D8D3E6', badge: '#F26A45', badgeFg: '#FFF8EE', well: '#FFE2CF', radioOff: 'rgba(30,26,58,0.4)', solid: '#FFFAF5', line: 'rgba(30,26,58,0.16)', barA: '#F2603C', barX: '#FFC3AE', barXFg: '#5A1D0A', barB: 'rgba(30,26,58,0.26)', off: 'rgba(30,26,58,0.38)', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
+    return { t, theme, answers: [{ t: 'No' }, { t: 'Yes' }, { t: 'Rather not say' }] };
+  }
+}
+</script>
+</body>
+</html>

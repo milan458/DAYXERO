@@ -1,0 +1,389 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "DarkRow.dc.html": {
+      "h": 1157,
+      "page": "screens",
+      "title": "Dark mode",
+      "w": 1330,
+      "x": 0,
+      "y": 651
+    },
+    "Day.dc.html": {
+      "h": 844,
+      "page": "screens",
+      "radius": 44,
+      "title": "3 \u00b7 Your day (before Quit Day)",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    },
+    "Glim2.dc.html": {
+      "h": 240,
+      "page": "parts",
+      "w": 240,
+      "x": 640,
+      "y": 0
+    },
+    "Horizon2.dc.html": {
+      "h": 300,
+      "page": "parts",
+      "w": 400,
+      "x": 960,
+      "y": 0
+    },
+    "Jelli.dc.html": {
+      "h": 240,
+      "page": "parts",
+      "w": 240,
+      "x": 320,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "h": 844,
+      "page": "screens",
+      "radius": 44,
+      "title": "1 \u00b7 How it works (after Welcome)",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "NightSky.dc.html": {
+      "h": 300,
+      "page": "parts",
+      "title": "Night sky (v5)",
+      "w": 390,
+      "x": 1440,
+      "y": 0
+    },
+    "SOS.dc.html": {
+      "h": 844,
+      "page": "screens",
+      "radius": 44,
+      "title": "2 \u00b7 Craving SOS (after triggers)",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "Xero.dc.html": {
+      "h": 240,
+      "page": "parts",
+      "w": 240,
+      "x": 0,
+      "y": 0
+    },
+    "PaywallA.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1800,
+      "h": 844,
+      "page": "paywall",
+      "title": "A \u00b7 One screen (yearly light, dark \u00b7 3 months light, dark)"
+    },
+    "PaywallB.dc.html": {
+      "x": 0,
+      "y": 964,
+      "w": 1800,
+      "h": 844,
+      "page": "paywall",
+      "title": "B \u00b7 Two pages (light 1, 2 \u00b7 dark 1, 2)"
+    },
+    "PaywallC.dc.html": {
+      "x": 0,
+      "y": 1928,
+      "w": 2270,
+      "h": 2040,
+      "page": "paywall",
+      "title": "C \u00b7 Long scroll, pinned button (first screen, full scroll, light and dark, 3 months)"
+    },
+    "PayA.dc.html": {
+      "x": 0,
+      "y": 420,
+      "w": 390,
+      "h": 844,
+      "page": "parts",
+      "radius": 44,
+      "title": "Paywall A (tweak theme, plan)"
+    },
+    "PayB.dc.html": {
+      "x": 470,
+      "y": 420,
+      "w": 390,
+      "h": 844,
+      "page": "parts",
+      "radius": 44,
+      "title": "Paywall B (tweak theme, step)"
+    },
+    "PayC.dc.html": {
+      "x": 940,
+      "y": 420,
+      "w": 390,
+      "h": 844,
+      "page": "parts",
+      "radius": 44,
+      "title": "Paywall C (tweak theme, plan, view)"
+    },
+    "History1.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 5140,
+      "h": 2440,
+      "page": "history",
+      "title": "Round 1 \u00b7 first drafts"
+    },
+    "History2.dc.html": {
+      "x": 0,
+      "y": 2560,
+      "w": 5140,
+      "h": 2630,
+      "page": "history",
+      "title": "Round 2"
+    },
+    "History3.dc.html": {
+      "x": 0,
+      "y": 5310,
+      "w": 5550,
+      "h": 2240,
+      "page": "history",
+      "title": "Round 3"
+    },
+    "History4.dc.html": {
+      "x": 0,
+      "y": 7670,
+      "w": 5550,
+      "h": 2600,
+      "page": "history",
+      "title": "Round 4"
+    },
+    "History5.dc.html": {
+      "x": 0,
+      "y": 10390,
+      "w": 5550,
+      "h": 2480,
+      "page": "history",
+      "title": "Round 5"
+    },
+    "HistoryF.dc.html": {
+      "x": 0,
+      "y": 12990,
+      "w": 5550,
+      "h": 2550,
+      "page": "history",
+      "title": "Final pass (what is on the Paywall page)"
+    },
+    "PaywallD.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 3210,
+      "h": 844,
+      "page": "paywall2",
+      "title": "D \u00b7 Savings, everything in Pro, the offer (light 1, 2, 3 \u00b7 3 months \u00b7 dark 1, 2, 3)"
+    },
+    "PayD.dc.html": {
+      "x": 1410,
+      "y": 420,
+      "w": 390,
+      "h": 844,
+      "page": "parts",
+      "radius": 44,
+      "title": "Paywall D (tweak theme, step, plan)"
+    },
+    "EvCompany.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "evidence",
+      "radius": 44,
+      "title": "1 \u00b7 Good company (new, after Products; tweak product)"
+    },
+    "EvWorks.dc.html": {
+      "x": 470,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "evidence",
+      "radius": 44,
+      "title": "2 \u00b7 What works (new, after Your baseline; tweak product)"
+    },
+    "EvTriggers.dc.html": {
+      "x": 940,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "evidence",
+      "radius": 44,
+      "title": "3 \u00b7 Triggers (no number: the when-then figure did not hold up)"
+    },
+    "EvObstacles.dc.html": {
+      "x": 1410,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "evidence",
+      "radius": 44,
+      "title": "4 \u00b7 Obstacles, with the withdrawal line"
+    },
+    "EvNRT.dc.html": {
+      "x": 1880,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "evidence",
+      "radius": 44,
+      "title": "5 \u00b7 NRT, rewritten (tweak product)"
+    },
+    "EvQuitDay.dc.html": {
+      "x": 2350,
+      "y": 0,
+      "w": 390,
+      "h": 930,
+      "page": "evidence",
+      "radius": 44,
+      "title": "6 \u00b7 Quit Day, with the evidence card (scrolls)"
+    },
+    "EvPlan.dc.html": {
+      "x": 2820,
+      "y": 0,
+      "w": 390,
+      "h": 1060,
+      "page": "evidence",
+      "radius": 44,
+      "title": "7 \u00b7 Your plan, with what it is built on (scrolls)"
+    },
+    "EvSources.dc.html": {
+      "x": 3290,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "evidence",
+      "radius": 44,
+      "title": "8 \u00b7 The research sheet"
+    },
+    "EvidenceDark.dc.html": {
+      "x": 0,
+      "y": 1240,
+      "w": 4150,
+      "h": 1120,
+      "page": "evidence",
+      "title": "Dark mode"
+    },
+    "EvCard.dc.html": {
+      "x": 1880,
+      "y": 420,
+      "w": 346,
+      "h": 210,
+      "page": "parts",
+      "title": "Evidence card (two groups of 100)"
+    },
+    "EvPregnancy.dc.html": {
+      "x": 3760,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "evidence",
+      "radius": 44,
+      "title": "5b \u00b7 Pregnant or breastfeeding (new step, right after NRT)"
+    },
+    "EvIllo.dc.html": {
+      "x": 2306,
+      "y": 420,
+      "w": 64,
+      "h": 64,
+      "page": "parts",
+      "title": "Evidence objects (tweak kind)"
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-16T16:45:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas",
+    "page": "evidence"
+  },
+  "notes": {
+    "historytitle": {
+      "x": 0,
+      "y": -300,
+      "text": "Paywall: every version the three critics judged, round by round",
+      "kind": "title1",
+      "maxW": 5550,
+      "page": "history"
+    },
+    "evidencetitle": {
+      "x": 0,
+      "y": -300,
+      "text": "Evidence story: two new screens and the six that change",
+      "kind": "title1",
+      "maxW": 4150,
+      "page": "evidence"
+    }
+  },
+  "order": [
+    "Xero.dc.html",
+    "Jelli.dc.html",
+    "Glim2.dc.html",
+    "Horizon2.dc.html",
+    "NightSky.dc.html",
+    "Main.dc.html",
+    "SOS.dc.html",
+    "Day.dc.html",
+    "DarkRow.dc.html",
+    "PayA.dc.html",
+    "PayB.dc.html",
+    "PayC.dc.html",
+    "PaywallA.dc.html",
+    "PaywallB.dc.html",
+    "PaywallC.dc.html",
+    "History1.dc.html",
+    "History2.dc.html",
+    "History3.dc.html",
+    "History4.dc.html",
+    "History5.dc.html",
+    "HistoryF.dc.html",
+    "PayD.dc.html",
+    "PaywallD.dc.html",
+    "EvCompany.dc.html",
+    "EvWorks.dc.html",
+    "EvTriggers.dc.html",
+    "EvObstacles.dc.html",
+    "EvNRT.dc.html",
+    "EvQuitDay.dc.html",
+    "EvPlan.dc.html",
+    "EvSources.dc.html",
+    "EvPregnancy.dc.html",
+    "EvidenceDark.dc.html",
+    "EvCard.dc.html",
+    "EvIllo.dc.html"
+  ],
+  "pages": [
+    {
+      "id": "evidence",
+      "name": "Evidence story"
+    },
+    {
+      "id": "screens",
+      "name": "Screens"
+    },
+    {
+      "id": "parts",
+      "name": "Parts"
+    },
+    {
+      "id": "paywall2",
+      "name": "Paywall v2"
+    },
+    {
+      "id": "paywall",
+      "name": "Paywall"
+    },
+    {
+      "id": "history",
+      "name": "Paywall history"
+    }
+  ],
+  "title": "DayXero onboarding: three new screens"
+}

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Evidence card</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 346px; box-sizing: border-box; background: {{t.card}}; box-shadow: {{t.ring}}; border-radius: 20px; padding: 14px 16px 12px 16px; display: flex; flex-direction: column; gap: 10px; font-family: 'DM Sans', system-ui, sans-serif; color: {{t.fg}}; -webkit-font-smoothing: antialiased">
+  <div style="font-size: 13px; font-weight: 700; color: {{t.muted}}">{{kicker}}</div>
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px"><span style="font-size: 14px; font-weight: 600; color: {{t.muted}}">{{aLabel}}</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 18px; white-space: nowrap">{{aText}}</span></div>
+    <div role="img" aria-label="{{aAria}}" style="display: grid; grid-template-columns: repeat(25, minmax(0, 1fr)); gap: 3px">
+      <sc-for list="{{dotsA}}" as="d" hint-placeholder-count="100"><span style="aspect-ratio: 1; border-radius: 50%; box-sizing: border-box; {{d.c}}"></span></sc-for>
+    </div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px"><span style="font-size: 14px; font-weight: 600; color: {{t.muted}}; display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap">{{bLabel}}<sc-if value="{{hasGap}}" hint-placeholder-val="{{true}}"><span style="display: inline-flex; align-items: center; gap: 4px; font-weight: 500"><span style="width: 9px; height: 9px; border-radius: 50%; box-sizing: border-box; box-shadow: inset 0 0 0 1.5px {{t.a}}"></span>{{gapText}}</span></sc-if></span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 18px; white-space: nowrap">{{bText}}</span></div>
+    <div role="img" aria-label="{{bAria}}" style="display: grid; grid-template-columns: repeat(25, minmax(0, 1fr)); gap: 3px">
+      <sc-for list="{{dotsB}}" as="d" hint-placeholder-count="100"><span style="aspect-ratio: 1; border-radius: 50%; box-sizing: border-box; {{d.c}}"></span></sc-for>
+    </div>
+  </div>
+  <sc-if value="{{hasNote}}" hint-placeholder-val="{{false}}">
+    <div style="font-size: 13px; font-weight: 500; line-height: 1.4; color: {{t.muted}}">{{note}}</div>
+  </sc-if>
+  <a href="#" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 28px; font-size: 13px; font-weight: 600; color: {{t.muted}}; text-decoration: underline; text-underline-offset: 2px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 a9 9 0 1 0 0.01 0 M12 11 v6 M12 7.5 v0.5"></path></svg>{{source}}</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"kicker":{"editor":"text","default":"In trials, quit for six months or more"},"aLabel":{"editor":"text","default":"Used nicotine replacement"},"aN":{"editor":"int","min":0,"max":100,"default":23},"bLabel":{"editor":"text","default":"Placebo or none"},"bN":{"editor":"int","min":0,"max":100,"default":15},"unit":{"editor":"text","default":""},"note":{"editor":"text","default":""},"source":{"editor":"text","default":"Cochrane review of 133 trials, 2018"},"$preview":{"width":346,"height":210}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = (this.props.theme ?? 'light') === 'dark';
+    const t = dark
+      ? { fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', a: '#FF8A65', b: '#FF8A65', off: 'rgba(255,255,255,0.2)' }
+      : { fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', ring: 'none', a: '#F2603C', b: '#F2603C', off: 'rgba(30,26,58,0.15)' };
+    const aN = Number(this.props.aN ?? 23), bN = Number(this.props.bN ?? 15);
+    const unit = String(this.props.unit ?? '');
+    const hi = Math.max(aN, bN);
+    const dots = (n, c) => Array.from({ length: 100 }, (_, i) => ({ c: i < n ? `background: ${c}` : i < hi ? `box-shadow: inset 0 0 0 1.5px ${c}` : `background: ${t.off}` }));
+    const note = String(this.props.note ?? '');
+    return { t,
+      kicker: this.props.kicker ?? 'In trials, quit for six months or more',
+      aLabel: this.props.aLabel ?? 'Used nicotine replacement', bLabel: this.props.bLabel ?? 'Placebo or none',
+      aText: `${aN} in 100${unit ? ' ' + unit : ''}`, bText: `${bN} in 100`,
+      aAria: `${aN} of 100 people`, bAria: `${bN} of 100 people`,
+      hasGap: aN !== bN, gapText: `${Math.abs(aN - bN)} fewer`, dotsA: dots(aN, t.a), dotsB: dots(bN, t.b), note, hasNote: note.length > 0,
+      source: this.props.source ?? 'Cochrane review of 133 trials, 2018' };
+  }
+}
+</script>
+</body>
+</html>

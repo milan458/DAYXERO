@@ -237,3 +237,9 @@ Open asks, repeated across critics: S8 rows (three identical review marks, Xero'
 bottom spacing, one object style for every spot icon, uneven two-column captions on S2, copy density on S2, S6, S7.
 Canvas: not published (blocked once on 18 Nov, not retried; waiting for the user's go-ahead).
 Stop check: bar no (8.15 against 9.0) | user decision pending.
+
+## Ship (19 Nov)
+User: "lets go with round 9. can you give me the final output". Round 9 is final.
+Deliverable: `cook/final/` (sheets, 18 stills, the 14 canvas files) and `cook/evidence-story-final.zip`.
+Canvas publish attempted again with the updated index (EvPregnancy at x 3760, EvIllo on Parts at x 2306 y 420); denied by the
+permission classifier a second time. Not worked around.
