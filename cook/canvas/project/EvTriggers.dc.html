@@ -52,7 +52,7 @@ body{margin:0}
           <rect width="346" height="124" fill="url(#evDaySky-{{theme}})"></rect>
           <circle cx="46" cy="84" r="24" fill="#FFC93C"></circle>
           <path d="M300 18 a15 15 0 1 0 14 22 a12 12 0 1 1 -14 -22 Z" fill="#FFF1C2"></path>
-          <circle cx="262" cy="22" r="1.6" fill="#FFF8EE"></circle><circle cx="326" cy="58" r="1.4" fill="#FFF8EE"></circle><circle cx="282" cy="50" r="1.2" fill="#FFF8EE"></circle>
+          
           <path d="M0 88 C60 72 120 78 180 86 C250 96 300 78 346 74 V124 H0 Z" fill="url(#evDayH1-{{theme}})"></path>
           <path d="M0 102 C80 88 150 94 220 104 C280 112 320 100 346 96 V124 H0 Z" fill="url(#evDayH2-{{theme}})"></path>
           <path d="M0 116 C90 106 180 110 260 116 C310 120 330 116 346 114 V124 H0 Z" fill="url(#evDayH3-{{theme}})"></path>
@@ -96,7 +96,7 @@ class Component extends DCLogic {
     };
     const check = 'M5.5 12.5l4.2 4L18.5 7.5';
     const chip = (label, ic, on) => ({ t: label, ic: I[ic], on: String(on), fg: on ? t.selFg : t.fg, bg: on ? t.sel : t.card, ring: on ? 'none' : t.ring, dot: on ? t.badge : 'transparent', ink: on ? t.badgeFg : t.muted });
-    const sky = dark ? { a: '#A9563C', b: '#B98258', c: '#77779A', d: '#2E3C68', e: '#111933' } : { a: '#FF9D6E', b: '#FFD3A0', c: '#CFE6FF', d: '#6F8FCB', e: '#24335C' };
+    const sky = dark ? { a: '#A9563C', b: '#B98258', c: '#77779A', d: '#2E3C68', e: '#111933' } : { a: '#FF9D6E', b: '#FFCF9C', c: '#B9D8FF', d: '#6F8FCB', e: '#24335C' };
     const hill = dark ? { a1: '#C2553A', b1: '#3A4878', a2: '#9C3F2C', b2: '#27345C', a3: '#7A2E22', b3: '#172244' } : { a1: '#FF9D6E', b1: '#5F78B4', a2: '#FF7A55', b2: '#3F5594', a3: '#E85A3E', b3: '#27386E' };
     return { t, theme, sky, hill,
       picked: [{ t: 'Coffee', ic: I.coffee }, { t: 'Stress', ic: I.bolt }],

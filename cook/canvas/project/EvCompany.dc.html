@@ -68,7 +68,7 @@ class Component extends DCLogic {
     }[product];
     const hasStat = copy.big.length > 0;
     const nm = (copy.big.match(/\d+/g) || [0, 0]).map(Number);
-    const dots = Array.from({ length: nm[1] }, (_, i) => ({ s: i < nm[0] ? '' : `filter: grayscale(1) brightness(${dark ? 1 : 0.8}); opacity: ${dark ? 0.55 : 0.45}` }));
+    const dots = Array.from({ length: nm[1] }, (_, i) => ({ s: i < nm[0] ? '' : `filter: grayscale(1) brightness(${dark ? 1.1 : 1.5}) contrast(${dark ? 0.8 : 0.6}); opacity: ${dark ? 0.5 : 0.6}` }));
     return { t, dots, dotSz: nm[1] > 5 ? 30 : 60, dotGap: nm[1] > 5 ? '2px' : '4px', discRing: dark ? 'inset 0 0 0 1.5px rgba(255,255,255,0.14), 0 0 40px rgba(255,150,90,0.10)' : '0 12px 32px rgba(190,84,40,0.20)', light: !dark, dark, hasStat, noStat: !hasStat, big: copy.big, line: copy.line, sub: copy.sub, source: copy.source,
       halo: dark ? 'rgba(255,176,96,0.42)' : 'rgba(255,246,206,0.85)', discBg: dark ? '#1F2950' : '#FFD3A6', shadow: dark ? 'rgba(0,0,0,0.55)' : 'rgba(80,20,10,0.35)',
       xeroFx: dark ? 'filter: brightness(0.96) drop-shadow(4px -2px 8px rgba(255,170,90,0.45))' : 'filter: drop-shadow(0 0 2.5px rgba(255,248,238,0.95)) drop-shadow(0 6px 10px rgba(120,30,10,0.22))' };

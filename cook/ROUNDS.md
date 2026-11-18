@@ -210,3 +210,21 @@ Changes:
 - S6/S7: one prep-week component (seven numbered circles, day one filled, then the Quit Day sun). S1: dark disc fades at its base.
 - EvIllo: five more objects (cup, bolt, stack, page, shield).
 Stills: `cook/stills/r08/` (sheets include S9) | Pairs: `cook/compare/r08/` | 3 critics
+Scores, eyeballed, raw overall (Opus / Sonnet / Fable -> median; previous best in brackets):
+S1 8.4/8.4/8.5 = 8.4 (8.5) | S2 7.9/8.1/8.0 = 8.0 (8.1) | S3 8.2/8.2/8.1 = 8.2 (8.2) | S4 7.6/7.8/7.6 = 7.6 (8.2, down)
+S5 8.0/8.1/8.2 = 8.1 (7.8, up) | S6 8.4/8.2/8.4 = 8.4 (8.4) | S7 8.1/8.3/8.3 = 8.3 (8.5, down) | S8 7.9/8.0/7.8 = 7.9 (8.0)
+Set 8.1/8.1/8.1 = 8.1 (8.2)
+S5 gained from losing the pregnancy question. S4 lost to a real defect: the summary card touched the last chip row.
+S7 lost because the unified prep row now duplicates S6. Not reverted; fixed in round 9.
+
+## Round 09
+
+Focus: round 8 defects.
+Changes:
+- S4: card clears the chips (shorter hill, tighter rows); the sun sits at the week-four end of the hill.
+- S7: list rows use the drawn objects (patch, clipboard, bubble, sun); prep stamps is one row with a single gold stamp
+  ("One a day. Your first is waiting."), so it no longer repeats the S6 week. Frame 1090 -> 1060.
+- S5: quiet end labels on the bars ("1.5 to 1.6 times", "baseline"); warm neutral for the comparison bar (also S2).
+- S2: "about" set small before the figure. S3: no stars, bluer midday sky. S1: third figure is a pale ghost. S8: larger source marks.
+- EvIllo: sun object. EvidenceDark row includes the pregnancy step (4150 wide).
+Stills: `cook/stills/r09/` | Pairs: `cook/compare/r09/` | 3 critics
