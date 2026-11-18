@@ -19,6 +19,10 @@ on:
         description: "With screenshots: only the v4 gallery pages, pushed to ci-screens-v4 (quick)"
         type: boolean
         default: false
+      only:
+        description: "With screenshots: 'paywall' takes just the paywall pages, pushed to ci-screens-v4 (a few minutes)"
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -119,6 +123,18 @@ jobs:
             done
             echo "::warning title=Blank screenshot::$name was still blank after 15 seconds"
           }
+          # Paywall v2: the three pages and the 3-month offer, light and dark; the offer at the largest text.
+          PW2="-dx.paywallPreview YES -dx.store mock"
+          for mode in light dark; do
+            for n in 1 2 3; do
+              shoot $mode large "pw2-$n-$mode" $PW2 -dx.paywallStep $n
+            done
+            shoot $mode large "pw2-3-quarterly-$mode" $PW2 -dx.paywallStep 3 -dx.paywallPlan quarterly
+          done
+          shoot light accessibility-extra-extra-extra-large pw2-3-light-ax5 $PW2 -dx.paywallStep 3
+          shoot light large pw2-inapp-light $PW2
+          ONLY="${{ inputs.only }}"
+          if [ "$ONLY" != "paywall" ]; then
           # v4 foundation pages (V4Gallery), light and dark.
           for page in type scenes xero jelli glim buttons program; do
             shoot light large "v4-$page-light" -dx.v4Gallery "$page"
@@ -169,8 +185,9 @@ jobs:
           WAIT=9 shoot light large v4-pledge-light -dx.homeScenario day3 -dx.store pro -dx.openPledge YES
           WAIT=9 shoot dark large v4-pledge-dark -dx.homeScenario day3 -dx.store pro -dx.openPledge YES
           shoot light large v4-today-yourday-light -dx.homeScenario day3 -dx.store pro -dx.todaySlot morning -dx.forceDaily pledge -dx.homeScroll lower
+          fi
           BRANCH=ci-screens
-          if [ "${{ inputs.v4_only }}" = "true" ]; then
+          if [ "${{ inputs.v4_only }}" = "true" ] || [ "$ONLY" = "paywall" ]; then
             BRANCH=ci-screens-v4
           else
           for step in breathe welcome products baseline_cigarettes baseline_vape baseline_summary triggers personal obstacles nrt quit_day building reveal trial; do
@@ -415,7 +432,7 @@ jobs:
   # Apple has no command to fold the simulator, so this uses hinge (MIT, pinned). It runs apart from build-test so a
   # change in that tooling can't block builds; a fold that doesn't happen fails this job rather than passing quietly.
   duo:
-    if: github.event_name == 'workflow_dispatch' && inputs.screenshots && !inputs.v4_only
+    if: github.event_name == 'workflow_dispatch' && inputs.screenshots && !inputs.v4_only && inputs.only == ''
     runs-on: xcode-27
     timeout-minutes: 60
     env:

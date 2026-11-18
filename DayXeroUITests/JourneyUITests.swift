@@ -73,7 +73,16 @@ final class JourneyUITests: XCTestCase {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         if springboard.alerts.buttons["Allow"].waitForExistence(timeout: 5) { springboard.alerts.buttons["Allow"].tap() }
         // The first-run paywall: start the free trial, then "You're all set" leads on.
+        // Paywall v2: what you'll keep and everything in Pro come before the offer.
         let cta = app.buttons["paywall.cta"]
+        for page in 1...2 where !cta.exists {
+            let next = app.buttons["paywall.continue"]
+            guard next.waitForExistence(timeout: 10) else { break }
+            snap(app, "06-paywall-page\(page)")
+            tapWhenStill(app, next, name: "Paywall continue")
+            // Let the next page take the last one's place before looking for its button.
+            RunLoop.current.run(until: .now.addingTimeInterval(1))
+        }
         XCTAssert(cta.waitForExistence(timeout: 10), "The paywall didn't follow onboarding")
         snap(app, "06-paywall")
         tapWhenStill(app, cta, name: "Start trial")
