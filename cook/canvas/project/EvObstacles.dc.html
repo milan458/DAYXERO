@@ -33,8 +33,7 @@ body{margin:0}
       </sc-for>
     </div>
 
-    <div style="margin-top: auto; margin-bottom: 18px; position: relative; padding-top: 46px">
-      <div style="position: absolute; right: 20px; top: 0; width: 76px; height: 76px"><dc-import name="Xero" mood="hello" stage="1" animate="true" size="76" hint-size="76px,76px"></dc-import></div>
+    <div style="margin-top: auto; margin-bottom: 20px; position: relative">
       <div style="position: relative; background: {{t.solid}}; box-shadow: {{t.ring}}; border-radius: 20px; overflow: hidden">
         <p style="margin: 0; padding: 14px 16px 4px 16px; font-size: 15px; font-weight: 500; line-height: 1.4; color: {{t.muted}}"><b style="font-weight: 700; color: {{t.fg}}">2 picked.</b> Here’s what each one adds.</p>
         <sc-for list="{{adds}}" as="r" hint-placeholder-count="2">
@@ -47,10 +46,9 @@ body{margin:0}
         </sc-for>
         <div style="margin-top: 8px; background: {{t.tint}}; padding: 12px 16px 8px 16px; display: flex; flex-direction: column; gap: 8px">
           <p style="margin: 0; font-size: 15px; font-weight: 600; line-height: 1.4; text-wrap: pretty">Both are withdrawal, and it passes. Usually worst in week one, easing over two to four.</p>
-          <div role="img" aria-label="Withdrawal is strongest in week 1 and eases by weeks 2 to 4" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; align-items: end">
-            <sc-for list="{{weeks}}" as="w" hint-placeholder-count="4">
-              <div style="display: flex; flex-direction: column; gap: 4px"><div style="height: 22px; display: flex; align-items: flex-end"><div style="width: 100%; height: {{w.h}}; border-radius: 5px; background: {{w.c}}"></div></div><span style="font-size: 13px; font-weight: 600; color: {{t.muted}}">{{w.t}}</span></div>
-            </sc-for>
+          <div role="img" aria-label="Withdrawal is strongest in week 1 and eases by weeks 2 to 4" style="display: flex; flex-direction: column; gap: 4px">
+            <svg width="100%" height="34" viewBox="0 0 314 34" preserveAspectRatio="none" aria-hidden="true" style="display: block"><path d="M0 34 L0 5 C46 4 70 5 96 11 C150 24 226 29 314 31 L314 34 Z" fill="{{t.area}}"></path><path d="M0 5 C46 4 70 5 96 11 C150 24 226 29 314 31" fill="none" stroke="{{t.barA}}" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke"></path></svg>
+            <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); font-size: 13px; font-weight: 600; color: {{t.muted}}"><span>Week 1</span><span>Week 2</span><span>Week 3</span><span>Week 4</span></div>
           </div>
           <a href="#" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 28px; font-size: 13px; font-weight: 600; color: {{t.muted}}; text-decoration: underline; text-underline-offset: 2px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 a9 9 0 1 0 0.01 0 M12 11 v6 M12 7.5 v0.5"></path></svg>Hughes, 2007 · people who stopped smoking</a>
         </div>
@@ -58,7 +56,7 @@ body{margin:0}
     </div>
   </div>
 
-  <div style="padding: 0 22px 14px 22px; flex: none; display: flex; flex-direction: column; gap: 2px">
+  <div style="padding: 0 22px 22px 22px; flex: none; display: flex; flex-direction: column; gap: 2px">
     <button style="width: 100%; height: 58px; border-radius: 999px; border: 0; background: {{t.btn}}; color: {{t.btnFg}}; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px; box-shadow: {{t.btnShadow}}">Continue</button>
     <button style="width: 100%; height: 44px; border: 0; background: transparent; color: {{t.fg}}; font-family: 'DM Sans', system-ui, sans-serif; font-weight: 600; font-size: 15px">Skip for now</button>
   </div>
@@ -69,8 +67,8 @@ class Component extends DCLogic {
   renderVals() {
     const dark = (this.props.theme ?? 'light') === 'dark';
     const t = dark
-      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#182034', card2: '#212A41', tint: '#212A41', line: 'rgba(255,255,255,0.12)', ring: 'inset 0 0 0 1px rgba(255,255,255,0.15)', navBtn: 'rgba(255,255,255,0.14)', navTrack: 'rgba(255,255,255,0.2)', sel: '#FFF8EE', selFg: '#0E1322', badge: '#F26A45', badgeFg: '#FFF8EE', solid: '#182034', arrow: 'rgba(255,255,255,0.45)', barRgb: '255,138,101', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
-      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: 'rgba(255,255,255,0.92)', card2: '#FFE7D0', tint: '#FFEBDD', line: 'rgba(30,26,58,0.12)', ring: 'none', navBtn: 'rgba(255,255,255,0.72)', navTrack: 'rgba(30,26,58,0.24)', sel: '#1E1A3A', selFg: '#FFF8EE', badge: '#F26A45', badgeFg: '#FFF8EE', solid: '#FFFAF5', arrow: 'rgba(30,26,58,0.45)', barRgb: '242,96,60', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
+      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', card2: '#212A41', tint: '#212A41', line: 'rgba(255,255,255,0.12)', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', navBtn: 'rgba(255,255,255,0.14)', navTrack: 'rgba(255,255,255,0.2)', sel: '#FFF8EE', selFg: '#0E1322', badge: '#F26A45', badgeFg: '#FFF8EE', solid: '#182034', arrow: 'rgba(255,255,255,0.45)', barA: '#FF8A65', area: 'rgba(255,138,101,0.22)', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
+      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', card2: '#FFE7D0', tint: '#FFEBDD', line: 'rgba(30,26,58,0.12)', ring: 'none', navBtn: 'rgba(255,255,255,0.72)', navTrack: 'rgba(30,26,58,0.24)', sel: '#1E1A3A', selFg: '#FFF8EE', badge: '#F26A45', badgeFg: '#FFF8EE', solid: '#FFFAF5', arrow: 'rgba(30,26,58,0.45)', barA: '#F2603C', area: 'rgba(242,96,60,0.2)', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
     const I = {
       bolt: 'M13 3L5 13.5h6L10 21l8-10.5h-6z',
       people: 'M9 11a3 3 0 100-6 3 3 0 000 6zM3.5 19a5.5 5.5 0 0111 0M16 11a2.6 2.6 0 100-5.2M17 14.2a4.8 4.8 0 013.5 4.8',
@@ -83,8 +81,7 @@ class Component extends DCLogic {
     };
     const check = 'M5.5 12.5l4.2 4L18.5 7.5';
     const chip = (label, ic, on) => ({ t: label, ic: on ? check : I[ic], on: String(on), fg: on ? t.selFg : t.fg, bg: on ? t.sel : t.card, ring: on ? 'none' : t.ring, dot: on ? t.badge : 'transparent', ink: on ? t.badgeFg : t.muted });
-    const weeks = [['Week 1', 22, 1], ['Week 2', 14, 1], ['Week 3', 9, 1], ['Week 4', 5, 1]].map(([w, h, o]) => ({ t: w, h: h + 'px', c: `rgba(${t.barRgb},${o})` }));
-    return { t, weeks,
+    return { t,
       adds: [{ a: 'Irritability', b: '1-minute reset', ic: I.bolt }, { a: 'Sleep', b: 'Night wind-down', ic: I.moon }],
       chips: [chip('Irritability', 'bolt', true), chip('Sleep', 'moon', true), chip('Hunger', 'apple', false), chip('Social pressure', 'people', false), chip('Restlessness', 'wave', false), chip('Weight', 'scale', false), chip('Focus', 'target', false), chip('Motivation', 'flag', false)] };
   }

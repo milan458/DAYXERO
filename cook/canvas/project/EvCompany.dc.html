@@ -25,18 +25,19 @@ body{margin:0}
 
   <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; padding: 0 26px 12px 26px">
     <div style="position: relative; width: 248px; height: 248px; flex: none">
-      <div style="position: absolute; left: 0; top: 0; width: 248px; height: 248px; border-radius: 50%; overflow: hidden; background: {{discBg}}">
-        <sc-if value="{{light}}" hint-placeholder-val="{{true}}"><dc-import name="Horizon2" scene="dawn" clarity="100" clouds="false" sun-x="250" sun-r="44" sun-dy="-10" w="248" h="248" fit="xMidYMax slice" animate="true" hint-size="248px,248px"></dc-import></sc-if>
-        <sc-if value="{{dark}}" hint-placeholder-val="{{false}}"><dc-import name="NightSky" theme="dark" dawn="true" warm="true" stars="false" hills="true" sun-scale="1.7" sun-lift="10" sun-at="0.7" fade="false" w="248" h="248" animate="true" hint-size="248px,248px"></dc-import></sc-if>
+      <div style="position: absolute; left: 0; top: 0; width: 248px; height: 248px; border-radius: 50%; overflow: hidden; background: {{discBg}}; box-shadow: {{discRing}}">
+        <sc-if value="{{light}}" hint-placeholder-val="{{true}}"><dc-import name="Horizon2" scene="dawn" clarity="100" clouds="false" sun-x="250" sun-r="0" sun-dy="-10" w="248" h="248" fit="xMidYMax slice" animate="true" hint-size="248px,248px"></dc-import></sc-if>
+        <sc-if value="{{dark}}" hint-placeholder-val="{{false}}"><dc-import name="NightSky" theme="dark" dawn="true" warm="true" stars="false" hills="true" sun-scale="0" sun-lift="10" sun-at="0.5" fade="false" w="248" h="248" animate="true" hint-size="248px,248px"></dc-import></sc-if>
+        <div style="position: absolute; left: 14px; top: 52px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(closest-side, {{halo}}, rgba(255,240,200,0))"></div>
       </div>
       <div style="position: absolute; width: 96px; height: 15px; border-radius: 50%; background: radial-gradient(closest-side, {{shadow}}, rgba(20,10,30,0)); left: 70px; top: 204px"></div>
       <div style="position: absolute; width: 120px; height: 120px; left: 58px; top: 96px; {{xeroFx}}"><dc-import name="Xero" mood="hello" stage="1" animate="true" size="120" hint-size="120px,120px"></dc-import></div>
     </div>
 
     <sc-if value="{{hasStat}}" hint-placeholder-val="{{true}}">
-      <div style="margin-top: 22px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 76px; line-height: 0.95; letter-spacing: -3px; text-align: center">{{big}}</div>
-      <div role="img" aria-label="{{big}}" style="margin-top: 14px; display: flex; gap: {{dotGap}}; justify-content: center"><sc-for list="{{dots}}" as="d" hint-placeholder-count="3"><span style="width: {{dotSz}}; height: {{dotSz}}; border-radius: 50%; box-sizing: border-box; {{d.s}}"></span></sc-for></div>
-      <h1 style="margin: 16px 0 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 26px; line-height: 1.12; letter-spacing: -0.7px; text-align: center; text-wrap: balance">{{line}}</h1>
+      <div style="margin-top: 18px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 76px; line-height: 0.95; letter-spacing: -3px; text-align: center">{{big}}</div>
+      <div role="img" aria-label="{{big}}" style="margin-top: 10px; display: flex; gap: {{dotGap}}; justify-content: center"><sc-for list="{{dots}}" as="d" hint-placeholder-count="3"><div style="width: {{dotSz}}px; height: {{dotSz}}px; {{d.s}}"><dc-import name="Xero" mood="hello" stage="1" animate="false" size="{{dotSz}}" hint-size="40px,40px"></dc-import></div></sc-for></div>
+      <h1 style="margin: 10px 0 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 26px; line-height: 1.12; letter-spacing: -0.7px; text-align: center; text-wrap: balance">{{line}}</h1>
     </sc-if>
     <sc-if value="{{noStat}}" hint-placeholder-val="{{false}}">
       <h1 style="margin: 26px 0 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 1.1; letter-spacing: -0.9px; text-align: center; text-wrap: balance">{{line}}</h1>
@@ -67,9 +68,9 @@ class Component extends DCLogic {
     }[product];
     const hasStat = copy.big.length > 0;
     const nm = (copy.big.match(/\d+/g) || [0, 0]).map(Number);
-    const dots = Array.from({ length: nm[1] }, (_, i) => ({ s: i < nm[0] ? `background: ${t.mark}` : `box-shadow: inset 0 0 0 2.5px ${t.dotOff}` }));
-    return { t, dots, dotSz: nm[1] > 5 ? '16px' : '22px', dotGap: nm[1] > 5 ? '7px' : '10px', light: !dark, dark, hasStat, noStat: !hasStat, big: copy.big, line: copy.line, sub: copy.sub, source: copy.source,
-      discBg: dark ? '#1F2950' : '#FFD3A6', shadow: dark ? 'rgba(0,0,0,0.55)' : 'rgba(80,20,10,0.35)',
+    const dots = Array.from({ length: nm[1] }, (_, i) => ({ s: i < nm[0] ? '' : `filter: grayscale(1) brightness(${dark ? 0.9 : 1.25}); opacity: ${dark ? 0.5 : 0.42}` }));
+    return { t, dots, dotSz: nm[1] > 5 ? 26 : 44, dotGap: nm[1] > 5 ? '2px' : '4px', discRing: dark ? 'inset 0 0 0 1.5px rgba(255,255,255,0.12)' : 'none', light: !dark, dark, hasStat, noStat: !hasStat, big: copy.big, line: copy.line, sub: copy.sub, source: copy.source,
+      halo: dark ? 'rgba(255,176,96,0.42)' : 'rgba(255,246,206,0.85)', discBg: dark ? '#1F2950' : '#FFD3A6', shadow: dark ? 'rgba(0,0,0,0.55)' : 'rgba(80,20,10,0.35)',
       xeroFx: dark ? 'filter: brightness(0.96) drop-shadow(4px -2px 8px rgba(255,170,90,0.45))' : 'filter: drop-shadow(0 0 2.5px rgba(255,248,238,0.95)) drop-shadow(0 6px 10px rgba(120,30,10,0.22))' };
   }
 }

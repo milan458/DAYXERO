@@ -12,7 +12,7 @@ const srv = http.createServer((q, r) => {
   r.writeHead(200, { 'content-type': types[path.extname(f)] || 'application/octet-stream' }); r.end(fs.readFileSync(f));
 }).listen(0);
 const port = srv.address().port;
-const shots = [['S1','EvCompany',844],['S2','EvWorks',844],['S3','EvTriggers',844],['S4','EvObstacles',844],['S5','EvNRT',900],['S6','EvQuitDay',990],['S7','EvPlan',1120],['S8','EvSources',844]];
+const shots = [['S1','EvCompany',844],['S2','EvWorks',844],['S3','EvTriggers',844],['S4','EvObstacles',844],['S5','EvNRT',900],['S6','EvQuitDay',950],['S7','EvPlan',1120],['S8','EvSources',844]];
 const b = await chromium.launch();
 for (const theme of ['light','dark']) for (const [id, name, h] of shots) {
   const pg = await b.newPage({ viewport: { width: 390, height: h }, deviceScaleFactor: scale });

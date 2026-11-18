@@ -44,3 +44,35 @@ Scores, eyeballed, raw (2 critics: Opus, Sonnet): overall per screen
 
 Top gaps: weak selected state on chips; S2 and S5 state a number in a paragraph with no graphic; S4 note card touches the button; S8 flat brown scrim and plain list; S7 coin overlaps the sun; widows.
 
+## Round 01
+
+Time: 18:25 to 19:15 UTC
+Focus: every screen; selected state, data graphics for S2 and S5, the S4 collision, S8 scrim, S7 hero.
+Changes:
+- Chips (S3, S4) and option rows (S5): icons, solid selected fill with a coral check badge.
+- S2: hero figure "about 80% more likely to quit" with a two-bar comparison. S5: "50 to 60% higher" with bars.
+- S3: when-then summary card with Xero. S4: one card (what each adds + withdrawal note + week graphic).
+- S1: three dots under "2 in 3". S6: prep week ends on a Quit Day sun, note folded into the dot card, one accent.
+- S7: the Day 0 coin is the sun; scalloped prep stamps. S8: the plan screen dimmed behind the sheet, type tags.
+Stills: `cook/stills/r01/` | Pairs: `cook/compare/r01/`
+Scores, eyeballed, raw overall (Opus / Sonnet -> median; baseline median):
+S1 8.4/8.2 = 8.3 (8.25) | S2 7.9/7.9 = 7.9 (7.55) | S3 7.5/8.0 = 7.75 (7.5) | S4 7.7/7.7 = 7.7 (7.05) | S5 7.8/7.8 = 7.8 (7.35)
+S6 8.2/8.3 = 8.25 (8.05) | S7 8.3/8.4 = 8.35 (8.0) | S8 7.8/7.7 = 7.75 (7.4) | Set 7.9/8.0 = 7.95, calibrated 7.8
+Measured: none (no reference images, so no color check). Not checked: motion, tweak variants (vape, pouches).
+Top gaps: peeking Xero reads as a clipping bug; bars carry no labels; "+" badge overlaps cards; S4 bars read as an error;
+S8 scrim muddy; S6 dead band and cramped day labels; widows in S7.
+Stop check: bar no -> next round.
+
+## Round 02
+
+Time: 19:15 to 19:50 UTC
+Focus: the round 1 gaps above.
+Changes:
+- S1: three small Xeros (two lit) replace the dots; Xero is the only sun in the disc, with a halo. Dark disc rim.
+- S2: ingredients back to two full rows with a "+" joint; split bar with "about 80% more" inside the extra segment.
+- S3: Xero stands on the summary card. S4: Xero removed, withdrawal shown as a falling curve, more room under Skip.
+- S5: split bar "50 to 60% more", Xero removed, pregnancy question in its own card.
+- S6: frame 990 -> 950, day letters, day 1 filled, difference between the rows drawn as rings.
+- S7: wraps, stronger stamps and glow. S8: blurred backdrop, type tags in a left column, shorter intro.
+- Dark cards one step lighter with a stronger edge on all screens.
+Stills: `cook/stills/r02/` | Pairs: `cook/compare/r02/`
