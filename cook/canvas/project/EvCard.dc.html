@@ -39,7 +39,7 @@ class Component extends DCLogic {
     const dark = (this.props.theme ?? 'light') === 'dark';
     const t = dark
       ? { fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', a: '#FF8A65', b: '#FF8A65', off: 'rgba(255,255,255,0.2)' }
-      : { fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', ring: 'none', a: '#F2603C', b: '#F2603C', off: 'rgba(30,26,58,0.1)' };
+      : { fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', ring: 'none', a: '#F2603C', b: '#F2603C', off: 'rgba(30,26,58,0.15)' };
     const aN = Number(this.props.aN ?? 23), bN = Number(this.props.bN ?? 15);
     const unit = String(this.props.unit ?? '');
     const hi = Math.max(aN, bN);

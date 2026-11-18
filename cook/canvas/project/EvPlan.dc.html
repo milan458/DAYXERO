@@ -13,7 +13,7 @@
 body{margin:0}
 </style>
 </helmet>
-<div style="width: 390px; height: 1120px; box-sizing: border-box; background: {{t.g}}; color: {{t.fg}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; display: flex; flex-direction: column">
+<div style="width: 390px; height: 1090px; box-sizing: border-box; background: {{t.g}}; color: {{t.fg}}; position: relative; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; display: flex; flex-direction: column">
 
   <div style="position: relative; height: 300px; flex: none; overflow: hidden">
     <sc-if value="{{light}}" hint-placeholder-val="{{true}}"><dc-import name="Horizon2" scene="dawn" clarity="100" clouds="false" sun-x="262" sun-r="0" sun-dy="-20" w="390" h="300" fit="xMidYMax slice" animate="true" hint-size="390px,300px"></dc-import></sc-if>
@@ -47,7 +47,7 @@ body{margin:0}
     <div style="margin-top: 12px; background: {{t.card}}; box-shadow: {{t.ring}}; border-radius: 20px; padding: 14px 16px">
       <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px">Prep stamps</span><span style="font-size: 14px; font-weight: 500; color: {{t.muted}}">One a day</span></div>
       <div style="margin-top: 10px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; justify-items: center">
-        <sc-for list="{{stamps}}" as="s" hint-placeholder-count="7"><div style="position: relative; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 15px; color: {{s.fg}}"><svg width="42" height="42" viewBox="0 0 42 42" aria-hidden="true" style="position: absolute; left: 0; top: 0"><circle cx="21" cy="21" r="15" fill="{{s.c}}"></circle><circle cx="21" cy="21" r="16.5" fill="none" stroke="{{s.c}}" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.01 8.63"></circle><circle cx="21" cy="21" r="12.5" fill="none" stroke="{{s.in}}" stroke-width="1.5"></circle></svg><span style="position: relative">{{s.n}}</span></div></sc-for>
+        <sc-for list="{{stamps}}" as="s" hint-placeholder-count="7"><div style="position: relative; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 15px; color: {{s.fg}}"><svg width="42" height="42" viewBox="0 0 42 42" aria-hidden="true" style="position: absolute; left: 0; top: 0"><circle cx="21" cy="21" r="15" fill="{{s.c}}"></circle><circle cx="21" cy="21" r="16.5" fill="none" stroke="{{s.c}}" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.01 8.63"></circle><circle cx="21" cy="21" r="{{s.r}}" fill="none" stroke="{{s.in}}" stroke-width="1.6" stroke-dasharray="{{s.dash}}"></circle></svg><span style="position: relative">{{s.n}}</span></div></sc-for>
       </div>
     </div>
   </div>
@@ -57,13 +57,13 @@ body{margin:0}
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1120}}'>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1090}}'>
 class Component extends DCLogic {
   renderVals() {
     const dark = (this.props.theme ?? 'light') === 'dark';
     const t = dark
-      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', card2: '#212A41', well: '#232C45', stamp: '#3B4873', line: 'rgba(255,255,255,0.12)', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', mark: '#FF8A65', coral: '#E0603F', sel: '#FFF8EE', selFg: '#0E1322', off: 'rgba(255,255,255,0.3)', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
-      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', card2: '#FFE7D0', well: '#FFEBDD', stamp: '#FFDCC6', line: 'rgba(30,26,58,0.12)', ring: 'none', mark: '#FF7A55', coral: '#D9492A', sel: '#1E1A3A', selFg: '#FFF8EE', off: 'rgba(30,26,58,0.28)', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
+      ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', card2: '#212A41', well: '#232C45', stamp: '#3B4873', line: 'rgba(255,255,255,0.12)', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', mark: '#FF8A65', coral: '#E0603F', sel: '#FFF8EE', selFg: '#0E1322', off: 'rgba(255,255,255,0.45)', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
+      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', card2: '#FFE7D0', well: '#FFEBDD', stamp: '#FFDCC6', line: 'rgba(30,26,58,0.12)', ring: 'none', mark: '#FF7A55', coral: '#D9492A', sel: '#1E1A3A', selFg: '#FFF8EE', off: 'rgba(30,26,58,0.42)', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
     const patch = 'M7 4 h10 a3 3 0 0 1 3 3 v10 a3 3 0 0 1 -3 3 H7 a3 3 0 0 1 -3 -3 V7 a3 3 0 0 1 3 -3 Z M9 12 h6 M12 9 v6';
     const chat = 'M4 5 h16 v11 H9 l-5 4 Z';
     const moon = 'M20 14 A8 8 0 1 1 10 4 A6 6 0 0 0 20 14 Z';
@@ -75,7 +75,7 @@ class Component extends DCLogic {
       { ...sup, icon: moon, t: 'A check-in every day', d: 'A morning pledge and a night check-in.' },
       { ...sup, icon: sun, t: 'A clean stop on Quit Day', d: 'First goal: 28 days. The NHS says that makes you 5 times more likely to stay quit.' }
     ];
-    const stamps = [1, 2, 3, 4, 5, 6, 7].map((n) => ({ n: String(n), c: n === 1 ? '#FFC93C' : t.stamp, in: n === 1 ? '#F29A2E' : t.off, fg: n === 1 ? '#5A2E06' : t.fg }));
+    const stamps = [1, 2, 3, 4, 5, 6, 7].map((n) => ({ n: String(n), c: n === 1 ? '#FFC93C' : 'transparent', in: n === 1 ? '#F29A2E' : t.off, r: n === 1 ? 12.5 : 16, dash: n === 1 ? 'none' : '3.2 3.5', fg: n === 1 ? '#5A2E06' : t.muted }));
     const g = dark ? '14,19,34' : '255,195,138';
     return { t, light: !dark, dark, rows, stamps, coinGlow: dark ? '0 0 0 10px rgba(255,201,60,0.10), 0 0 44px 12px rgba(255,170,80,0.32)' : '0 0 0 12px rgba(255,248,238,0.34), 0 0 44px 16px rgba(255,240,200,0.7)',
       shadow: dark ? 'rgba(0,0,0,0.55)' : 'rgba(80,20,10,0.35)', blend: `linear-gradient(rgba(${g},0), rgba(${g},0.85))`,

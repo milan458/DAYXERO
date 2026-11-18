@@ -94,3 +94,22 @@ Changes:
 - S6: "6 fewer" legend for the ring dots, stronger day rings. S7: one-line first row, stronger dark stamps.
 - S8: neutral blurred backdrop, tags top-aligned, solid arrow buttons, Xero by the title. S1: larger pictogram, darker third figure.
 Stills: `cook/stills/r03/` | Pairs: `cook/compare/r03/` | 3 critics (Opus, Sonnet, Fable)
+Scores, eyeballed, raw overall (Opus / Sonnet / Fable -> median; round 2 median):
+S1 8.6/8.2/8.6 = 8.6 (8.3) | S2 8.1/7.9/8.0 = 8.0 (7.6) | S3 8.2/8.0/8.1 = 8.1 (8.05) | S4 8.1/8.0/8.0 = 8.0 (7.9) | S5 7.9/7.8/8.0 = 7.9 (7.7)
+S6 8.4/8.2/8.4 = 8.4 (8.4) | S7 8.3/8.4/8.5 = 8.4 (8.4) | S8 8.1/7.8/7.8 = 7.8 (7.8) | Set 8.2/8.1/8.2 = 8.2, calibrated 8.05
+All screens at or above round 2: kept. Best so far: round 3.
+Top gaps: bars without values; Xero cropped by the card it stands on; S5 density; S4 two-tone card; S7 dark stamps read as cogs;
+S8 heavy arrow buttons and squeezed text; dead bands above the button on S6 and S7.
+Stop check: bar no -> next round.
+
+## Round 04
+
+Time: 20:20 to 20:50 UTC
+Focus: the round 3 gaps.
+Changes:
+- S2, S5: value labels on the bars (about 1.8x vs 1x; 1.5 to 1.6x vs 1x), the same ratios the copy states. "+" centred in the gap.
+- S2, S3: Xero drawn in front of the card with a contact shadow. S5: no Xero; pregnancy question is a segmented control.
+- Chips keep their own icon when selected, so the summary pills match. S4: one surface with a divider, centred week labels, bed and scale glyphs.
+- S6: 930 tall, bigger date, clearer Change pill and empty dots. S7: 1090 tall, locked stamps are dashed outlines.
+- S8: warm blurred backdrop, plain arrows, wider text. S1: bigger pictogram, disc shadow in light, rim in dark.
+Stills: `cook/stills/r04/` | Pairs: `cook/compare/r04/` | 3 critics
