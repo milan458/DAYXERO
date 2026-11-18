@@ -63,7 +63,7 @@ class Component extends DCLogic {
     const dark = (this.props.theme ?? 'light') === 'dark';
     const t = dark
       ? { g: '#0E1322', fg: '#FFF8EE', muted: '#B3BACC', card: '#1B2439', card2: '#212A41', well: '#232C45', stamp: '#3B4873', line: 'rgba(255,255,255,0.12)', ring: 'inset 0 0 0 1px rgba(255,255,255,0.22)', mark: '#FF8A65', coral: '#E0603F', sel: '#FFF8EE', selFg: '#0E1322', off: 'rgba(255,255,255,0.45)', btn: '#FFF8EE', btnFg: '#0E1322', btnShadow: '0 6px 18px rgba(255,248,238,0.14)' }
-      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', card2: '#FFE7D0', well: '#FFEBDD', stamp: '#FFDCC6', line: 'rgba(30,26,58,0.12)', ring: 'none', mark: '#FF7A55', coral: '#D9492A', sel: '#1E1A3A', selFg: '#FFF8EE', off: 'rgba(30,26,58,0.42)', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
+      : { g: '#FFC38A', fg: '#1E1A3A', muted: '#4A2810', card: '#FFFAF5', card2: '#FFE7D0', well: '#FFDCC6', stamp: '#FFDCC6', line: 'rgba(30,26,58,0.12)', ring: 'none', mark: '#FF7A55', coral: '#D9492A', sel: '#1E1A3A', selFg: '#FFF8EE', off: 'rgba(30,26,58,0.42)', btn: '#1E1A3A', btnFg: '#FFF8EE', btnShadow: '0 6px 18px rgba(30,26,58,0.22)' };
     const patch = 'M7 4 h10 a3 3 0 0 1 3 3 v10 a3 3 0 0 1 -3 3 H7 a3 3 0 0 1 -3 -3 V7 a3 3 0 0 1 3 -3 Z M9 12 h6 M12 9 v6';
     const chat = 'M4 5 h16 v11 H9 l-5 4 Z';
     const moon = 'M20 14 A8 8 0 1 1 10 4 A6 6 0 0 0 20 14 Z';
@@ -77,7 +77,7 @@ class Component extends DCLogic {
     ];
     const stamps = [1, 2, 3, 4, 5, 6, 7].map((n) => ({ n: String(n), c: n === 1 ? '#FFC93C' : 'transparent', in: n === 1 ? '#F29A2E' : t.off, r: n === 1 ? 12.5 : 16, dash: n === 1 ? 'none' : '3.2 3.5', fg: n === 1 ? '#5A2E06' : t.muted }));
     const g = dark ? '14,19,34' : '255,195,138';
-    return { t, light: !dark, dark, rows, stamps, coinGlow: dark ? '0 0 0 10px rgba(255,201,60,0.10), 0 0 44px 12px rgba(255,170,80,0.32)' : '0 0 0 12px rgba(255,248,238,0.34), 0 0 44px 16px rgba(255,240,200,0.7)',
+    return { t, light: !dark, dark, rows, stamps, coinGlow: dark ? '0 0 0 10px rgba(255,201,60,0.16), 0 0 48px 14px rgba(255,190,70,0.38)' : '0 0 0 12px rgba(255,248,238,0.34), 0 0 44px 16px rgba(255,240,200,0.7)',
       shadow: dark ? 'rgba(0,0,0,0.55)' : 'rgba(80,20,10,0.35)', blend: `linear-gradient(rgba(${g},0), rgba(${g},0.85))`,
       xeroFx: dark ? 'filter: brightness(0.96) drop-shadow(4px -2px 8px rgba(255,170,90,0.45))' : 'filter: drop-shadow(0 0 2.5px rgba(255,248,238,0.95)) drop-shadow(0 6px 10px rgba(120,30,10,0.22))' };
   }

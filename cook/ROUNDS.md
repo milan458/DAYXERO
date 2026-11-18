@@ -113,3 +113,22 @@ Changes:
 - S6: 930 tall, bigger date, clearer Change pill and empty dots. S7: 1090 tall, locked stamps are dashed outlines.
 - S8: warm blurred backdrop, plain arrows, wider text. S1: bigger pictogram, disc shadow in light, rim in dark.
 Stills: `cook/stills/r04/` | Pairs: `cook/compare/r04/` | 3 critics
+Scores, eyeballed, raw overall (Opus / Sonnet / Fable -> median; round 3 median):
+S1 8.5/8.1/8.6 = 8.5 (8.6) | S2 8.1/7.8/8.3 = 8.1 (8.0) | S3 8.2/7.8/8.3 = 8.2 (8.1) | S4 8.2/7.9/8.2 = 8.2 (8.0) | S5 7.8/7.7/7.9 = 7.8 (7.9)
+S6 8.4/8.1/8.5 = 8.4 (8.4) | S7 8.5/8.3/8.6 = 8.5 (8.4) | S8 8.1/7.6/8.0 = 8.0 (7.8) | Set 8.2/7.9/8.3 = 8.2, calibrated 8.05
+Flat against round 3 (S1 and S5 down 0.1, five screens up 0.1 to 0.2). Kept. Read: small fixes no longer move the set;
+the repeated asks are bespoke art on S5 and S8, fewer boxes on S2, an apricot Xero (shared part, out of scope), less copy
+(limited by the fact-checked wording).
+Stop check: bar no -> next round.
+
+## Round 05
+
+Time: 20:50 to 21:20 UTC
+Focus: composition on the weakest screens (S2, S5, S8, S3).
+Changes:
+- S2: one card. Two large tokens joined by "+", a divider, then the figure and bars. Bar values are quiet labels.
+- S5: a drawn patch + lozenge next to the patch line; segmented control on a visible track.
+- S8: sheet over the real plan screen with a light dim (no blur), tag tints by evidence type, smaller source lines.
+- S3: larger cheering Xero on the summary card. S6: "6 fewer" legend under the second grid, warmer empty dots.
+- S1: tighter number, pictogram and label; lighter ghost bean. S7: cleaner dark halo, stronger icon wells.
+Stills: `cook/stills/r05/` | Pairs: `cook/compare/r05/` | 3 critics
