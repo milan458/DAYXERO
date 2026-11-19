@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 public extension View {
 
@@ -46,4 +47,37 @@ private struct AvoidFold: ViewModifier {
         return max(proxy.size.width - fold.frame.minX, 0)
     }
     #endif
+}
+
+// MARK: iPad
+
+public extension DX.Size {
+    /// The widest the app's content runs on iPad: the iPhone Duo's inner display, the widest screen every layout
+    /// has been checked on.
+    static let padColumnWidth: CGFloat = 670
+}
+
+public extension View {
+    /// On iPad (19 Nov 2026, portrait and full screen only), keeps a screen's content in a centred column of
+    /// `DX.Size.padColumnWidth` by widening the horizontal safe area. Anything that ignores the safe area (grounds,
+    /// skies, dimming layers) still runs to the screen's edges. On iPhone this does nothing.
+    ///
+    /// A presentation starts a new hierarchy, so the app's root and every full-screen cover apply it (`dxCover`).
+    func dxPadColumn() -> some View {
+        modifier(PadColumn())
+    }
+}
+
+private struct PadColumn: ViewModifier {
+    @State private var width: CGFloat = 0
+
+    func body(content: Content) -> some View {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            content
+                .safeAreaPadding(.horizontal, max(0, (width - DX.Size.padColumnWidth) / 2))
+                .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
+        } else {
+            content
+        }
+    }
 }

@@ -39,6 +39,7 @@ struct DayXeroApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .dxPadColumn()
                 // v5: every switch is the kit toggle (coral on, the ink at 30% off).
                 .toggleStyle(.dx)
                 .environment(entitlement)
@@ -103,7 +104,7 @@ struct RootView: View {
             .environment(sos)
             .environment(log)
             .environment(nrt)
-            .fullScreenCover(item: behindPaywall($nrt.sheet)) { sheet in
+            .dxCover(item: behindPaywall($nrt.sheet)) { sheet in
                 if let profile = profiles.first {
                     switch sheet {
                     case .setup: NRTSetupView(profile: profile) { nrt.sheet = nil }
@@ -120,13 +121,13 @@ struct RootView: View {
                     .presentationDragIndicator(.visible)
                     .presentationCornerRadius(32)
             }
-            .fullScreenCover(item: behindPaywall($log.form)) { page in
+            .dxCover(item: behindPaywall($log.form)) { page in
                 LogSheet(profile: profiles.first, start: page) { log.page = nil }
                     .environment(sos)
             }
             // Craving SOS sits above everything in the app, so every way in reaches it in one step (S6.5). Like the
             // log and NRT sheets it stays behind the hard paywall: a widget, Siri or a link can't open it without a plan.
-            .fullScreenCover(item: behindPaywall($sos.launch)) { launch in
+            .dxCover(item: behindPaywall($sos.launch)) { launch in
                 CravingSOSView(profile: profiles.first, source: launch.source) { sos.launch = nil }
             }
             // A request that arrives without a plan is dropped, not kept for later.

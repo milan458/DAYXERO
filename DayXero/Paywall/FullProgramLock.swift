@@ -44,7 +44,7 @@ private struct FullProgramPaywall: ViewModifier {
     @Environment(Entitlement.self) private var entitlement: Entitlement?
 
     func body(content: Content) -> some View {
-        content.fullScreenCover(isPresented: $isPresented) {
+        content.dxCover(isPresented: $isPresented) {
             if let entitlement {
                 PaywallView(name: profile?.name ?? "", quitDay: profile?.quitDay ?? .now,
                             model: PaywallModel(store: entitlement.store, entitlement: entitlement),

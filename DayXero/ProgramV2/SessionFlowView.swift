@@ -983,7 +983,7 @@ struct SessionCompletion: View {
         .onAppear {
             withAnimation(motion.animation(DX.Move.celebrate)) { shown = true }
         }
-        .fullScreenCover(isPresented: $showOffer, onDismiss: onDone) {
+        .dxCover(isPresented: $showOffer, onDismiss: onDone) {
             QuitDayOffer(profile: ctx.store.profile) { showOffer = false }
         }
     }

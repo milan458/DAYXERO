@@ -853,8 +853,8 @@ struct NRTChoiceBeat: View {
                 SafetyNote(text: ctx.text(beat.safetyText)).padding(.top, DX.Space.xs)
             }
         }
-        .fullScreenCover(isPresented: $showSetup) { NRTSetupView(profile: ctx.store.profile) { showSetup = false } }
-        .fullScreenCover(isPresented: $showTaper) { TaperSetupView(profile: ctx.store.profile) { showTaper = false } }
+        .dxCover(isPresented: $showSetup) { NRTSetupView(profile: ctx.store.profile) { showSetup = false } }
+        .dxCover(isPresented: $showTaper) { TaperSetupView(profile: ctx.store.profile) { showTaper = false } }
         .onAppear { if case let .text(id)? = ctx.answer(beat.saveAs) { picked = id } }
     }
 
@@ -911,7 +911,7 @@ struct NRTStepdownBeat: View {
                 SafetyNote(text: ctx.text(beat.safetyText))
             }
         }
-        .fullScreenCover(isPresented: $showPlanner) { NRTSetupView(profile: ctx.store.profile) { showPlanner = false } }
+        .dxCover(isPresented: $showPlanner) { NRTSetupView(profile: ctx.store.profile) { showPlanner = false } }
     }
 }
 
@@ -940,7 +940,7 @@ struct SlipPracticeBeat: View {
                 }
             }
         }
-        .fullScreenCover(isPresented: $practising) {
+        .dxCover(isPresented: $practising) {
             SlipFlow(entry: nil, profile: ctx.store.profile, practice: true) {
                 practising = false
                 practised = true

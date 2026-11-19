@@ -90,7 +90,7 @@ struct ProgramView: View {
         }) { item in
             stopSheet(item)
         }
-        .fullScreenCover(item: $open, onDismiss: { NotificationCenter.default.post(name: .dxSessionClosed, object: nil) }) { item in
+        .dxCover(item: $open, onDismiss: { NotificationCenter.default.post(name: .dxSessionClosed, object: nil) }) { item in
             SessionFlowView(sessionId: item.id, profile: profile, isReplay: item.isReplay)
         }
         .sheet(item: Binding(get: { upgradeTitle.map { SessionOpen(id: $0) } }, set: { upgradeTitle = $0?.id })) { item in
@@ -99,7 +99,7 @@ struct ProgramView: View {
                          onUnlocked: { upgradeTitle = nil })
                 .presentationDetents([.medium, .large])
         }
-        .fullScreenCover(isPresented: $showPaywall) {
+        .dxCover(isPresented: $showPaywall) {
             PaywallView(name: profile.name, quitDay: profile.quitDay,
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })

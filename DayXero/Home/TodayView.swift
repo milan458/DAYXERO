@@ -108,30 +108,30 @@ struct TodayView: View {
                 checkMilestone()
             }
         }
-        .fullScreenCover(item: $session, onDismiss: {
+        .dxCover(item: $session, onDismiss: {
             NotificationCenter.default.post(name: .dxSessionClosed, object: nil)
         }) { item in
             SessionFlowView(sessionId: item.id, profile: profile, isReplay: item.isReplay)
         }
-        .fullScreenCover(item: $celebrating) { milestone in
+        .dxCover(item: $celebrating) { milestone in
             MilestoneMoment(milestone: milestone, stats: MilestoneStats(profile: profile, logs: logs)) {
                 CelebratedMilestones.markReached(daysClear: HomeSnapshot(profile: profile, isPro: entitlement.isPro).daysClear)
                 celebrating = nil
             }
         }
-        .fullScreenCover(isPresented: $showHealth) {
+        .dxCover(isPresented: $showHealth) {
             HealthTimelineView(profile: profile, onClose: { showHealth = false })
         }
-        .fullScreenCover(isPresented: $showPledge) {
+        .dxCover(isPresented: $showPledge) {
             PledgeView(profile: profile) { showPledge = false }
         }
-        .fullScreenCover(isPresented: $showCheckIn) {
+        .dxCover(isPresented: $showCheckIn) {
             CheckInView(profile: profile) { showCheckIn = false }
         }
-        .fullScreenCover(isPresented: $showCalmTools) {
+        .dxCover(isPresented: $showCalmTools) {
             CalmToolsView(onClose: { showCalmTools = false }, fromSOS: false)
         }
-        .fullScreenCover(isPresented: $showSettings) {
+        .dxCover(isPresented: $showSettings) {
             SettingsSheet(profile: profile, start: settingsPage)
         }
         .sheet(isPresented: $showUpgrade) {
@@ -140,7 +140,7 @@ struct TodayView: View {
                          onUnlocked: { showUpgrade = false })
                 .presentationDetents([.medium, .large])
         }
-        .fullScreenCover(isPresented: $showPaywall) {
+        .dxCover(isPresented: $showPaywall) {
             PaywallView(name: profile.name, quitDay: profile.quitDay,
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })

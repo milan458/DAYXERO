@@ -664,7 +664,7 @@ struct SubscriptionSettingsView: View {
             plans = (try? await entitlement.store.loadPlans()) ?? []
         }
         .manageSubscriptionsSheet(isPresented: $manage)
-        .fullScreenCover(isPresented: $showPaywall) {
+        .dxCover(isPresented: $showPaywall) {
             PaywallView(name: profile.name, quitDay: profile.quitDay,
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })

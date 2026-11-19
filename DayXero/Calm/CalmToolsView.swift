@@ -92,10 +92,10 @@ struct CalmToolsView: View {
             }
         }
         .background(ground.background.ignoresSafeArea())
-        .fullScreenCover(isPresented: $rewardCard) {
+        .dxCover(isPresented: $rewardCard) {
             RewardDefusionView { rewardCard = false }
         }
-        .fullScreenCover(item: $open) { tool in
+        .dxCover(item: $open) { tool in
             CalmToolPlayer(tool: tool, fromSOS: fromSOS) { backToSOS in
                 open = nil
                 if backToSOS {

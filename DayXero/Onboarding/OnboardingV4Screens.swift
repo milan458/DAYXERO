@@ -716,7 +716,7 @@ struct PlanRevealScreen: View {
             try? await Task.sleep(for: .seconds(1.0))
             landed.toggle()
         }
-        .fullScreenCover(isPresented: $showPlans) {
+        .dxCover(isPresented: $showPlans) {
             PaywallView(name: model.name, quitDay: model.quitDay,
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement), onClose: { showPlans = false },
                         spend: PaywallModel.Spend(perYear: model.stats.moneyPerYear, currencyCode: model.currencyCode,

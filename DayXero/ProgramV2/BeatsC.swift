@@ -310,7 +310,7 @@ struct SOSPracticeBeat: View {
                     .dxType(.footnote).foregroundStyle(DX.Ground.table.ink)
             }
         }
-        .fullScreenCover(isPresented: $showing) {
+        .dxCover(isPresented: $showing) {
             CravingSOSView(profile: ctx.store.profile, source: "practice", practice: true) {
                 showing = false
                 tried = true

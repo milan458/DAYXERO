@@ -41,16 +41,16 @@ struct ProgressTab: View {
                 }
             }
         }
-        .fullScreenCover(item: $milestoneOpen) { milestone in
+        .dxCover(item: $milestoneOpen) { milestone in
             MilestoneMoment(milestone: milestone, stats: MilestoneStats(profile: profile, logs: entries)) { milestoneOpen = nil }
         }
         .sheet(isPresented: $sharing) {
             ShareCardMaker(milestone: nil, stats: MilestoneStats(profile: profile, logs: entries)).presentationDetents([.large])
         }
-        .fullScreenCover(isPresented: $showHealth) {
+        .dxCover(isPresented: $showHealth) {
             HealthTimelineView(profile: profile, onClose: { showHealth = false })
         }
-        .fullScreenCover(isPresented: $showSettings) {
+        .dxCover(isPresented: $showSettings) {
             SettingsSheet(profile: profile)
         }
         .fullProgramPaywall(isPresented: $showPaywall, profile: profile)

@@ -84,10 +84,10 @@ struct SlipFlow: View {
         .animation(motion.animation(.easeInOut(duration: 0.3)), value: stage)
         .sensoryFeedback(DX.Haptic.commit, trigger: savedFeedback)
         .onAppear(perform: prefill)
-        .fullScreenCover(isPresented: $showNRT) {
+        .dxCover(isPresented: $showNRT) {
             if let profile { NRTSetupView(profile: profile) { showNRT = false } }
         }
-        .fullScreenCover(isPresented: $showQuitDay) {
+        .dxCover(isPresented: $showQuitDay) {
             // Settings › Quit Day sets the new date; logs, plans and history are untouched.
             if let profile { SettingsSheet(profile: profile, start: .quitDay) }
         }

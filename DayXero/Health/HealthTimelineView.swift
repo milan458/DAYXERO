@@ -79,7 +79,7 @@ struct HealthTimelineView: View {
         }
         .background(ground.background.ignoresSafeArea())
         .dxGround(.reading, paint: false)
-        .fullScreenCover(item: $open) { item in
+        .dxCover(item: $open) { item in
             HealthItemDetail(item: item, items: HealthTimeline.bundled?.items(for: product) ?? [],
                              quitDay: profile.quitDay, boundaryHour: profile.dayBoundaryHour,
                              timeline: HealthTimeline.bundled)

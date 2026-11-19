@@ -683,7 +683,7 @@ struct CheckInSavedView: View {
         }
         .environment(\.colorScheme, .dark)
         .dxGround(.violet)
-        .fullScreenCover(isPresented: $breathing) { GlimBreathingView { breathing = false } }
+        .dxCover(isPresented: $breathing) { GlimBreathingView { breathing = false } }
         .sensoryFeedback(.success, trigger: stamped)
         .task {
             try? await Task.sleep(for: .seconds(motion.reduce ? 0 : 1.1))

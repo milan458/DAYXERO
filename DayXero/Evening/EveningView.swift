@@ -78,16 +78,16 @@ struct WindDownView: View {
         .onAppear {
             withAnimation(motion.animation(DX.Move.settle)) { shown = true }
         }
-        .fullScreenCover(item: $openTool) { tool in
+        .dxCover(item: $openTool) { tool in
             CalmToolPlayer(tool: tool) { backToSOS in
                 openTool = nil
                 if backToSOS { startSOS?() }
             }
         }
-        .fullScreenCover(isPresented: $breathing) {
+        .dxCover(isPresented: $breathing) {
             GlimBreathingView { breathing = false }
         }
-        .fullScreenCover(isPresented: $checkingIn) {
+        .dxCover(isPresented: $checkingIn) {
             CheckInView(profile: profile) { checkingIn = false }
         }
     }

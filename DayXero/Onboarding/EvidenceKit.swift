@@ -583,7 +583,7 @@ struct ResearchSheet: View {
 extension View {
     /// Presents the research sheet over this screen, dimmed behind it.
     func researchSheet(isPresented: Binding<Bool>, product: Product) -> some View {
-        fullScreenCover(isPresented: isPresented) {
+        dxCover(isPresented: isPresented) {
             ResearchSheet(product: product) { isPresented.wrappedValue = false }
                 .presentationBackground(.clear)
                 .dxGround(.apricot, paint: false)

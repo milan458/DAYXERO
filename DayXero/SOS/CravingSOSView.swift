@@ -109,7 +109,7 @@ struct CravingSOSView: View {
                 celebrate.toggle()
             }
         }
-        .fullScreenCover(isPresented: $showCalmTools) {
+        .dxCover(isPresented: $showCalmTools) {
             CalmToolsView(onClose: { showCalmTools = false }, fromSOS: true)
         }
         .sheet(isPresented: $showTricks) { SensoryTricksSheet() }
