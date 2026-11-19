@@ -55,7 +55,7 @@ struct OnboardingModelTests {
         model.products = [.cigarettes, .vape]
         #expect(model.sequence == [.welcome, .howItWorks, .products, .goodCompany, .baseline(.cigarettes), .baseline(.vape),
                                    .baselineSummary, .whatWorks, .triggers, .cravingSOS, .personal, .obstacles, .nrt, .pregnancy,
-                                   .yourDay, .quitDay, .building, .reveal, .trial])
+                                   .yourDay, .quitDay, .reveal, .trial])
     }
 
     /// 18 Nov 2026: the evidence story. "Good company" and "What works" ask nothing; the pregnancy question follows

@@ -179,7 +179,7 @@ struct WelcomeScreen: View {
                         .accessibilityElement(children: .combine)
                         .accessibilityAddTraits(.isHeader)
                         .dxArrive(6, delay: 0)
-                        Text("Short prep sessions for up to 7 days, while you still smoke or vape.")
+                        Text("A personal plan built on what the research shows works, with help the moment a craving hits.")
                             .dxType(.body)
                             .foregroundStyle(ground.muted)
                             .fixedSize(horizontal: false, vertical: true)
@@ -268,15 +268,15 @@ struct WelcomeScreen: View {
 
 // MARK: F04 Quit Day · apricot (canvas "Evidence story", board 6)
 
-/// The date on one card (the sun badge, the date, "Change", then the prep week as numbered days ending on the sun),
+/// The date on one card (the sun badge, the date, then the prep week as numbered days ending on the sun). The date is
+/// given, a week out, not picked here (19 Nov 2026); it can be changed later in Settings. Then
 /// the one trial that compared stopping all at once with cutting down as two groups of 100, and the hold.
 ///
 /// Motion: title, the date card (the days pop left to right), the evidence card and the hold arrive in order. Holding
-/// fills the button over 1500 ms; on complete it shows "Quit Day set", the sun badge bumps and the caption swaps to
-/// "Quit Day set" with a green tick. 1200 ms later the button crossfades into Continue.
+/// fills the button over 1500 ms; on complete it shows "You’re committed", the sun badge bumps and the caption swaps
+/// to "You’re committed" with a green tick. 1200 ms later the button crossfades into Continue.
 struct QuitDayScreen: View {
     @Bindable var model: OnboardingModel
-    @State private var picking = false
     @State private var committed = false
     @State private var showContinue = false
     @State private var research = false
@@ -295,17 +295,15 @@ struct QuitDayScreen: View {
         return days
     }
 
-    private var recommended: Bool { model.calendar.isDate(model.quitDay, inSameDayAs: model.recommendedQuitDay) }
-
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
-                Text(model.name.isEmpty ? "Pick your\nQuit Day" : "Pick your\nQuit Day, \(model.name)")
+                Text(model.name.isEmpty ? "Your Quit Day\nis set" : "Your Quit Day\nis set, \(model.name)")
                     .dxType(.large).foregroundStyle(ground.ink)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
                     .dxArrive(0)
-                Text("I recommend a full week of prep first. Keep using as normal until then.")
+                Text("It’s a week from today, so you get a full week of prep first. Keep using as normal until then.")
                     .dxType(.body).foregroundStyle(ground.muted)
                     .fixedSize(horizontal: false, vertical: true)
                     .dxArrive(1)
@@ -326,7 +324,7 @@ struct QuitDayScreen: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             VStack(spacing: 10) {
                 ZStack {
-                    HoldButton(String(localized: "Hold to set your Quit Day"), done: String(localized: "Quit Day set"),
+                    HoldButton(String(localized: "Hold to commit to your Quit Day"), done: String(localized: "You’re committed"),
                                duration: 1.5, on: ground) {
                         withAnimation(motion.animation(DX.Move.settle.speed(0.9 / 0.7))) { committed = true }
                         Task {
@@ -346,7 +344,7 @@ struct QuitDayScreen: View {
                         .accessibilityHidden(!showContinue)
                 }
                 .dxArrive(8)
-                Text("Quit Day comes on this date, even if prep runs short. You can change it later.")
+                Text("You can change your Quit Day later in Settings.")
                     .dxType(.caption).foregroundStyle(ground.muted)
                     .multilineTextAlignment(.center)
                     .dxArrive(9)
@@ -362,69 +360,42 @@ struct QuitDayScreen: View {
             }
         }
         .sensoryFeedback(.success, trigger: committed) { _, done in done }
-        .onChange(of: model.quitDay) {
-            // A new date has to be held again.
-            committed = false
-            showContinue = false
-        }
-        .sheet(isPresented: $picking) {
-            NavigationStack {
-                ScrollView {
-                    QuitDayCalendar(quitDay: $model.quitDay, today: model.today, range: model.quitDayRange, calendar: model.calendar)
-                        .padding(DX.Layout.gutter)
-                }
-                .background(DX.Ground.reading.background)
-                .navigationTitle("Pick your Quit Day")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { picking = false } } }
-            }
-            .presentationDetents([.medium, .large])
-        }
         .researchSheet(isPresented: $research, product: model.evidenceProduct)
     }
 
-    /// The sun badge, the date and "Change" over a hairline, then the prep week.
+    /// The sun badge and the date over a hairline, then the prep week. The date is set for them (a week out) and
+    /// changed later in Settings, not here (19 Nov 2026).
     private var dateCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Button { picking = true } label: {
-                HStack(spacing: 12) {
-                    SunBadge(size: 44).dxBump(committed)
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(model.quitDay, format: .dateTime.weekday(.abbreviated).month(.abbreviated).day())
-                            .dxFace(.display, 26, weight: 800, tracking: -0.7).foregroundStyle(ground.ink)
-                            .lineLimit(1).minimumScaleFactor(0.7)
-                        ZStack(alignment: .leading) {
-                            Text(recommended ? "Recommended" : "Your Quit Day")
-                                .dxFace(.body, 14, weight: 500).foregroundStyle(ground.muted)
-                                .opacity(committed ? 0 : 1)
-                            HStack(spacing: 4) {
-                                Text("Quit Day set").foregroundStyle(ground.ink)
-                                DXIcon(.check, size: 11, weight: 3.4).foregroundStyle(.white)
-                                    .frame(width: 16, height: 16).background(DX.Fill.done, in: Circle())
-                                    .padding(.leading, 2)
-                            }
-                            .dxFace(.body, 14, weight: 700)
-                            .opacity(committed ? 1 : 0)
+            HStack(spacing: 12) {
+                SunBadge(size: 44).dxBump(committed)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(model.quitDay, format: .dateTime.weekday(.abbreviated).month(.abbreviated).day())
+                        .dxFace(.display, 26, weight: 800, tracking: -0.7).foregroundStyle(ground.ink)
+                        .lineLimit(1).minimumScaleFactor(0.7)
+                    ZStack(alignment: .leading) {
+                        Text("A week from today")
+                            .dxFace(.body, 14, weight: 500).foregroundStyle(ground.muted)
+                            .opacity(committed ? 0 : 1)
+                        HStack(spacing: 4) {
+                            Text("You’re committed").foregroundStyle(ground.ink)
+                            DXIcon(.check, size: 11, weight: 3.4).foregroundStyle(.white)
+                                .frame(width: 16, height: 16).background(DX.Fill.done, in: Circle())
+                                .padding(.leading, 2)
                         }
-                        .animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.3), value: committed)
+                        .dxFace(.body, 14, weight: 700)
+                        .opacity(committed ? 1 : 0)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("Change")
-                        .dxFace(.body, 15, weight: 600).foregroundStyle(ground.ink)
-                        .padding(.horizontal, 14)
-                        .frame(height: 44)
-                        .background(Color(light: 0xFFDCC2, dark: 0x2E3957), in: Capsule())
+                    .animation(.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.3), value: committed)
                 }
-                .contentShape(Rectangle())
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .buttonStyle(.dxPress)
-            .accessibilityLabel(Text("Quit Day, \(model.quitDay.formatted(.dateTime.weekday(.wide).day().month(.wide)))"))
-            .accessibilityHint(Text("Change the date"))
+            .accessibilityElement(children: .combine)
             Rectangle().fill(Color(light: (0x1E1A3A, 0.12), dark: (0xFFFFFF, 0.12))).frame(height: 1)
             HStack(alignment: .firstTextBaseline) {
                 Text("Your prep week").dxFace(.body, 15, weight: 700).foregroundStyle(ground.ink)
                 Spacer()
-                Text("^[\(prepDays.count) short session](inflect: true)").dxFace(.body, 14, weight: 500).foregroundStyle(ground.muted)
+                Text("Guided sessions").dxFace(.body, 14, weight: 500).foregroundStyle(ground.muted)
             }
             HStack(spacing: 2) {
                 ForEach(Array(prepDays.enumerated()), id: \.element) { i, day in

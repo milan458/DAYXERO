@@ -674,12 +674,14 @@ struct BaselineSummaryScreen: View {
             }
             .padding(.top, 18)
             HStack(alignment: .top, spacing: 14) {
-                costCell(value: money, money: true, line: String(localized: "a year"))
+                costCell(value: money, money: true, line: String(localized: "spent a year"))
                 Rectangle().fill(g.line).frame(width: 1)
                 if model.hoursPerYear >= 1 {
-                    costCell(value: Decimal(Int(model.hoursPerYear.rounded())), money: false, line: String(localized: "of smoke breaks"))
+                    costCell(value: Decimal(Int(model.hoursPerYear.rounded())), money: false,
+                             line: model.orderedProducts == [.cigarettes] ? String(localized: "a year on smoke breaks")
+                                 : String(localized: "a year spent using"))
                 } else {
-                    costCell(value: money * 5, money: true, line: String(localized: "in 5 years"))
+                    costCell(value: money * 5, money: true, line: String(localized: "spent in 5 years"))
                 }
             }
             .fixedSize(horizontal: false, vertical: true)

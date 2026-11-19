@@ -104,7 +104,7 @@ struct OnboardingFlow: View {
                 .accessibilityLabel(Text("Back"))
             }
             OnbProgressBar(value: model.progress, ground: ground)
-                .padding(onArt ? 6 : 0)
+                // Same slim bar as every other step; over art the track gets a cream fill so it stays legible.
                 .background(onArt ? DX.Fill.cream.opacity(0.85) : .clear, in: Capsule())
                 .padding(.trailing, 8)
         }

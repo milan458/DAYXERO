@@ -48,7 +48,7 @@ struct GoodCompanyScreen: View {
         switch model.evidenceProduct {
         case .cigarettes:
             Copy(stat: (2, 3), line: "people who smoke want to quit",
-                 sub: "Wanting to stop is the normal thing. Staying stopped is the hard part, so that is what we will plan for.",
+                 sub: "You’re far from alone. Wanting to quit is the easy part. Making it stick is the hard part, so that’s what we’ll plan for.",
                  source: "CDC, 2022 survey of US adults")
         case .vape:
             Copy(stat: (6, 10), line: "adults who vape intend to quit",

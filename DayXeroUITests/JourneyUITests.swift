@@ -66,11 +66,7 @@ final class JourneyUITests: XCTestCase {
         hold.press(forDuration: 2.2)
         // The hold hands over to Continue once Quit Day is set (010).
         tapSettled(app, "Continue")
-        // F05 the plan builds, then F06 the plan is ready: nothing is charged on it. The button arrives
-        // once the plan is built (011); give it a moment to land.
-        XCTAssert(app.buttons["See my plan"].waitForExistence(timeout: 10))
-        sleep(1)
-        tapSettled(app, "See my plan")
+        // F06 the plan is ready: nothing is charged on it. (The "plan builds" screen before it was removed, 19 Nov 2026.)
         XCTAssert(app.buttons["Start my prep week"].waitForExistence(timeout: 10), "Plan screen didn't appear")
         snap(app, "05-plan")
         tapSettled(app, "Start my prep week")

@@ -426,12 +426,21 @@ private struct QuitDayChanger: View {
     var body: some View {
         let today = Calendar.current.startOfDay(for: .now)
         let latest = Calendar.current.date(byAdding: .day, value: 30, to: today) ?? today
+        // In prep the date can't come before the last prep session allows: one a day, then Quit Day (19 Nov 2026).
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today
+        let afterPrep = prep ? QuitDaySlide.earliest(profile, in: context) : nil
+        let first = max(tomorrow, afterPrep ?? tomorrow)
         let range: ClosedRange<Date> = DemoMode.isOn
             ? (Calendar.current.date(byAdding: .year, value: -2, to: today) ?? today)...(Calendar.current.date(byAdding: .year, value: 1, to: today) ?? today)
-            : prep ? (Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today)...latest : today...latest
+            : prep ? first...max(latest, first) : today...latest
         VStack(alignment: .leading, spacing: 12) {
             if prep || confirmed || DemoMode.isOn {
                 Text("Pick your Quit Day").dxType(.title).foregroundStyle(ground.ink)
+                if prep, !DemoMode.isOn {
+                    Text("It comes the day after your last prep session, so the earliest is \(first.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day())).")
+                        .dxType(.footnote).foregroundStyle(ground.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
                 DatePicker("Quit Day", selection: $date, in: range, displayedComponents: .date)
                     .datePickerStyle(.graphical)
                     .tint(Color(hex: 0xF26A45))

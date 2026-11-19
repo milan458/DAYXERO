@@ -37,13 +37,13 @@ struct HowItWorksScreen: View {
     private var phases: [Phase] {
         [
             Phase(id: 0, name: "Prep", span: "up to 7 days",
-                  detail: "Keep using as normal. One session a day maps your cravings and builds your plan.",
+                  detail: "Keep using as normal. Each day Xero coaches you through a guided session, maps your cravings and builds your plan.",
                   clarity: Double(CrewGrowth.prepClarity)),
             Phase(id: 1, name: "Quit Day", span: "the day you pick",
-                  detail: "You stop, with your first hours planned.",
+                  detail: "You stop, with a plan for every trigger and Craving SOS ready the moment an urge hits.",
                   clarity: 48),
             Phase(id: 2, name: "Four weeks", span: "after Quit Day",
-                  detail: "A weekly session, a morning pledge and a night check-in.",
+                  detail: "Daily support through the hardest stretch: a morning pledge, a night check-in, weekly coaching and Craving SOS whenever you need it.",
                   clarity: 100),
         ]
     }
@@ -60,12 +60,12 @@ struct HowItWorksScreen: View {
             VStack(alignment: .leading, spacing: 0) {
                 hero
                 VStack(alignment: .leading, spacing: 0) {
-                    MarkedTitle(String(localized: "How your quit "), marking: String(localized: "works"), color: ground.mark)
+                    MarkedTitle(String(localized: "How DayXero "), marking: String(localized: "works"), color: ground.mark)
                         .dxType(.large)
                         .foregroundStyle(ground.ink)
                         .accessibilityAddTraits(.isHeader)
                         .dxArrive(0)
-                    Text("Your sky brightens every day you stay clear.")
+                    Text("A guided plan from today to four weeks past your Quit Day.")
                         .dxType(.body)
                         .foregroundStyle(ground.muted)
                         .fixedSize(horizontal: false, vertical: true)

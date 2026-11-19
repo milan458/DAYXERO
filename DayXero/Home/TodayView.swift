@@ -822,9 +822,13 @@ private struct TodayDay {
             stamps = Stamps(daysToQuit: daysToQuit, quitDate: quitDate, done: done, total: total,
                             current: sessionOpen && done < total ? done + 1 : nil)
             let theme: String? = if case .open? = program?.kind, let line = program?.subtitle, !line.isEmpty { line } else { nil }
+            let dayLine: String = night ? String(localized: "\(countdown) · \(quitDate)")
+                : theme.map { String(localized: "Today: \($0).") } ?? (daysToQuit == 0 ? countdown : "\(countdown) · \(quitDate)")
+            // On the day prep fell behind and the Quit Day moved back, say so here (19 Nov 2026).
+            let movedNote: String? = QuitDaySlide.note(now: now, clock: clock)
             hero = TodayHeroModel(
                 night: night, mode: .prep, greeting: greeting,
-                line: night ? String(localized: "\(countdown) · \(quitDate)") : theme.map { String(localized: "Today: \($0).") } ?? (daysToQuit == 0 ? countdown : "\(countdown) · \(quitDate)"),
+                line: movedNote ?? dayLine,
                 why: view.why, profileInitial: initial,
                 pill: label.isEmpty ? todayDate : "\(todayDate) · \(label)",
                 titleLead: "", titleWord: "", moneyKept: 0, currencyCode: snap.currencyCode, avoided: 0, avoidedUnit: "",

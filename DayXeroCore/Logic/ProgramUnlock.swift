@@ -72,10 +72,28 @@ public struct ProgramUnlock: Sendable {
         self.init(steps: content.sessions.map { Step(id: $0.id, rule: $0.unlock.rule, minDay: $0.unlock.minDay) }, clock: clock)
     }
 
-    /// The day Day Xero opens: the start of the Quit Day the person chose, whatever prep is done (S27.7).
-    /// Unfinished prep doesn't move it; those sessions stay open as catch-up.
+    /// The Quit Day's calendar date. Day Xero opens then, or later if prep is still running (`earliestDayXero`).
     public func dayXeroDate(quitDay: Date) -> Date {
         clock.startOfDate(quitDay)
+    }
+
+    /// The earliest day Day Xero can open, from prep so far (19 Nov 2026): prep runs one session a day, in order,
+    /// and Day Xero comes the day after the last one. A Quit Day earlier than this moves back to it, so nobody
+    /// reaches Day Xero with prep unfinished. nil when nothing holds Day Xero: the program has no prep, or Day Xero
+    /// has already been started (people who began it under the old rule keep it, with prep as catch-up).
+    public func earliestDayXero(records: [String: Record], quitTimestamp: Date?, now: Date) -> Date? {
+        guard quitTimestamp == nil, let dx = steps.firstIndex(where: { $0.rule == .dayXero }), dx > 0 else { return nil }
+        let begun = records[steps[dx].id]
+        guard begun?.startedAt == nil, begun?.completedAt == nil else { return nil }
+        let prep = steps[..<dx]
+        let finished = prep.compactMap { records[$0.id]?.completedAt }
+        let remaining = prep.count - finished.count
+        let dayAfterLast = finished.max().flatMap { clock.calendar.date(byAdding: .day, value: 1, to: clock.day(containing: $0)) }
+        guard remaining > 0 else { return dayAfterLast }
+        // The next prep session can be done today, or tomorrow if one was finished today; the rest follow daily.
+        let today = clock.day(containing: now)
+        let next = dayAfterLast.map { max(today, $0) } ?? today
+        return clock.calendar.date(byAdding: .day, value: remaining, to: next)
     }
 
     /// Whole days since Day Xero was started (its commit set `quitTimestamp`): 0 on Day Xero itself, 1 the day after.
@@ -85,11 +103,13 @@ public struct ProgramUnlock: Sendable {
 
     /// Every session's state, in program order.
     ///
-    /// Two chains (S27.7). Prep runs one session a day after the last, in order. Day Xero opens at the start of the
-    /// Quit Day whether prep is finished or not, and the week sessions follow it, in order, by days since Day Xero.
-    /// Prep left unfinished on the Quit Day becomes catch-up: the next prep session is open straight away (no
-    /// one-a-day wait) and never blocks Day Xero or the weeks. Before the Quit Day, Day Xero shows as waiting only
-    /// once prep is finished, so Home shows the next prep session first.
+    /// Two chains. Prep runs one session a day after the last, in order. Day Xero opens on the Quit Day once prep
+    /// is finished; while prep is behind, it waits for `earliestDayXero` instead (19 Nov 2026; the app also moves
+    /// the saved Quit Day to that date, see `QuitDaySlide`). The week sessions follow Day Xero, in order, by days
+    /// since it. Before then, Day Xero shows as waiting only once prep is finished, so Home shows the next prep
+    /// session first.
+    /// Someone who started Day Xero under the old rule (S27.7) with prep unfinished keeps it: their leftover prep
+    /// is catch-up, open straight away with no one-a-day wait, and never blocks the weeks.
     /// - Parameters:
     ///   - records: started and finished times by session ID.
     ///   - quitDay: the Quit Day the person chose.
@@ -99,7 +119,8 @@ public struct ProgramUnlock: Sendable {
         var previousFinished: Date? = nil
         var waitingFound = false
         let dayXeroIndex = steps.firstIndex { $0.rule == .dayXero }
-        let opensOn = dayXeroDate(quitDay: quitDay)
+        let opensOn = max(dayXeroDate(quitDay: quitDay),
+                          earliestDayXero(records: records, quitTimestamp: quitTimestamp, now: now) ?? .distantPast)
         let today = clock.day(containing: now)
         let quitDayHasCome = today >= opensOn
         for (i, step) in steps.enumerated() {
@@ -139,7 +160,7 @@ public struct ProgramUnlock: Sendable {
                 out.append((step.id, open))
             case .nextDayAfterPrevious:
                 let finishedDay = clock.day(containing: previousFinished ?? now)
-                // Prep catch-up after the Quit Day has no one-a-day wait.
+                // Prep catch-up after Day Xero has opened (old rule only) has no one-a-day wait.
                 let isPrep = dayXeroIndex.map { i < $0 } ?? false
                 let ready = today > finishedDay || (isPrep && quitDayHasCome)
                 out.append((step.id, ready ? open : .scheduled(.tomorrow)))

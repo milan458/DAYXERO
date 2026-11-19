@@ -7,8 +7,8 @@ import SwiftData
 enum QuitDayPolicy {
     /// A full prep week: one prep session a day.
     static let recommendedDaysAhead = 7
-    /// Prep can be 3 to 7 days (S27.7). Day Xero opens on the Quit Day whatever prep is done, and unfinished prep
-    /// sessions stay open as catch-up (ProgramUnlock.states).
+    /// The range the old date picker allowed (S27.7). Onboarding no longer offers a date (19 Nov 2026): Quit Day is
+    /// set a week out and follows prep from there (`QuitDaySlide`).
     static let earliestDaysAhead = 3
     static let latestDaysAhead = 30
 }
@@ -191,7 +191,7 @@ final class OnboardingModel {
     var sequence: [OnboardingStep] {
         [.welcome, .howItWorks, .products, .goodCompany] + orderedProducts.map(OnboardingStep.baseline)
             + [.baselineSummary, .whatWorks, .triggers, .cravingSOS, .personal, .obstacles, .nrt, .pregnancy, .yourDay, .quitDay,
-               .building, .reveal, .trial]
+               .reveal, .trial]
     }
 
     /// The steps the bar counts: the baseline screens share one slot, so the total is the same whatever is picked.
