@@ -276,17 +276,21 @@ struct ProgramPathMap: View {
 /// Today's stamp: a 68 pt scalloped seal in the button colour with a play mark, breathing a soft pulse ring (2.4 s).
 private struct TodaySeal: View {
     @Environment(\.colorScheme) private var scheme
+    @State private var pulse = false
     private let motion = MotionPolicy()
 
     var body: some View {
         let t = DX.Ground.reading.tokens(dark: scheme == .dark)
         ZStack {
-            TimelineView(.animation(minimumInterval: 1 / 30, paused: motion.reduce)) { timeline in
-                let k = motion.reduce ? 0 : (timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 2.4)) / 2.4
-                Circle().stroke(Color(hex: t.btn).opacity(0.35 * (1 - k)), lineWidth: 2)
-                    .frame(width: 68, height: 68)
-                    .scaleEffect(1 + 0.3 * k)
-            }
+            // One repeating animation the system runs by itself, in place of redrawing the page 30 times a second,
+            // which made scrolling here stutter (19 Nov 2026).
+            Circle().stroke(Color(hex: t.btn).opacity(pulse ? 0 : 0.35), lineWidth: 2)
+                .frame(width: 68, height: 68)
+                .scaleEffect(pulse ? 1.3 : 1)
+                .onAppear {
+                    guard !motion.reduce else { return }
+                    withAnimation(.linear(duration: 2.4).repeatForever(autoreverses: false)) { pulse = true }
+                }
             SealShape().fill(Color(hex: t.btn)).frame(width: 68, height: 68)
             Circle().stroke(Color(hex: t.btnFg).opacity(0.28), style: StrokeStyle(lineWidth: 1.4, dash: [2, 3.4]))
                 .frame(width: 52, height: 52)

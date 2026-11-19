@@ -70,9 +70,13 @@ struct ProgramStore {
             guard let trialEnd = Entitlement.trialEndsNow, trialEnd > now else { return states }
             return ProgramUnlock.holding(states, untilTrialEnds: trialEnd, open: FullProgram.trialSessionIds)
         }
-        // Demo mode: every session open at any time, in any order.
+        // Demo mode: no waiting for days or dates, but still in order (19 Nov 2026): the first session not finished
+        // is open and everything after it stays locked until it's done.
+        var openFound = false
         return states.map { item -> (id: String, state: ProgramUnlock.State) in
             if case .completed = item.state { return item }
+            guard !openFound else { return (id: item.id, state: .locked) }
+            openFound = true
             let open: ProgramUnlock.State = records[item.id]?.startedAt != nil ? .inProgress : .available
             return (id: item.id, state: open)
         }

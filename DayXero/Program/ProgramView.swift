@@ -19,6 +19,8 @@ struct ProgramView: View {
     @State private var sheet: StopSheet?
     /// What the sheet's button asked for, done once the sheet has closed so a session or paywall can open.
     @State private var afterSheet: StopSheet?
+    /// The phase picked from the row at the top; nil follows the session that's up next (19 Nov 2026).
+    @State private var pickedPhase: String?
     /// Glim's weekly check-in after graduation (S27.18); the same setting as Settings › Notifications.
     @AppStorage(DailyReminderSettings.weeklyKey) private var weekly = DailyReminderSettings.offUntilChosen
 
@@ -36,7 +38,9 @@ struct ProgramView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     if let content = store.content {
-                        let phase = selectedPhase(content, current: current)
+                        let currentPhase = selectedPhase(content, current: current, picked: nil)
+                        let phase = selectedPhase(content, current: current, picked: pickedPhase)
+                        phasePicker(content, states: states, selected: phase.id, current: currentPhase.id)
                         header(phase, states: states, now: timeline.date)
                         if let graduated = profile.progress?.graduatedAt { completeHeader(graduated) }
                         let nextPhase = content.phases.firstIndex { $0.id == phase.id }
@@ -52,7 +56,9 @@ struct ProgramView: View {
                             sheet = StopSheet(session: session, title: stop.title, state: states[stop.id] ?? .locked,
                                               needsUpgrade: stop.needsUpgrade)
                         }
-                        if let line = teaseLine(phase, content: content, states: states, current: current, variant: store.variant) {
+                        // A different phase is a different road: its fill and stamps play in again.
+                        .id(phase.id)
+                        if phase.id == currentPhase.id, let line = teaseLine(phase, content: content, states: states, current: current, variant: store.variant) {
                             // v5 (022): the locked row on the hill, a lock tile and one line.
                             HStack(spacing: 12) {
                                 DXIcon(.lock, size: 18, weight: 2.4)
@@ -109,9 +115,54 @@ struct ProgramView: View {
     // MARK: Phases
 
     /// The phase picked, else the one holding today's session, else the last.
-    private func selectedPhase(_ content: ProgramContent, current: String?) -> ProgramContent.Phase {
+    private func selectedPhase(_ content: ProgramContent, current: String?, picked: String?) -> ProgramContent.Phase {
+        if let picked, let phase = content.phases.first(where: { $0.id == picked }) { return phase }
         if let current, let phase = content.phases.first(where: { $0.sessionIds.contains(current) }) { return phase }
         return content.phases.last ?? content.phases[0]
+    }
+
+    /// Every phase as a chip, in order (19 Nov 2026): the ones reached open their road, finished sessions included,
+    /// so earlier lessons can always be replayed; the ones ahead are shown with a lock and can't be opened yet.
+    private func phasePicker(_ content: ProgramContent, states: [String: ProgramUnlock.State], selected: String, current: String) -> some View {
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(content.phases, id: \.id) { phase in
+                        let reached = phase.id == current || phase.sessionIds.contains { states[$0]?.isOpen ?? false }
+                        let isSelected = phase.id == selected
+                        Button {
+                            pickedPhase = phase.id == current ? nil : phase.id
+                        } label: {
+                            HStack(spacing: 6) {
+                                if !reached { DXIcon(.lock, size: 12, weight: 2.6) }
+                                Text(verbatim: phase.title).dxFace(.body, 14, weight: 700)
+                            }
+                            .foregroundStyle(isSelected ? page : reached ? ground.ink : ProgramPathMap.muted)
+                            .padding(.horizontal, 14)
+                            .frame(height: 44)
+                            .background {
+                                if isSelected {
+                                    Capsule().fill(ground.ink)
+                                } else if reached {
+                                    Capsule().fill(tileFill)
+                                } else {
+                                    Capsule().strokeBorder(ProgramPathMap.muted.opacity(0.4), lineWidth: 1)
+                                }
+                            }
+                            .contentShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(!reached)
+                        .id(phase.id)
+                        .accessibilityLabel(Text(verbatim: phase.title))
+                        .accessibilityValue(reached ? Text(isSelected ? "Selected" : "") : Text("Locked"))
+                        .accessibilityAddTraits(isSelected ? .isSelected : [])
+                    }
+                }
+            }
+            .scrollClipDisabled()
+            .onAppear { proxy.scrollTo(selected, anchor: .center) }
+        }
     }
 
     /// v5 (022): "Prep week", then "3 of 7 done · 4 days to Day Xero".
