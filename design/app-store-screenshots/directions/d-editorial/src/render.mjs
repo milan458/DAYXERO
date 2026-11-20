@@ -1,4 +1,4 @@
-// Renders the ten DayXero App Store frames with Playwright (Chromium).
+// Renders the ten DayXero App Store frames (Direction D, editorial) with Playwright (Chromium).
 //   node render.mjs                 all frames, both sizes, plus the contact sheets
 //   node render.mjs 03 07           only these frames (both sizes), then the contact sheets
 //   node render.mjs --size 6.9      one size only
