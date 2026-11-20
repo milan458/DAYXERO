@@ -173,7 +173,7 @@ struct ProgramStore {
         switch key {
         case "quit_timestamp":
             progress.quitTimestamp = date
-            // The counter starts today if Day Xero comes later than the Quit Day first chosen.
+            // The counter starts today if Day Xero comes later than the Day Xero first chosen.
             if clock.day(containing: date) > clock.startOfDate(profile.quitDay) { profile.quitDay = clock.day(containing: date) }
         case "graduated_at": progress.graduatedAt = date
         default: break

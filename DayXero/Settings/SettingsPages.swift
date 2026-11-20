@@ -250,9 +250,9 @@ private struct UsualDayCard: View {
     }
 }
 
-// MARK: - Quit Day (066)
+// MARK: - Day Xero (066)
 
-/// Your Quit Day (v5, 066): the date as a calendar leaf beside the days free and the bar to the next badge; the first
+/// Your Day Xero (v5, 066): the date as a calendar leaf beside the days free and the bar to the next badge; the first
 /// week, Day Xero's sun then a disc a day; and a calm way to change it that confirms before any date wheel.
 struct QuitDaySettingsView: View {
     let profile: UserProfile
@@ -263,7 +263,7 @@ struct QuitDaySettingsView: View {
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
         let stats = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: clock)
         let prep = stats.isPrep(at: .now)
-        SettingsPage("Your Quit Day", lead: Text(prep ? "The day you stop. Your prep days lead up to it." : "The day you stopped. It all counts from here.")) {
+        SettingsPage("Your Day Xero", lead: Text(prep ? "The day you stop. Your prep days lead up to it." : "The day you stopped. It all counts from here.")) {
             hero(stats: stats, prep: prep).padding(.top, 18).dxArrive(2)
             if !prep { week(stats: stats).padding(.top, 12).dxArrive(3) }
             change(prep: prep).padding(.top, 12).dxArrive(4)
@@ -296,7 +296,7 @@ struct QuitDaySettingsView: View {
                         .dxFace(.display, 40, weight: 800, tracking: -0.8).foregroundStyle(ground.ink)
                     Text(days == 1 ? "day" : "days").dxType(.headline).foregroundStyle(ground.ink)
                 }
-                Text(prep ? "until Quit Day" : "free since \(date.formatted(.dateTime.month(.abbreviated).day()))")
+                Text(prep ? "until Day Xero" : "free since \(date.formatted(.dateTime.month(.abbreviated).day()))")
                     .dxType(.footnote).foregroundStyle(ground.muted)
                 if !prep, let next {
                     BadgeBar(value: Double(days) / Double(max(next, 1)))
@@ -413,7 +413,7 @@ private struct SunMark: View {
     }
 }
 
-/// Choosing a new Quit Day: after Quit Day a calm confirm comes first, then the date (066).
+/// Choosing a new Day Xero: after Day Xero a calm confirm comes first, then the date (066).
 private struct QuitDayChanger: View {
     let profile: UserProfile
     let prep: Bool
@@ -426,7 +426,7 @@ private struct QuitDayChanger: View {
     var body: some View {
         let today = Calendar.current.startOfDay(for: .now)
         let latest = Calendar.current.date(byAdding: .day, value: 30, to: today) ?? today
-        // In prep the date can't come before the last prep session allows: one a day, then Quit Day (19 Nov 2026).
+        // In prep the date can't come before the last prep session allows: one a day, then Day Xero (19 Nov 2026).
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today
         let afterPrep = prep ? QuitDaySlide.earliest(profile, in: context) : nil
         let first = max(tomorrow, afterPrep ?? tomorrow)
@@ -435,13 +435,13 @@ private struct QuitDayChanger: View {
             : prep ? first...max(latest, first) : today...latest
         VStack(alignment: .leading, spacing: 12) {
             if prep || confirmed || DemoMode.isOn {
-                Text("Pick your Quit Day").dxType(.title).foregroundStyle(ground.ink)
+                Text("Pick your Day Xero").dxType(.title).foregroundStyle(ground.ink)
                 if prep, !DemoMode.isOn {
                     Text("It comes the day after your last prep session, so the earliest is \(first.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day())).")
                         .dxType(.footnote).foregroundStyle(ground.muted)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                DatePicker("Quit Day", selection: $date, in: range, displayedComponents: .date)
+                DatePicker("Day Xero", selection: $date, in: range, displayedComponents: .date)
                     .datePickerStyle(.graphical)
                     .tint(Color(hex: 0xF26A45))
                 Button("Use \(date.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))") { save() }
@@ -453,7 +453,7 @@ private struct QuitDayChanger: View {
                 Spacer(minLength: 8)
                 Button("Choose a date") { withAnimation(DX.Move.settle) { confirmed = true } }
                     .buttonStyle(.dx(.primary, on: .reading))
-                Button("Keep my Quit Day") { dismiss() }
+                Button("Keep my Day Xero") { dismiss() }
                     .buttonStyle(.dx(.quiet, on: .reading))
             }
         }

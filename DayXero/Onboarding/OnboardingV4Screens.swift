@@ -266,7 +266,7 @@ struct WelcomeScreen: View {
     }
 }
 
-// MARK: F04 Quit Day · apricot (canvas "Evidence story", board 6)
+// MARK: F04 Day Xero · apricot (canvas "Evidence story", board 6)
 
 /// The date on one card (the sun badge, the date, then the prep week as numbered days ending on the sun). The date is
 /// given, a week out, not picked here (19 Nov 2026); it can be changed later in Settings. Then
@@ -283,7 +283,7 @@ struct QuitDayScreen: View {
     private let motion = MotionPolicy()
     private let ground = DX.Ground.apricot
 
-    /// The prep days, today to the day before Quit Day (at most seven).
+    /// The prep days, today to the day before Day Xero (at most seven).
     private var prepDays: [Date] {
         let quit = model.calendar.startOfDay(for: model.quitDay)
         var days: [Date] = []
@@ -298,7 +298,7 @@ struct QuitDayScreen: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
-                Text(model.name.isEmpty ? "Your Quit Day\nis set" : "Your Quit Day\nis set, \(model.name)")
+                Text(model.name.isEmpty ? "Your Day Xero\nis set" : "Your Day Xero\nis set, \(model.name)")
                     .dxType(.large).foregroundStyle(ground.ink)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
@@ -324,7 +324,7 @@ struct QuitDayScreen: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             VStack(spacing: 10) {
                 ZStack {
-                    HoldButton(String(localized: "Hold to commit to your Quit Day"), done: String(localized: "You’re committed"),
+                    HoldButton(String(localized: "Hold to commit to your Day Xero"), done: String(localized: "You’re committed"),
                                duration: 1.5, on: ground) {
                         withAnimation(motion.animation(DX.Move.settle.speed(0.9 / 0.7))) { committed = true }
                         Task {
@@ -344,7 +344,7 @@ struct QuitDayScreen: View {
                         .accessibilityHidden(!showContinue)
                 }
                 .dxArrive(8)
-                Text("You can change your Quit Day later in Settings.")
+                Text("You can change your Day Xero later in Settings.")
                     .dxType(.caption).foregroundStyle(ground.muted)
                     .multilineTextAlignment(.center)
                     .dxArrive(9)
@@ -408,7 +408,7 @@ struct QuitDayScreen: View {
                 .frame(maxWidth: .infinity)
                 .dxPop(0, delay: 0.35 + Double(prepDays.count) * 0.06)
                 .accessibilityElement(children: .ignore)
-                .accessibilityLabel(Text("Quit Day, \(model.quitDay.formatted(.dateTime.weekday(.wide).day().month(.wide)))"))
+                .accessibilityLabel(Text("Day Xero, \(model.quitDay.formatted(.dateTime.weekday(.wide).day().month(.wide)))"))
             }
         }
         .padding(.top, 14).padding(.horizontal, 16).padding(.bottom, 16)
@@ -438,7 +438,7 @@ struct QuitDayScreen: View {
     }
 }
 
-/// The Quit Day sun: a yellow disc with an amber ring and a line sun inside.
+/// The Day Xero sun: a yellow disc with an amber ring and a line sun inside.
 private struct SunBadge: View {
     let size: CGFloat
 
@@ -479,7 +479,7 @@ struct BuildingScreen: View {
     }
 
     private var rows: [Row] {
-        var all = [Row(id: 0, art: .flag, kicker: String(localized: "Quit Day"),
+        var all = [Row(id: 0, art: .flag, kicker: String(localized: "Day Xero"),
                        value: model.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()), quit: true)]
         let waves = Trigger.allCases.filter(model.triggers.contains).prefix(2)
             .map { $0 == .other ? String(localized: "other moments") : String(localized: $0.title).lowercased() }
@@ -702,18 +702,18 @@ struct PlanRevealScreen: View {
 
     private var dateText: String { model.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()) }
 
-    /// "Seven prep days, then your Quit Day on Wed, Nov 25. About $1,825 back in your pocket in a year."
+    /// "Seven prep days, then your Day Xero on Wed, Nov 25. About $1,825 back in your pocket in a year."
     private var lead: Text {
         let n = max(model.prepDays, 0)
         let strong = { (s: String) in Text(verbatim: s).dxRun(16, weight: 700).foregroundStyle(ground.ink) }
         var text: Text
         if n == 0 {
-            text = Text("Your Quit Day is today.")
+            text = Text("Your Day Xero is today.")
         } else {
             let f = NumberFormatter()
             f.numberStyle = .spellOut
             let word = (f.string(from: n as NSNumber) ?? "\(n)").capitalizedFirst
-            text = (n == 1 ? Text("One prep day, then your Quit Day on ") : Text("\(word) prep days, then your Quit Day on "))
+            text = (n == 1 ? Text("One prep day, then your Day Xero on ") : Text("\(word) prep days, then your Day Xero on "))
                 + strong(dateText) + Text(verbatim: ".")
         }
         let perYear = model.stats.moneyPerYear
@@ -766,7 +766,7 @@ struct PlanRevealScreen: View {
         .frame(height: Self.heroHeight)
         .clipped()
         .accessibilityElement()
-        .accessibilityLabel(Text("The Day Xero medallion, waiting for your Quit Day, with Xero cheering beside it."))
+        .accessibilityLabel(Text("The Day Xero medallion, with Xero cheering beside it."))
     }
 
     /// "DAY 0" on the sun-yellow coin, ringed twice, with a soft glow.
@@ -818,7 +818,7 @@ struct PlanRevealScreen: View {
             rows.append(BuiltRow(id: 1, illo: .plan, title: "Your when-then plans", detail: detail))
         }
         rows.append(BuiltRow(id: 2, illo: .bubble, title: "A check-in every day", detail: String(localized: "A morning pledge and a night check-in.")))
-        rows.append(BuiltRow(id: 3, illo: .sun, title: "A clean stop on Quit Day",
+        rows.append(BuiltRow(id: 3, illo: .sun, title: "A clean stop on Day Xero",
                              detail: String(localized: "First goal: 28 days. The NHS says that makes you 5 times more likely to stay quit.")))
         return rows
     }

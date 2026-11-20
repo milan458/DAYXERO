@@ -570,7 +570,7 @@ struct CommitBeat: View {
                     .frame(height: 260)
                     .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius, style: .continuous))
                     .accessibilityHidden(true)
-                    Text(verbatim: "\(Date.now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(String(localized: "Quit Day")) · \(ctx.store.minutes(of: session)) \(String(localized: "min"))")
+                    Text(verbatim: "\(Date.now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))) · \(String(localized: "Day Xero")) · \(ctx.store.minutes(of: session)) \(String(localized: "min"))")
                         .dxType(.caption).foregroundStyle(ground.muted)
                         .padding(.top, DX.Space.xs)
                     Text(verbatim: session.title.resolve(ctx.variant) ?? "").dxType(.large).foregroundStyle(ground.ink)
@@ -1091,7 +1091,7 @@ struct PlanCardBeat: View {
         var id: String { key }
     }
 
-    /// The Day Xero medal on its gold, with the date and the days to it (029). Shown before the Quit Day.
+    /// The Day Xero medal on its gold, with the date and the days to it (029). Shown before the Day Xero.
     @ViewBuilder private var medal: some View {
         let profile = ctx.store.profile
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)

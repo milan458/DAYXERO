@@ -1,16 +1,16 @@
 import Foundation
 
-/// The days listed on the plan reveal (S2.10): today and the six days after it, or, when Quit Day is a week
-/// or more away, the first prep days, a row for the rest, and Quit Day itself. No day is ever left out
+/// The days listed on the plan reveal (S2.10): today and the six days after it, or, when Day Xero is a week
+/// or more away, the first prep days, a row for the rest, and Day Xero itself. No day is ever left out
 /// without saying so.
 public enum PlanTimeline {
     public enum Kind: Equatable, Sendable {
         /// Prep day n, from 1.
         case prep(Int)
-        /// The prep days between the last listed one and Quit Day.
+        /// The prep days between the last listed one and Day Xero.
         case morePrep(Int)
         case quitDay
-        /// Day n clear; Quit Day itself is day 1, so the first of these is day 2.
+        /// Day n clear; Day Xero itself is day 1, so the first of these is day 2.
         case clear(Int)
     }
 
@@ -21,11 +21,11 @@ public enum PlanTimeline {
     }
 
     public static let rows = 7
-    /// Prep days listed before the "more" row when Quit Day is beyond the first week.
+    /// Prep days listed before the "more" row when Day Xero is beyond the first week.
     public static let leadingPrepDays = 5
 
     /// - Parameters:
-    ///   - prepDays: days from today to Quit Day. Today is prep day 1.
+    ///   - prepDays: days from today to Day Xero. Today is prep day 1.
     ///   - today: the start of today.
     public static func items(prepDays: Int, today: Date, calendar: Calendar = .current) -> [Item] {
         let prep = max(prepDays, 0)
@@ -44,6 +44,6 @@ public enum PlanTimeline {
         return items
     }
 
-    /// Whether the list reaches past the first week, so its heading should say "Up to Quit Day".
+    /// Whether the list reaches past the first week, so its heading should say "Up to Day Xero".
     public static func isLong(prepDays: Int) -> Bool { prepDays >= rows }
 }

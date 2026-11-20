@@ -7,9 +7,9 @@ public struct WidgetSnapshot: Codable, Sendable, Equatable {
     public enum Phase: String, Codable, Sendable {
         /// Before the first lesson is done.
         case beforeDay1
-        /// Prep days, before Quit Day.
+        /// Prep days, before Day Xero.
         case prep
-        /// Quit Day and after, while the program runs.
+        /// Day Xero and after, while the program runs.
         case quit
         /// After the program.
         case after
@@ -30,7 +30,7 @@ public struct WidgetSnapshot: Codable, Sendable, Equatable {
     /// Which prep day it is (1-based); prep only.
     public var prepDay: Int
     public var daysUntilQuitDay: Int
-    /// Days clear, counting Quit Day as 1, as on Home.
+    /// Days clear, counting Day Xero as 1, as on Home.
     public var daysFree: Int
     /// The start of today by the person's day boundary, for the ticking "into the day" timer.
     public var currentDayStart: Date

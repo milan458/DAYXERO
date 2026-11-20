@@ -96,7 +96,7 @@ public struct TopCard: View {
 /// The count is a SwiftUI animation of the number itself, so the model value is always the real one and only the
 /// frames in between are interpolated. The old version drew frames from a `TimelineView` and relied on a timer to
 /// finish; when the timeline stopped ticking part-way (seen on the Progress tab), the tile froze on an early frame:
-/// ₹20,697 for a ₹1,47,304 year, and 0 for 5 prep done or 7 days to Quit Day.
+/// ₹20,697 for a ₹1,47,304 year, and 0 for 5 prep done or 7 days to Day Xero.
 public struct CountingText: View {
     let value: Double
     let from: Double

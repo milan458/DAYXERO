@@ -16,7 +16,7 @@ public struct PrepChallenge: Sendable, Equatable, Identifiable {
                       detail: "Drink a full glass first, then decide. Notice if the urge changed."),
         PrepChallenge(id: "other-hand", title: "Use your other hand once",
                       detail: "Hold it in the hand you don't normally use. Notice how odd it feels: that's the autopilot."),
-        PrepChallenge(id: "tell-one", title: "Tell one person your Quit Day",
+        PrepChallenge(id: "tell-one", title: "Tell one person your Day Xero",
                       detail: "A text is enough. Saying it out loud makes it real."),
         PrepChallenge(id: "move-spot", title: "Move one trigger",
                       detail: "Put the lighter, the charger or the tin somewhere new, so reaching for it takes a thought."),

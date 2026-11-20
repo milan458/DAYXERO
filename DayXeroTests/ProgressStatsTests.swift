@@ -42,7 +42,7 @@ struct ProgressStatsTests {
     }
 
     @Test func moneyAndUnitsFollowTheBaseline() {
-        // Two full days after the Quit Day boundary (4am on 1 Nov).
+        // Two full days after the Day Xero boundary (4am on 1 Nov).
         let now = date(2026, 11, 3, 4)
         #expect(stats().unitsAvoided(at: now)[.vape] == 400)
         #expect(stats().moneyKept(at: now) == Decimal(string: "5.33"))
@@ -53,7 +53,7 @@ struct ProgressStatsTests {
         let slips = [
             SlipRecord(timestamp: date(2026, 11, 2, 12), product: .vape, amount: .one),   // 10 puffs
             SlipRecord(timestamp: date(2026, 11, 2, 20)),                                 // no product or amount: 1 of the main product
-            SlipRecord(timestamp: date(2026, 10, 30, 12), product: .vape, amount: .more), // before Quit Day: not counted
+            SlipRecord(timestamp: date(2026, 10, 30, 12), product: .vape, amount: .more), // before Day Xero: not counted
         ]
         #expect(stats().unitsAvoided(at: now, slips: slips, primary: .vape)[.vape] == 389)
         #expect(stats().daysClear(at: now) == 3)

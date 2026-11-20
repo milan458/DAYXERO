@@ -93,11 +93,11 @@ struct HealthTimelineView: View {
     private func subtitle(elapsed: Double, clock: DayClock, now: Date) -> String {
         if elapsed < 0 {
             let days = clock.days(from: now, toDate: profile.quitDay)
-            return days == 1 ? String(localized: "Quit Day tomorrow · what changes from then")
-                : String(localized: "Quit Day in \(days) days · what changes from then")
+            return days == 1 ? String(localized: "Day Xero tomorrow · what changes from then")
+                : String(localized: "Day Xero in \(days) days · what changes from then")
         }
         let day = clock.days(fromDate: profile.quitDay, to: now) + 1
-        return String(localized: "Day \(day) · your body since Quit Day")
+        return String(localized: "Day \(day) · your body since Day Xero")
     }
 
     /// v5 (037): the products as kit chips.
@@ -131,7 +131,7 @@ struct HealthTimelineView: View {
         }
     }
 
-    /// Before Quit Day the first change is raised as "From Quit Day"; after, the state from the timeline.
+    /// Before Day Xero the first change is raised as "From Day Xero"; after, the state from the timeline.
     private func rowState(_ item: HealthTimeline.Item, index: Int, elapsed: Double) -> RowState {
         if elapsed < 0 { return index == 0 ? .first : .ahead }
         switch HealthTimeline.state(of: item, elapsedHours: elapsed) {
@@ -146,7 +146,7 @@ struct HealthTimelineView: View {
     /// (CLIN-01) has no exact timing, so it never shows a bar.
     private func row(_ item: HealthTimeline.Item, state: RowState, elapsed: Double) -> some View {
         let status: String = switch state {
-        case .first: String(localized: "From Quit Day")
+        case .first: String(localized: "From Day Xero")
         case .ahead where elapsed >= 0 && !item.isFelt: HealthItemDetail.about(hours: item.fromHours - elapsed)
         default: item.when
         }
@@ -192,7 +192,7 @@ struct HealthTimelineView: View {
         switch state {
         case .done: String(localized: "Done")
         case let .now(fraction): String(localized: "Under way, \(Int((fraction * 100).rounded())) percent")
-        case .first: String(localized: "Starts on Quit Day")
+        case .first: String(localized: "Starts on Day Xero")
         case .ahead: String(localized: "Ahead")
         }
     }
@@ -586,7 +586,7 @@ struct HealthItemDetail: View {
         let startDay = Int(item.fromHours / 24) + 1
         let endDay = Int(item.toHours / 24) + 1
         let (title, line, p): (String, String, Double) = {
-            if elapsed < 0 { return (String(localized: "Counts from Quit Day"), item.when, 0) }
+            if elapsed < 0 { return (String(localized: "Counts from Day Xero"), item.when, 0) }
             if item.isFelt {
                 return (item.when, String(localized: "Timing varies a lot. You are on Day \(today)"), min(1, Double(today) / Double(max(endDay, 1))))
             }
@@ -661,7 +661,7 @@ struct HealthSummaryCard: View {
                         .dxFont(16, weight: 600, style: .body).foregroundStyle(Read4.ink)
                         .multilineTextAlignment(.leading)
                     if elapsed < 0 {
-                        Text("What changes in your body, from Quit Day").v4Text(.subtitle)
+                        Text("What changes in your body, from Day Xero").v4Text(.subtitle)
                     } else if let next {
                         Text("\(done) done · next: \(next.title.prefix(1).lowercased() + String(next.title.dropFirst()))").v4Text(.subtitle)
                             .multilineTextAlignment(.leading)

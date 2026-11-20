@@ -310,7 +310,7 @@ struct OnboardingModelTests {
         #expect(PregnancyAnswer.key.hasPrefix("dx."))
     }
 
-    /// S27.7: prep can be 3 to 7 days, so the earliest Quit Day is three days out and a shorter prep can continue.
+    /// S27.7: prep can be 3 to 7 days, so the earliest Day Xero is three days out and a shorter prep can continue.
     @Test func quitDayCanBeThreeDaysOut() {
         let model = makeModel()
         let earliest = model.calendar.date(byAdding: .day, value: 3, to: model.today)!

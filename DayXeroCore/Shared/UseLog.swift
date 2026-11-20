@@ -1,8 +1,8 @@
 import Foundation
 import SwiftData
 
-/// One-tap use logging from the app, the widget and Siri (S7.1). Before Quit Day a use is tracking;
-/// from Quit Day on it's a slip, which never changes days clear.
+/// One-tap use logging from the app, the widget and Siri (S7.1). Before Day Xero a use is tracking;
+/// from Day Xero on it's a slip, which never changes days clear.
 @MainActor
 public enum UseLog {
     /// Whether a use at `date` counts as a slip for this person.

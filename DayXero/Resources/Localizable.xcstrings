@@ -442,7 +442,7 @@
         }
       }
     },
-    "%lld days since Quit Day" : {
+    "%lld days since Day Xero" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -451,13 +451,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld day since Quit Day"
+                  "value" : "%lld day since Day Xero"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld days since Quit Day"
+                  "value" : "%lld days since Day Xero"
                 }
               }
             }
@@ -1406,13 +1406,13 @@
         }
       }
     },
-    "Prep day %lld check-in · %lld days to Quit Day" : {
+    "Prep day %lld check-in · %lld days to Day Xero" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Prep day %1$lld check-in · %2$#@arg2@ to Quit Day"
+            "value" : "Prep day %1$lld check-in · %2$#@arg2@ to Day Xero"
           },
           "substitutions" : {
             "arg2" : {
@@ -1455,29 +1455,6 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Prep week · %lld days"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "Quit Day in %lld days" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Quit Day in %lld day"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Quit Day in %lld days"
                 }
               }
             }
@@ -1554,7 +1531,7 @@
         }
       }
     },
-    "This taper needs %lld weeks, and Quit Day is sooner than that." : {
+    "This taper needs %lld weeks, and Day Xero is sooner than that." : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -1563,13 +1540,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "This taper needs %lld week, and Quit Day is sooner than that."
+                  "value" : "This taper needs %lld week, and Day Xero is sooner than that."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "This taper needs %lld weeks, and Quit Day is sooner than that."
+                  "value" : "This taper needs %lld weeks, and Day Xero is sooner than that."
                 }
               }
             }

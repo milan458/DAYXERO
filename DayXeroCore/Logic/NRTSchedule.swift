@@ -196,7 +196,7 @@ public struct StepSchedule: Sendable {
     }
 }
 
-/// The optional pouch taper (S9.3): it ends the day before Quit Day, and only runs if it fits.
+/// The optional pouch taper (S9.3): it ends the day before Day Xero, and only runs if it fits.
 public enum PouchTaperPlan {
     /// Halving from the onboarding strength down to about 1.5 mg, one week a step.
     public static func suggestedSteps(from strengthMg: Double) -> [PlanStep] {
@@ -210,18 +210,18 @@ public enum PouchTaperPlan {
         return steps
     }
 
-    /// The day the taper must start so it ends the day before Quit Day.
+    /// The day the taper must start so it ends the day before Day Xero.
     public static func startDate(steps: [PlanStep], quitDay: Date, clock: DayClock) -> Date {
         let days = steps.reduce(0) { $0 + $1.weeks * 7 }
         return clock.calendar.date(byAdding: .day, value: -days, to: clock.startOfDate(quitDay)) ?? quitDay
     }
 
-    /// Whether the taper fits between today and Quit Day.
+    /// Whether the taper fits between today and Day Xero.
     public static func fits(steps: [PlanStep], quitDay: Date, now: Date, clock: DayClock) -> Bool {
         startDate(steps: steps, quitDay: quitDay, clock: clock) >= clock.day(containing: now)
     }
 
-    /// The earliest Quit Day that leaves room for the whole taper, starting today.
+    /// The earliest Day Xero that leaves room for the whole taper, starting today.
     public static func quitDayToFit(steps: [PlanStep], now: Date, clock: DayClock) -> Date {
         let days = steps.reduce(0) { $0 + $1.weeks * 7 }
         return clock.calendar.date(byAdding: .day, value: days, to: clock.day(containing: now)) ?? now
@@ -323,7 +323,7 @@ public enum NRTReminderPlan {
                   let at = clock.calendar.date(byAdding: .hour, value: eveningHour, to: before), at > now else { return nil }
             return Reminder(id: "taper.step.\(stamp(day, clock.calendar))", date: at,
                             title: String(localized: "Tomorrow: \(strength(step.strengthMg)) pouches"),
-                            body: String(localized: "Your taper steps down tomorrow. One step closer to Quit Day."))
+                            body: String(localized: "Your taper steps down tomorrow. One step closer to Day Xero."))
         }
     }
 

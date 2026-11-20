@@ -19,7 +19,7 @@ struct TodayWeekTests {
     }
 
     @Test func prepEndsOnQuitDayWithFinishedSessionsTicked() {
-        // Wednesday 4 Nov, Quit Day Sunday 8 Nov, prep started Monday, sessions on Monday and Tuesday.
+        // Wednesday 4 Nov, Day Xero Sunday 8 Nov, prep started Monday, sessions on Monday and Tuesday.
         let week = TodayWeek.make(now: date(4, 9), quitDay: date(8, 0), programStart: date(2, 8),
                                   sessionsDone: [date(2, 20), date(3, 21)], slips: [], clock: clock)
         #expect(days(week) == [2, 3, 4, 5, 6, 7, 8])
@@ -59,7 +59,7 @@ struct TodayWeekTests {
     }
 
     @Test func afterQuitDayATickIsADayWithNoSlipLikeResilience() {
-        // Day 4: Quit Day Sunday 8, today Wednesday 11, a slip on Tuesday.
+        // Day 4: Day Xero Sunday 8, today Wednesday 11, a slip on Tuesday.
         let slips = [date(10, 22)]
         let week = TodayWeek.make(now: date(11, 9), quitDay: date(8, 0), programStart: date(2, 8),
                                   sessionsDone: [], slips: slips, clock: clock)

@@ -23,9 +23,9 @@ public enum Product: String, Codable, CaseIterable, Sendable {
 }
 
 public enum ProgramPhase: String, Codable, CaseIterable, Sendable {
-    /// Before Quit Day. Users may still use nicotine.
+    /// Before Day Xero. Users may still use nicotine.
     case prep
-    /// The 7-day program starting on Quit Day.
+    /// The 7-day program starting on Day Xero.
     case quit
     /// Weeks 2–5.
     case maintenance

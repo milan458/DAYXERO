@@ -93,7 +93,7 @@ struct HealthTimelineTests {
             HealthTimeline.Item(id: id, fromHours: from, toHours: to, when: "", title: id, line: "", detail: "", source: "acs")
         }
         let items = [item("a", 0, 2), item("b", 1, 72), item("c", 24, 168), item("d", 336, 2184)]
-        // Before Quit Day: nothing under way, the first change is next.
+        // Before Day Xero: nothing under way, the first change is next.
         let before = HealthTimeline.nowAndNext(items, elapsedHours: -10)
         #expect(before.now == nil && before.next?.id == "a")
         // 30 hours in: b and c overlap, the later one is featured; d is next.

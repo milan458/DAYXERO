@@ -85,7 +85,7 @@ struct NotificationPlanTests {
     /// CLIN-06: quiet graduation. Weeks 1 and 2 as usual; Weeks 3 and 4 drop the pledge note and allow two a day;
     /// from Week 5 one a day, with the check-in every other day. Off, everything comes back.
     @Test func quietGraduationStepsBackFromWeekThree() {
-        // Thu 5 Nov. Quit Day on the 1st: Week 1, the full set.
+        // Thu 5 Nov. Day Xero on the 1st: Week 1, the full set.
         let inputs1 = NotificationPlan.Inputs(now: at(5, 7), pledgedToday: false, checkedInToday: false, quitDay: day(1))
         #expect(NotificationPlan.plan(.init(), inputs: inputs1, calendar: calendar).filter { $0.date < day(6) }.map(\.kind) == [.pledge, .checkIn])
         // 14 days in (Week 3): no pledge note.

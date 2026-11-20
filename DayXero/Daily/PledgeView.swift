@@ -36,14 +36,14 @@ struct PledgeView: View {
         }
     }
 
-    /// Prep week: nobody is asked to stop before Quit Day.
+    /// Prep week: nobody is asked to stop before Day Xero.
     static let prepHeadline = String(localized: "Today, I'll notice my cravings and get ready.")
 
     var body: some View {
         let clock = DayClock(boundaryHour: profile.dayBoundaryHour)
         let stats = ProgressStats(quitDay: profile.quitDay, baselines: [], clock: clock)
         let day = clock.days(fromDate: profile.quitDay, to: .now) + 1
-        // The same days clear as Today: Quit Day is 1, prep is 0.
+        // The same days clear as Today: Day Xero is 1, prep is 0.
         let daysClear = stats.daysClear(at: .now)
         let chosen = Wording(rawValue: wording) ?? .wontUse
         let prep = stats.isPrep(at: .now)
@@ -158,7 +158,7 @@ struct PledgeView: View {
         }
     }
 
-    /// "Sunday · Day 3", or the weekday alone before Quit Day. The weekday follows the day boundary: 1am is still last night.
+    /// "Sunday · Day 3", or the weekday alone before Day Xero. The weekday follows the day boundary: 1am is still last night.
     private func dayLine(_ day: Int, clock: DayClock) -> String {
         let weekday = DailyRhythm(clock: clock).day(at: .now).formatted(.dateTime.weekday(.wide))
         return day > 0 ? String(localized: "\(weekday), Day \(day)") : weekday

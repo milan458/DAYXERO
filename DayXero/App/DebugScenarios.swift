@@ -6,7 +6,7 @@ import UIKit
 
 /// Sample people at different points in the program, for CI screenshots
 /// (`-dx.homeScenario prep|quitday|day3|done|day7|day12|free|returning`). Seeds an in-memory store only.
-/// `day7` is the v5 persona after Quit Day (cook/site/GUIDE.md): joined 14 days ago, Quit Day 7 days ago, 3 waves today.
+/// `day7` is the v5 persona after Day Xero (cook/site/GUIDE.md): joined 14 days ago, Day Xero 7 days ago, 3 waves today.
 enum DebugScenario: String {
     case prep, quitday, day3, done, day7, day12, free
     /// Back after a 4-day break: the program owes a replay (S5.7).
@@ -21,7 +21,7 @@ enum DebugScenario: String {
         let today = calendar.startOfDay(for: now)
         func day(_ offset: Int) -> Date { calendar.date(byAdding: .day, value: offset, to: today) ?? today }
 
-        // (started onboarding, Quit Day) relative to today
+        // (started onboarding, Day Xero) relative to today
         let (start, quit): (Int, Int) = switch self {
         case .prep: (-3, 4)
         case .quitday: (-7, 0)
@@ -44,7 +44,7 @@ enum DebugScenario: String {
             profile.products.append(ProductUse(product: .pouches, isPrimary: false, unitsPerDay: 8, pricePerPurchase: 6,
                                                unitsPerPurchase: 20, strengthMg: 6))
         }
-        // A patch plan from the 10-week US label, started on Quit Day (S9).
+        // A patch plan from the 10-week US label, started on Day Xero (S9).
         if UserDefaults.standard.bool(forKey: "dx.seedNRT") {
             profile.nrtInterest = .using
             profile.nrtPlans.append(NRTPlan(type: .patch, startDate: day(quit),
@@ -136,7 +136,7 @@ enum DebugScenario: String {
         progress.lastActiveAt = self == .returning ? progress.completions.map(\.completedAt).max() : now.addingTimeInterval(-3600)
 
         // Program v2: the same place in the new program. Prep sessions a day apart from the start, Day Xero on the
-        // Quit Day, week sessions on their day.
+        // Day Xero, week sessions on their day.
         let v2Done: Int = switch self {
         case .prep: 3
         case .quitday: 7
@@ -172,7 +172,7 @@ enum DebugScenario: String {
     }
 
     /// Cravings and uses with a clear shape: weekday mornings with coffee, weekend evenings with friends,
-    /// some stress in the afternoons, easing off after Quit Day.
+    /// some stress in the afternoons, easing off after Day Xero.
     private static func seedLogs(into context: ModelContext, from start: Date, to now: Date, quitDay: Date, calendar: Calendar) {
         var seed: UInt64 = 42
         func roll() -> Double {

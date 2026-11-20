@@ -24,7 +24,7 @@ public struct ProgramUnlock: Sendable {
     public enum Wait: Equatable, Sendable {
         /// "Unlocks tomorrow".
         case tomorrow
-        /// Day Xero waits for the Quit Day: "Day Xero is Thu, 12 Nov". Its date is always the Quit Day (S27.7).
+        /// Day Xero waits for the Day Xero: "Day Xero is Thu, 12 Nov". Its date is always the Day Xero (S27.7).
         case dayXero(Date)
         /// Opens this many days after Day Xero (the session's `minDay`). Shown with `counterDay`: "Unlocks on Day 11".
         case quitDay(Int)
@@ -72,13 +72,13 @@ public struct ProgramUnlock: Sendable {
         self.init(steps: content.sessions.map { Step(id: $0.id, rule: $0.unlock.rule, minDay: $0.unlock.minDay) }, clock: clock)
     }
 
-    /// The Quit Day's calendar date. Day Xero opens then, or later if prep is still running (`earliestDayXero`).
+    /// The Day Xero's calendar date. Day Xero opens then, or later if prep is still running (`earliestDayXero`).
     public func dayXeroDate(quitDay: Date) -> Date {
         clock.startOfDate(quitDay)
     }
 
     /// The earliest day Day Xero can open, from prep so far (19 Nov 2026): prep runs one session a day, in order,
-    /// and Day Xero comes the day after the last one. A Quit Day earlier than this moves back to it, so nobody
+    /// and Day Xero comes the day after the last one. A Day Xero earlier than this moves back to it, so nobody
     /// reaches Day Xero with prep unfinished. nil when nothing holds Day Xero: the program has no prep, or Day Xero
     /// has already been started (people who began it under the old rule keep it, with prep as catch-up).
     public func earliestDayXero(records: [String: Record], quitTimestamp: Date?, now: Date) -> Date? {
@@ -103,16 +103,16 @@ public struct ProgramUnlock: Sendable {
 
     /// Every session's state, in program order.
     ///
-    /// Two chains. Prep runs one session a day after the last, in order. Day Xero opens on the Quit Day once prep
+    /// Two chains. Prep runs one session a day after the last, in order. Day Xero opens on the Day Xero once prep
     /// is finished; while prep is behind, it waits for `earliestDayXero` instead (19 Nov 2026; the app also moves
-    /// the saved Quit Day to that date, see `QuitDaySlide`). The week sessions follow Day Xero, in order, by days
+    /// the saved Day Xero to that date, see `QuitDaySlide`). The week sessions follow Day Xero, in order, by days
     /// since it. Before then, Day Xero shows as waiting only once prep is finished, so Home shows the next prep
     /// session first.
     /// Someone who started Day Xero under the old rule (S27.7) with prep unfinished keeps it: their leftover prep
     /// is catch-up, open straight away with no one-a-day wait, and never blocks the weeks.
     /// - Parameters:
     ///   - records: started and finished times by session ID.
-    ///   - quitDay: the Quit Day the person chose.
+    ///   - quitDay: the Day Xero the person chose.
     ///   - quitTimestamp: when Day Xero's commit was held, if it has been.
     public func states(records: [String: Record], quitDay: Date, quitTimestamp: Date?, now: Date) -> [(id: String, state: State)] {
         var out: [(String, State)] = []
@@ -165,7 +165,7 @@ public struct ProgramUnlock: Sendable {
                 let ready = today > finishedDay || (isPrep && quitDayHasCome)
                 out.append((step.id, ready ? open : .scheduled(.tomorrow)))
             case .dayXero:
-                // Only the first Day Xero step starts a chain; a second one (not expected) opens on the Quit Day too.
+                // Only the first Day Xero step starts a chain; a second one (not expected) opens on the Day Xero too.
                 out.append((step.id, quitDayHasCome ? open : .scheduled(.dayXero(opensOn))))
             case .daysSinceQuit:
                 let minDay = step.minDay ?? 0
@@ -181,7 +181,7 @@ public struct ProgramUnlock: Sendable {
     }
 
     /// The same states for someone in a free trial that ends at `trialEnd`: sessions outside `open` that would be
-    /// ready now, tomorrow, or on a Quit Day before the trial ends wait for the trial to end instead. A session
+    /// ready now, tomorrow, or on a Day Xero before the trial ends wait for the trial to end instead. A session
     /// already started or finished is left alone, and so is anything that opens later anyway.
     public static func holding(_ states: [(id: String, state: State)], untilTrialEnds trialEnd: Date,
                                open: Set<String>) -> [(id: String, state: State)] {

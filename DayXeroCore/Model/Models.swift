@@ -306,7 +306,7 @@ public final class CheckIn {
     public var note: String?
     /// "Clear day" or "Had a slip" (S11.2). Never changes days clear.
     public var clearDay: Bool = true
-    /// Prep week only: "Mindful & observant" (true) or "Mostly autopilot" (false). nil after Quit Day.
+    /// Prep week only: "Mindful & observant" (true) or "Mostly autopilot" (false). nil after Day Xero.
     public var prepMindful: Bool?
 
     public init(day: Date, mood: Mood, cravingCount: Int, note: String? = nil, clearDay: Bool = true, prepMindful: Bool? = nil,
@@ -378,7 +378,7 @@ public final class NRTPlan {
     }
 }
 
-/// An optional pouch-strength taper before Quit Day (S9.3). Pouches aren't NRT; this is a plan the person sets.
+/// An optional pouch-strength taper before Day Xero (S9.3). Pouches aren't NRT; this is a plan the person sets.
 @Model
 public final class PouchTaper {
     public var startDate: Date

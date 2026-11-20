@@ -105,7 +105,7 @@ struct TodayPlanTests {
         let clock = DayClock(calendar: calendar, boundaryHour: 4)
         let quitDay = date(5, 0)
         #expect(Resilience.percent(quitDay: quitDay, slips: [], now: date(8, 10), clock: clock) == 100)
-        // Before Quit Day there's nothing to lose.
+        // Before Day Xero there's nothing to lose.
         #expect(Resilience.percent(quitDay: quitDay, slips: [], now: date(3, 10), clock: clock) == 100)
         // Day 4 of 4, with two slips on one day: 3 of 4 days clear.
         #expect(Resilience.percent(quitDay: quitDay, slips: [date(6, 13), date(6, 20)], now: date(8, 10), clock: clock) == 75)

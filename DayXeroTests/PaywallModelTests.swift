@@ -106,7 +106,7 @@ struct PaywallModelTests {
         #expect(!entitlement.isPro)
     }
 
-    // MARK: Yearly and 3 months are sold whenever the Quit Day is
+    // MARK: Yearly and 3 months are sold whenever the Day Xero is
 
     @Test func onlyYearlyAndThreeMonthsAreSold() async {
         let (model, _) = make(StubStore())
@@ -115,7 +115,7 @@ struct PaywallModelTests {
         #expect(model.plans.map(\.plan) == [.annual, .quarterly])
         #expect(model.selected == .annual)
         #expect(model.trialEndDate == now.addingTimeInterval(3 * 86_400))
-        // The stub's 3-day trial ends 4 days before a Quit Day a week away; the paywall says so.
+        // The stub's 3-day trial ends 4 days before a Day Xero a week away; the paywall says so.
         #expect(model.trialEndsAfterQuitDay == -4)
     }
 
@@ -135,7 +135,7 @@ struct PaywallModelTests {
         #expect(model.trialEndsAfterQuitDay == nil)
     }
 
-    /// A 3-day trial started with a week of prep to go ends 4 days before the Quit Day.
+    /// A 3-day trial started with a week of prep to go ends 4 days before the Day Xero.
     @Test func aThreeDayTrialEndsBeforeAWeekOfPrepDoes() {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(identifier: "UTC")!

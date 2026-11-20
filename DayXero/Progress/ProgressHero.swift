@@ -3,8 +3,8 @@ import SwiftUI
 
 // MARK: - The hero card (v5, 036)
 
-/// The sky and the days since Quit Day in one card, so the count is stated once: "7 days free", "$49.00 kept so
-/// far", the sky's clarity tag and Xero on his hill; under the sky the Quit Day sun and a tick for each day since,
+/// The sky and the days since Day Xero in one card, so the count is stated once: "7 days free", "$49.00 kept so
+/// far", the sky's clarity tag and Xero on his hill; under the sky the Day Xero sun and a tick for each day since,
 /// then "Each day free clears a little more of your sky."
 struct ProgressHeroCard: View {
     let count: Int
@@ -183,7 +183,7 @@ struct ProgressSky: View {
     }
 }
 
-/// Quit Day's sun, then a tick for each day since, today's ringed (036). Past a week, the last seven days.
+/// Day Xero's sun, then a tick for each day since, today's ringed (036). Past a week, the last seven days.
 struct ProgressDayStrip: View {
     let quitDay: Date
     let today: Date
@@ -196,7 +196,7 @@ struct ProgressDayStrip: View {
         let first = max(1, since - 6)
         let days = (0..<7).map { first + $0 }
         HStack(spacing: 0) {
-            cell(label: String(localized: "Quit Day"), bold: true) {
+            cell(label: String(localized: "Day Xero"), bold: true) {
                 Circle().fill(Color(hex: 0xFFD966))
                     .overlay(DXIcon(.sun, size: 14, weight: 2.4).foregroundStyle(Color(hex: 0x1E1A3A)))
             }
@@ -227,7 +227,7 @@ struct ProgressDayStrip: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("Quit Day, \(quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day())), then every day free to today"))
+        .accessibilityLabel(Text("Day Xero, \(quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day())), then every day free to today"))
     }
 
     private func cell<Disc: View>(label: String, bold: Bool, @ViewBuilder disc: () -> Disc) -> some View {

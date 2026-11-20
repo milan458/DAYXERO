@@ -106,7 +106,7 @@ struct V4Gallery: View {
                 }
             }
             section("Hold to commit", on: .apricot) {
-                HoldButton("Hold to set Quit Day", done: "Quit Day set", duration: DX.Move.hold, on: .apricot) {}
+                HoldButton("Hold to set Day Xero", done: "Day Xero set", duration: DX.Move.hold, on: .apricot) {}
             }
         }
     }
@@ -217,12 +217,12 @@ struct V4Gallery: View {
         }
     }
 
-    // Persona: Sam, Quit Day Fri 6 Nov 2026, mock today Sun 8 Nov at 09:40 (decision 17 values).
+    // Persona: Sam, Day Xero Fri 6 Nov 2026, mock today Sun 8 Nov at 09:40 (decision 17 values).
 
     private var scenes: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Scenes").dxType(.headline)
-            // Quit Day hero: dawn at clarity 23 (1 day clear), apricot edge.
+            // Day Xero hero: dawn at clarity 23 (1 day clear), apricot edge.
             HeroScene(.dawn, clarity: CrewGrowth.clarity(daysClear: 1), height: 260, edge: DX.Ground.apricot.background)
                 .overlay(alignment: .bottom) { XeroView(mood: .hello, stage: 1, size: .scene).offset(y: -20) }
                 .clipShape(RoundedRectangle(cornerRadius: DX.Layout.cardRadius))
@@ -261,7 +261,7 @@ struct V4Gallery: View {
             Text("Today").dxType(.headline)
             TopCard(kicker: "Week 1 · Day 2", title: "The noisy passengers", detail: "Let them talk. Keep driving.", ground: .apricot) {}
             HStack(spacing: 8) {
-                StatTile(value: 3, label: "days since Quit Day", ground: .apricot)
+                StatTile(value: 3, label: "days since Day Xero", ground: .apricot)
                 StatTile(value: 26, label: "not smoked", ground: .apricot)
                 StatTile(value: 15.65, label: "kept", ground: .apricot) { String(format: "$%.2f", $0) }
             }
@@ -299,7 +299,7 @@ struct V4Gallery: View {
         VStack(spacing: 12) {
             TypingDots().frame(maxWidth: .infinity, alignment: .leading)
             ReplyBubble("Coffee and stress", onEdit: {})
-            PlanStepRow(kicker: "Quit Day", value: "Fri 6 Nov", index: 0, ground: .lilac)
+            PlanStepRow(kicker: "Day Xero", value: "Fri 6 Nov", index: 0, ground: .lilac)
             AnswerTray(options: ["Waking up", "Coffee", "After meals", "Stress", "Drinking", "Boredom"],
                        selection: $answers, multiple: true, step: 2, of: 3, onMore: {}) {}
         }

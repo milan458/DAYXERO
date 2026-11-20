@@ -36,7 +36,7 @@ struct OnboardingFlow: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        // Quit Day's dawn art runs up under the status bar, so its header floats over the art, inside the safe area.
+        // Day Xero's dawn art runs up under the status bar, so its header floats over the art, inside the safe area.
         .overlay(alignment: .top) {
             if breathed && overlaysTopBar {
                 topBar(onArt: true)
@@ -72,7 +72,7 @@ struct OnboardingFlow: View {
         }
     }
 
-    /// Every step after Welcome has the same pinned header, Quit Day and the reminders included (QW3). It sits above
+    /// Every step after Welcome has the same pinned header, Day Xero and the reminders included (QW3). It sits above
     /// each screen's scroll view, so nothing scrolls up under it or into the Dynamic Island.
     private var showsTopBar: Bool {
         model.step != .welcome

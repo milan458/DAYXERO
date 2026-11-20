@@ -11,7 +11,7 @@ struct ProgressTab: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @Query(sort: \LogEntry.timestamp, order: .reverse) private var entries: [LogEntry]
     @Query private var checkIns: [CheckIn]
-    /// Program v2 sessions, observed exactly as Today observes them, so "of 7 prep done" and the Quit Day countdown
+    /// Program v2 sessions, observed exactly as Today observes them, so "of 7 prep done" and the Day Xero countdown
     /// read the same snapshot on both tabs and update the moment a session is finished.
     @Query private var sessionRecords: [SessionRecord]
     @State private var series = Insights.Series.cravings
@@ -107,7 +107,7 @@ struct ProgressTab: View {
 
     @ViewBuilder
     private func details(_ insights: Insights, now: Date) -> some View {
-        // What's changing in the body, from Quit Day (S10).
+        // What's changing in the body, from Day Xero (S10).
         whatsChanging(now: now)
         // The full step plan for each NRT product (S9.5).
         ForEach(profile.nrtPlans.sorted { $0.createdAt < $1.createdAt }) { plan in
@@ -163,7 +163,7 @@ struct ProgressTab: View {
 
     // MARK: What you've gained (S7.4)
 
-    /// v5 (036): "Your progress" with Settings beside it, and "Quit Day was Fri, Nov 6" under it.
+    /// v5 (036): "Your progress" with Settings beside it, and "Day Xero was Fri, Nov 6" under it.
     private func header(_ snap: HomeSnapshot) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(alignment: .center, spacing: 8) {
@@ -192,12 +192,12 @@ struct ProgressTab: View {
 
     private func eyebrow(_ snap: HomeSnapshot) -> String {
         if case let .prep(days) = snap.phase {
-            return days == 1 ? String(localized: "Quit Day in 1 day") : String(localized: "Quit Day in \(days) days")
+            return days == 1 ? String(localized: "Day Xero in 1 day") : String(localized: "Day Xero in \(days) days")
         }
-        return String(localized: "Quit Day was \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))")
+        return String(localized: "Day Xero was \(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))")
     }
 
-    /// v5 (036): the sky and the days since Quit Day in one card. In prep the sky waits for Quit Day.
+    /// v5 (036): the sky and the days since Day Xero in one card. In prep the sky waits for Day Xero.
     private func hero(_ snap: HomeSnapshot, now: Date) -> some View {
         let prep = isPrepPhase(snap)
         let clarity = prep ? CrewGrowth.prepClarity : CrewGrowth.clarity(daysClear: snap.daysClear)
@@ -207,13 +207,13 @@ struct ProgressTab: View {
         let daysToQuit = Self.daysToQuit(snap)
         return ProgressHeroCard(
             count: prep ? daysToQuit : snap.daysClear,
-            countLabel: prep ? (daysToQuit == 1 ? String(localized: "day to Quit Day") : String(localized: "days to Quit Day"))
+            countLabel: prep ? (daysToQuit == 1 ? String(localized: "day to Day Xero") : String(localized: "days to Day Xero"))
                 : (snap.daysClear == 1 ? String(localized: "day free") : String(localized: "days free")),
             money: NSDecimalNumber(decimal: prep ? snap.moneyPerYear : snap.moneyKept).doubleValue,
             moneyFormat: prep ? whole : cents,
             moneyLabel: prep ? String(localized: "you'll keep a year") : String(localized: "kept so far"),
             clarity: clarity, quitDay: profile.quitDay, today: now, showsDays: !prep,
-            note: prep ? String(localized: "Your sky starts clearing on Quit Day.") : String(localized: "Each day free clears a little more of your sky."))
+            note: prep ? String(localized: "Your sky starts clearing on Day Xero.") : String(localized: "Each day free clears a little more of your sky."))
             .padding(.top, 2)
             .dxArrive(2, delay: 0)
     }
@@ -272,7 +272,7 @@ struct ProgressTab: View {
                        line: current.line, state: HealthTimeline.state(of: current, elapsedHours: elapsed))
         }
         if let next {
-            changeCard(next, status: elapsed < 0 ? String(localized: "Starting on Quit Day") : String(localized: "Next"),
+            changeCard(next, status: elapsed < 0 ? String(localized: "Starting on Day Xero") : String(localized: "Next"),
                        line: current == nil ? next.line : "", state: .ahead)
         }
         let labels = [current, next].compactMap { item in item.flatMap { timeline?.source($0.source)?.label } }

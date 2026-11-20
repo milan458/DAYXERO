@@ -7,7 +7,7 @@ enum LessonCatalog {
     static func title(for day: ProgramDayID) -> String {
         switch day.phase {
         case .prep: String(localized: "Prep day \(day.index)")
-        case .quit: day.index == 1 ? String(localized: "Your Quit Day plan") : String(localized: "Day \(day.index)")
+        case .quit: day.index == 1 ? String(localized: "Your Day Xero plan") : String(localized: "Day \(day.index)")
         case .maintenance: String(localized: "Week \(day.index + 1)")
         }
     }
@@ -54,7 +54,7 @@ struct HomeSnapshot {
     let moneyPerYear: Decimal
     let currencyCode: String
     let prepDone: Int
-    /// Prep sessions in the program (seven), not calendar days to Quit Day.
+    /// Prep sessions in the program (seven), not calendar days to Day Xero.
     let prepTotal: Int
     /// Which prep day today is on the calendar (Day 1 is the day onboarding finished).
     let prepDayNumber: Int
@@ -132,7 +132,7 @@ struct HomeSnapshot {
             .filter { clock.day(containing: $0.completedAt) == today }
             .max { $0.completedAt < $1.completedAt }?.dayID
 
-        // "Not smoked" and the like subtract what logged slips used, so they stay true (S27.9). Days since Quit Day don't.
+        // "Not smoked" and the like subtract what logged slips used, so they stay true (S27.9). Days since Day Xero don't.
         let slipEntries = (try? profile.modelContext?.fetch(FetchDescriptor<LogEntry>(predicate: #Predicate<LogEntry> { $0.kindRaw == "slip" }))) ?? []
         let primary = profile.products.first(where: \.isPrimary)?.product ?? profile.products.first?.product
         let avoided = stats.unitsAvoided(at: now, slips: slipEntries.map { SlipRecord(timestamp: $0.timestamp, product: $0.product, amount: $0.amount) },
@@ -148,8 +148,8 @@ struct HomeSnapshot {
         let records = sessions ?? (try? profile.modelContext?.fetch(FetchDescriptor<SessionRecord>())) ?? []
         let sessionsDone = records.filter { $0.completedAt != nil }
         let prepIds = ProgramContent.bundled?.prepSessionIds ?? []
-        // The program has seven prep sessions (P1 to P7) however far away Quit Day is. Calendar days to Quit Day can be
-        // anything from 3 to 30, which read as "Prep day 1 of 9" when someone picked a Quit Day nine days out.
+        // The program has seven prep sessions (P1 to P7) however far away Day Xero is. Calendar days to Day Xero can be
+        // anything from 3 to 30, which read as "Prep day 1 of 9" when someone picked a Day Xero nine days out.
         prepTotal = prepIds.isEmpty ? schedule.prepDays : prepIds.count
         prepDone = min(max(completed.filter { $0.phase == .prep }.count, sessionsDone.filter { prepIds.contains($0.sessionId) }.count),
                        max(prepTotal, 0))

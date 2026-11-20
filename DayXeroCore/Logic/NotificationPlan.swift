@@ -63,7 +63,7 @@ public enum NotificationPlan {
         public var nextLessonName: String?
         /// The four weeks are done (graduation held). Glim's weekly check-in starts then.
         public var graduated: Bool
-        /// Quit Day, for quiet graduation (CLIN-06). nil leaves every day at the full set.
+        /// Day Xero, for quiet graduation (CLIN-06). nil leaves every day at the full set.
         public var quitDay: Date?
 
         public init(now: Date, pledgedToday: Bool, checkedInToday: Bool, lessons: [(day: Date, name: String, minutes: Int)] = [],
@@ -146,7 +146,7 @@ public enum NotificationPlan {
 
     // MARK: Quiet graduation (CLIN-06)
 
-    /// Fewer notes as cravings fade, counted in days since Quit Day (Quit Day is 0). Weeks 1 and 2 get the full set.
+    /// Fewer notes as cravings fade, counted in days since Day Xero (Day Xero is 0). Weeks 1 and 2 get the full set.
     /// Weeks 3 and 4 drop the morning pledge note (the pledge still waits on Today) and allow two a day. From Week 5,
     /// one a day, with the evening check-in every other day. Away notes are untouched: there are only two.
     public enum GraduationStage: Sendable, Equatable {
@@ -170,7 +170,7 @@ public enum NotificationPlan {
 
         public var pledge: Bool { self == .full }
 
-        /// From Week 5 the check-in goes out on even days since Quit Day only.
+        /// From Week 5 the check-in goes out on even days since Day Xero only.
         func checkIn(on day: Date, calendar: Calendar, quitDay: Date?) -> Bool {
             guard self == .quiet, let quitDay else { return true }
             let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: quitDay), to: day).day ?? 0
@@ -248,8 +248,8 @@ public enum NotificationCopy {
 
     public static func awaySecond(replay: String?) -> (String, String) {
         (String(localized: "Welcome back, whenever you're ready"),
-         replay.map { String(localized: "We'll start with a quick replay of \($0). Your days since Quit Day haven't changed.") }
-            ?? String(localized: "Your days since Quit Day haven't changed."))
+         replay.map { String(localized: "We'll start with a quick replay of \($0). Your days since Day Xero haven't changed.") }
+            ?? String(localized: "Your days since Day Xero haven't changed."))
     }
 
     /// Words notifications never use (S14.3). A test checks every string against this list.

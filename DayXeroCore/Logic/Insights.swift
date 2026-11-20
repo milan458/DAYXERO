@@ -25,7 +25,7 @@ public struct Insights: Sendable {
     public enum Series: String, Sendable, CaseIterable {
         /// Cravings, from SOS sessions and craving logs.
         case cravings
-        /// Uses during prep and slips after Quit Day.
+        /// Uses during prep and slips after Day Xero.
         case uses
     }
 

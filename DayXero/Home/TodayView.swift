@@ -46,6 +46,10 @@ struct TodayView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     /// Today's prep challenge (CLIN-11): the day it was last done.
     @AppStorage("dx.prepChallengeDoneOn") private var challengeDoneOn = 0.0
+    /// The prep path (20 Nov 2026): the stone whose day the sheet shows (nil is today's), and whether the day card is
+    /// open in place of the day's cards.
+    @State private var pathDay: Int?
+    @State private var dayCardOpen = false
 
     var body: some View {
         // Re-evaluates each minute so counters tick, the day rolls over and night falls on its own.
@@ -169,13 +173,37 @@ struct TodayView: View {
         }
     }
 
+    /// During prep, the path of stones to Day Xero; after it, the scene with the day's badge.
+    @ViewBuilder
     private func hero(_ day: TodayDay, top: CGFloat) -> some View {
+        if day.state == .prep, let path = day.path {
+            TodayPathHero(night: day.night,
+                          dateLine: day.now.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)),
+                          greeting: day.hero.greeting, profileInitial: day.hero.profileInitial,
+                          stones: path.stones, crew: path.crew,
+                          selected: dayCardOpen ? min(pathDay ?? path.crew, path.days.count - 1) : nil,
+                          dayXeroLabel: path.dayXeroLabel, summary: day.hero.accessibilityLabel,
+                          crewStage: day.crewStage, topInset: top,
+                          onStone: { index in
+                              withAnimation(motion.animation(DX.Move.settle)) {
+                                  pathDay = index
+                                  dayCardOpen = true
+                              }
+                          },
+                          onProfile: { settingsPage = nil; showSettings = true })
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { heroHeight = $0 }
+        } else {
+            standardHero(day, top: top)
+        }
+    }
+
+    private func standardHero(_ day: TodayDay, top: CGFloat) -> some View {
         let onRing: (() -> Void)? = if day.state == .postQuit { { showHealth = true } } else { nil }
         return TodayHero(model: day.hero, topInset: top, onProfile: { settingsPage = nil; showSettings = true }, onRing: onRing)
             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { heroHeight = $0 }
     }
 
-    /// The page: the kit's lighter cream under the scene during prep (015); after Quit Day the apricot ground fading
+    /// The page: the kit's lighter cream under the scene during prep (015); after Day Xero the apricot ground fading
     /// to cream down the scroll (016, 017); the night ground after 6 PM (018).
     private func pageColor(_ day: TodayDay) -> Color {
         day.night ? DX.Ground.violet.background : TodayInk.page
@@ -194,8 +222,164 @@ struct TodayView: View {
         }
     }
 
-    /// The focus card, the prep countdown, the day's log and the rest of the day.
+    /// During prep, the sheet under the path; after Day Xero, the day's cards.
+    @ViewBuilder
     private func lower(_ day: TodayDay) -> some View {
+        if day.state == .prep, let path = day.path {
+            prepLower(day, path: path)
+        } else {
+            standardLower(day)
+        }
+    }
+
+    /// The sheet under the path (20 Nov 2026): "Today" with the card that matters now and the rest of the day, or,
+    /// with the chevron or a stone, one day's card. It overlaps the scene's last 28 pt with rounded top corners.
+    private func prepLower(_ day: TodayDay, path: TodayPathModel) -> some View {
+        let index = min(pathDay ?? path.crew, path.days.count - 1)
+        let shown = path.days[index]
+        let today = day.clock.day(containing: day.now)
+        let title: String = !dayCardOpen ? String(localized: "Today")
+            : shown.date == today ? String(localized: "Today's card")
+            : shown.date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
+        return VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 12) {
+                Text(verbatim: title)
+                    .dxFace(.display, 19, weight: 700, tracking: -0.2)
+                    .foregroundStyle(TodayInk.ink)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityAddTraits(.isHeader)
+                Button {
+                    withAnimation(motion.animation(DX.Move.settle)) {
+                        dayCardOpen.toggle()
+                        pathDay = nil
+                    }
+                } label: {
+                    DXIcon(.down, size: 18, weight: 2.4)
+                        .rotationEffect(.degrees(dayCardOpen ? 180 : 0))
+                        .foregroundStyle(TodayInk.ink)
+                        .frame(width: 44, height: 44)
+                        .background(TodayInk.well, in: Circle())
+                }
+                .buttonStyle(.dxPress)
+                .accessibilityLabel(dayCardOpen ? Text("Back to today") : Text("Open today's card"))
+            }
+            .padding(.leading, 2)
+            if dayCardOpen {
+                dayCard(day, path: path, index: index).id("lower")
+            } else {
+                // The line under the greeting used to carry this; it sits here on the day the date moves.
+                if let note = QuitDaySlide.note(now: day.now, clock: day.clock) {
+                    Text(verbatim: note)
+                        .dxFace(.body, 14, weight: 500)
+                        .foregroundStyle(TodayInk.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.horizontal, 14).padding(.vertical, 12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(TodayInk.well, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                }
+                focusCard(day).id("lower").dxArrive(4)
+                if day.night && day.focus != .recovery {
+                    logRows(day).todayCard().dxArrive(6)
+                }
+                timeline(day).padding(.top, 12)
+            }
+        }
+        .padding(.horizontal, DX.Layout.gutter)
+        .padding(.top, 12)
+        .padding(.bottom, DX.Space.s)
+        .dxReadableColumn()
+        .background(pageColor(day), in: UnevenRoundedRectangle(topLeadingRadius: 28, topTrailingRadius: 28, style: .continuous))
+        .padding(.top, -28)
+    }
+
+    /// One day of the path as its card: the pledge, the session, the day's log and the check-in, each with what was
+    /// done, what to do now, or that it opens on the day.
+    private func dayCard(_ day: TodayDay, path: TodayPathModel, index: Int) -> TodayDayCard {
+        let shown = path.days[index]
+        let today = day.clock.day(containing: day.now)
+        let isToday = shown.date == today
+        let past = shown.date < today
+        let opens = String(localized: "Opens on the day")
+        let missed = String(localized: "Not done that day")
+        var rows: [TodayDayCard.Row] = []
+
+        if isToday {
+            if let time = day.pledgedAt {
+                rows.append(.init(id: "pledge", mark: .done, title: String(localized: "Morning pledge"), detail: done(at: time)))
+            } else {
+                rows.append(.init(id: "pledge", mark: .open, title: String(localized: "Morning pledge"), detail: String(localized: "10 sec"),
+                                  action: String(localized: "Pledge"), run: { showPledge = true }))
+            }
+        } else if past {
+            let made = pledges.first { $0.day == shown.date }?.madeAt
+            rows.append(.init(id: "pledge", mark: made == nil ? .open : .done, title: String(localized: "Morning pledge"),
+                              detail: made.map(done(at:)) ?? missed))
+        } else {
+            rows.append(.init(id: "pledge", mark: .locked, title: String(localized: "Morning pledge"), detail: opens))
+        }
+
+        let sessionTitle = shown.title.isEmpty ? shown.label : "\(shown.label) · \(shown.title)"
+        let id = shown.sessionId
+        switch shown.state {
+        case let .completed(time):
+            rows.append(.init(id: "session", mark: .done, title: sessionTitle, detail: done(at: time),
+                              action: String(localized: "Replay"), run: { session = SessionOpen(id: id, isReplay: true) }))
+        case .available, .inProgress:
+            let inProgress = shown.state == .inProgress
+            let needsUpgrade = ProgramV2Access.needsUpgrade(id, isPro: entitlement.isPro)
+            let title = shown.title
+            rows.append(.init(id: "session", mark: .open, title: sessionTitle,
+                              detail: inProgress ? String(localized: "\(shown.minutes) min · Xero saved your place")
+                                  : String(localized: "\(shown.minutes) min"),
+                              action: needsUpgrade ? String(localized: "Unlock") : inProgress ? String(localized: "Continue") : String(localized: "Start"),
+                              primary: true,
+                              run: { if needsUpgrade { unlock(id, title) } else { openSession(id) } }))
+        case .scheduled(.tomorrow):
+            rows.append(.init(id: "session", mark: .locked, title: sessionTitle, detail: String(localized: "Opens tomorrow")))
+        case .scheduled(.trialEnds):
+            rows.append(.init(id: "session", mark: .locked, title: sessionTitle, detail: String(localized: "Opens after your free trial")))
+        case .scheduled, .locked:
+            rows.append(.init(id: "session", mark: .locked, title: sessionTitle, detail: opens))
+        }
+
+        // The day's use is logged during prep only; from Day Xero on a use is a slip, with its own flow.
+        if index < path.stones.count {
+            let product = day.products.first ?? primaryProduct
+            let count = useCount(product, on: shown.date)
+            if isToday {
+                rows.append(.init(id: "log", mark: count > 0 ? .done : .open, title: logTitle(product),
+                                  detail: count > 0 ? String(localized: "\(count) logged today") : String(localized: "Tonight · 1 min"),
+                                  action: String(localized: "Log"), run: { log.open() }))
+            } else if past {
+                rows.append(.init(id: "log", mark: count > 0 ? .done : .open, title: logTitle(product),
+                                  detail: count > 0 ? String(localized: "\(count) logged") : String(localized: "Nothing logged that day")))
+            } else {
+                rows.append(.init(id: "log", mark: .locked, title: logTitle(product), detail: opens))
+            }
+        }
+
+        if isToday {
+            if let time = day.checkedInAt {
+                rows.append(.init(id: "checkin", mark: .done, title: String(localized: "Evening check-in"), detail: done(at: time)))
+            } else {
+                rows.append(.init(id: "checkin", mark: .open, title: String(localized: "Check-in with Glim"), detail: checkInLine,
+                                  action: String(localized: "Check in"), run: { showCheckIn = true }))
+            }
+        } else if past {
+            let made = checkIns.first { $0.day == shown.date }?.madeAt
+            rows.append(.init(id: "checkin", mark: made == nil ? .open : .done, title: String(localized: "Evening check-in"),
+                              detail: made.map(done(at:)) ?? missed))
+        } else {
+            rows.append(.init(id: "checkin", mark: .locked, title: String(localized: "Evening check-in"), detail: opens))
+        }
+
+        let date = shown.date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
+        let kicker = (isToday ? "\(String(localized: "Today")) · \(date)" : date).uppercased()
+        return TodayDayCard(kicker: kicker, isToday: isToday, name: shown.label, rows: rows)
+    }
+
+    /// The focus card, the prep countdown, the day's log and the rest of the day.
+    private func standardLower(_ day: TodayDay) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             if day.focus == .recovery {
                 Text("Now").dxFace(.display, 19, weight: 700, tracking: -0.2).foregroundStyle(TodayInk.ink)
@@ -501,7 +685,7 @@ struct TodayView: View {
         justLogged = entries
         loggedFeedback.toggle()
         if entries.first?.kind == .use { NotificationCenter.default.post(name: .dxUseLogged, object: nil) }
-        // A slip (from Quit Day on) goes straight to Jelli's if-then planner (CLIN-10).
+        // A slip (from Day Xero on) goes straight to Jelli's if-then planner (CLIN-10).
         if entries.first?.kind == .slip {
             Analytics.track(.slipLogged(source: "today"))
             log.open(.slipPlan)
@@ -566,8 +750,12 @@ struct TodayView: View {
     }
 
     fileprivate func useCount(_ product: Product, now: Date) -> Int {
-        let today = clock.day(containing: now)
-        return logs.filter { $0.product == product && $0.kind != .craving && clock.day(containing: $0.timestamp) == today }.count
+        useCount(product, on: clock.day(containing: now))
+    }
+
+    /// Uses of a product logged on one day (the start of that day, by the day boundary).
+    fileprivate func useCount(_ product: Product, on day: Date) -> Int {
+        logs.filter { $0.product == product && $0.kind != .craving && clock.day(containing: $0.timestamp) == day }.count
     }
 
     // MARK: Program
@@ -625,7 +813,7 @@ struct TodayView: View {
 
     fileprivate var clock: DayClock { DayClock(boundaryHour: profile.dayBoundaryHour) }
 
-    /// When the time free counts from: Day Xero's commit, or else the start of Quit Day.
+    /// When the time free counts from: Day Xero's commit, or else the start of Day Xero.
     fileprivate var quitMoment: Date {
         if let held = profile.progress?.quitTimestamp { return held }
         let start = clock.startOfDate(profile.quitDay)
@@ -709,6 +897,8 @@ private struct TodayDay {
     let hero: TodayHeroModel
     /// The prep countdown (015).
     let stamps: Stamps?
+    /// The prep week as the path of stones (20 Nov 2026); nil after Day Xero.
+    let path: TodayPathModel?
     /// The last seven nights for the check-in (018).
     let nights: [TodayNightTicks.Night]
 
@@ -729,6 +919,7 @@ private struct TodayDay {
         let store = ProgramStore(context: view.contextValue, profile: profile)
         program = ProgramToday(store: store, isPro: view.entitlementIsPro, now: now)
         let sessionOpen: Bool = if case .open(_, _, false)? = program?.kind { true } else { false }
+        path = state == .prep ? TodayPathModel.make(store: store, profile: profile, clock: clock, now: now) : nil
 
         // The pledge and the check-in (DailyRhythm).
         let rhythm = DailyRhythm(clock: clock)
@@ -783,13 +974,13 @@ private struct TodayDay {
         let quitStart = clock.startOfDate(profile.quitDay)
         let daysToQuit = max(clock.days(from: now, toDate: profile.quitDay), 0)
 
-        // What's ahead at the end of the timeline: Quit Day during prep, then the next milestone (Milestones).
+        // What's ahead at the end of the timeline: Day Xero during prep, then the next milestone (Milestones).
         func dayName(_ date: Date) -> String {
             let gap = clock.calendar.dateComponents([.day], from: today, to: date).day ?? 0
             return gap <= 6 ? date.formatted(.dateTime.weekday(.wide)) : date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
         }
         if state == .prep {
-            ahead = daysToQuit > 0 ? Ahead(text: String(localized: "\(dayName(quitStart)) · Quit Day"), isQuitDay: true) : nil
+            ahead = daysToQuit > 0 ? Ahead(text: String(localized: "\(dayName(quitStart)) · Day Xero"), isQuitDay: true) : nil
         } else if let next = snap.nextMilestone,
                   let date = clock.calendar.date(byAdding: .day, value: next == 1 ? 1 : next - 1, to: quitStart) {
             let label = next == 1 ? String(localized: "1 day free") : String(localized: "\(next) days free")
@@ -813,9 +1004,9 @@ private struct TodayDay {
         switch state {
         case .prep:
             let countdown: String = switch daysToQuit {
-            case 0: String(localized: "Quit Day is today")
-            case 1: String(localized: "1 day to Quit Day")
-            default: String(localized: "\(daysToQuit) days to Quit Day")
+            case 0: String(localized: "Day Xero is today")
+            case 1: String(localized: "1 day to Day Xero")
+            default: String(localized: "\(daysToQuit) days to Day Xero")
             }
             let done = snap.prepDone, total = max(snap.prepTotal, 1)
             let label = program.map { if case .open = $0.kind { $0.label } else { "" } } ?? ""
@@ -824,7 +1015,7 @@ private struct TodayDay {
             let theme: String? = if case .open? = program?.kind, let line = program?.subtitle, !line.isEmpty { line } else { nil }
             let dayLine: String = night ? String(localized: "\(countdown) · \(quitDate)")
                 : theme.map { String(localized: "Today: \($0).") } ?? (daysToQuit == 0 ? countdown : "\(countdown) · \(quitDate)")
-            // On the day prep fell behind and the Quit Day moved back, say so here (19 Nov 2026).
+            // On the day prep fell behind and the Day Xero moved back, say so here (19 Nov 2026).
             let movedNote: String? = QuitDaySlide.note(now: now, clock: clock)
             hero = TodayHeroModel(
                 night: night, mode: .prep, greeting: greeting,
@@ -969,5 +1160,86 @@ private struct WaterGlassTile: View {
         .background(Color(light: 0xF1E8DA, dark: 0x26304C), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
         .animation(motion.animation(DX.Move.settle), value: fill)
         .accessibilityHidden(true)
+    }
+}
+
+// MARK: The prep path
+
+/// The prep week laid out for the path (20 Nov 2026): each prep session with the day it falls on, then Day Xero.
+/// A finished session sits on the day it was finished; the next one is today if it's open, and the rest follow a
+/// day apart, which is how they unlock (`ProgramUnlock`).
+struct TodayPathModel {
+    struct Day {
+        let sessionId: String
+        /// "Prep 3", "Day Xero".
+        let label: String
+        let title: String
+        let minutes: Int
+        /// The start of its day.
+        let date: Date
+        let state: ProgramUnlock.State
+    }
+
+    /// The prep sessions in order, then Day Xero last.
+    let days: [Day]
+    /// One stone per prep session.
+    let stones: [TodayPathStone]
+    /// The stone the character stands on: today's, else the last one finished.
+    let crew: Int
+    let dayXeroLabel: String
+
+    @MainActor
+    static func make(store: ProgramStore, profile: UserProfile, clock: DayClock, now: Date) -> TodayPathModel? {
+        guard let content = store.content else { return nil }
+        let prep = content.sessions.filter { $0.phaseId == "prep" }
+        guard !prep.isEmpty, let dayXero = content.sessions.first(where: { $0.unlock.rule == .dayXero }) else { return nil }
+        let states = Dictionary(store.states(now: now).map { ($0.id, $0.state) }, uniquingKeysWith: { a, _ in a })
+        let today = clock.day(containing: now)
+        let after = { (date: Date) in clock.calendar.date(byAdding: .day, value: 1, to: date) ?? date }
+        // The day the next unfinished session can be done.
+        var cursor = today
+        var days: [Day] = []
+        for session in prep + [dayXero] {
+            let state = states[session.id] ?? .locked
+            var date = cursor
+            switch state {
+            case let .completed(time):
+                date = clock.day(containing: time)
+                cursor = max(cursor, after(date))
+            case .scheduled(.tomorrow):
+                date = max(cursor, after(today))
+                cursor = after(date)
+            case let .scheduled(.trialEnds(end)):
+                date = max(cursor, clock.day(containing: end))
+                cursor = after(date)
+            case let .scheduled(.dayXero(opens)):
+                date = max(cursor, clock.startOfDate(opens))
+                cursor = after(date)
+            default:
+                if session.id == dayXero.id { date = max(cursor, clock.startOfDate(profile.quitDay)) }
+                cursor = after(date)
+            }
+            days.append(Day(sessionId: session.id, label: session.label, title: session.title.resolve(store.variant) ?? "",
+                            minutes: store.minutes(of: session), date: date, state: state))
+        }
+        let text = { (date: Date) in date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)) }
+        let isDone = { (day: Day) -> Bool in if case .completed = day.state { true } else { false } }
+        let prepDays = Array(days.dropLast())
+        let stones = prepDays.enumerated().map { index, day -> TodayPathStone in
+            let open = day.state == .available || day.state == .inProgress
+            let state: TodayPathStone.State = isDone(day) ? .done : (open && day.date == today) ? .today : .ahead
+            let status: String = switch state {
+            case .done: String(localized: "done")
+            case .today: String(localized: "today")
+            case .ahead: String(localized: "not open yet")
+            }
+            return TodayPathStone(id: index, state: state, label: "\(day.label), \(text(day.date)), \(status)")
+        }
+        let crew = prepDays.firstIndex { $0.date == today && !isDone($0) }
+            ?? prepDays.lastIndex { $0.date == today }
+            ?? prepDays.lastIndex(where: isDone)
+            ?? 0
+        let last = days[days.count - 1]
+        return TodayPathModel(days: days, stones: stones, crew: crew, dayXeroLabel: "\(last.label), \(text(last.date))")
     }
 }

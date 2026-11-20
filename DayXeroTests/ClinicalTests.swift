@@ -18,7 +18,7 @@ struct ClinicalTests {
 
     // MARK: CLIN-02
 
-    /// Smoke, not nicotine, speeds caffeine up: so smokers who named coffee, from Quit Day through its first week.
+    /// Smoke, not nicotine, speeds caffeine up: so smokers who named coffee, from Day Xero through its first week.
     @Test func theCoffeeNoteIsForSmokersInQuitWeek() {
         #expect(CaffeineAlert.applies(products: [.cigarettes], triggers: [.coffee], daysSinceQuit: 0))
         #expect(CaffeineAlert.applies(products: [.vape, .cigarettes], triggers: [.stress, .coffee], daysSinceQuit: 6))

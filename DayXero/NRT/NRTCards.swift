@@ -156,13 +156,13 @@ struct TaperCard: View {
                     if let next = schedule.next(after: current) {
                         Text("\(NRTReminderPlan.strength(next.step.strengthMg)) from \(next.start.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))").dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
                     } else {
-                        Text("Then Quit Day").dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
+                        Text("Then Day Xero").dxType(.footnote).foregroundStyle(DX.Ground.reading.muted)
                     }
                 } else if let start = schedule.start, !schedule.hasStarted(at: now) {
                     Text("Starts \(start.formatted(.dateTime.weekday(.wide).day().month()))")
                         .dxFace(.body, 16, weight: 600).foregroundStyle(DX.Ground.reading.ink)
                 } else {
-                    Text("Taper done. Quit Day is next.").dxFace(.body, 16, weight: 600)
+                    Text("Taper done. Day Xero is next.").dxFace(.body, 16, weight: 600)
                         .foregroundStyle(DX.Ground.reading.ink)
                 }
             }
@@ -200,9 +200,9 @@ struct NRTInviteRow: View {
     }
 }
 
-/// The optional pouch-strength taper (S9.3). It ends the day before Quit Day and only runs if it fits;
-/// moving Quit Day to make room is the person's choice, never automatic.
-/// v5 (052): when it doesn't fit, the conflict is the title, and the chart shows where Quit Day falls in it.
+/// The optional pouch-strength taper (S9.3). It ends the day before Day Xero and only runs if it fits;
+/// moving Day Xero to make room is the person's choice, never automatic.
+/// v5 (052): when it doesn't fit, the conflict is the title, and the chart shows where Day Xero falls in it.
 struct TaperSetupView: View {
     let profile: UserProfile
     let onDone: () -> Void
@@ -253,9 +253,9 @@ struct TaperSetupView: View {
                     .dxArrive(0)
                     Group {
                         if fits {
-                            Text("Lower the strength before Quit Day, so stopping feels smaller. It ends the day before Quit Day, \(profile.quitDay.formatted(.dateTime.weekday(.wide).month(.abbreviated).day())).")
+                            Text("Lower the strength before Day Xero, so stopping feels smaller. It ends the day before Day Xero, \(profile.quitDay.formatted(.dateTime.weekday(.wide).month(.abbreviated).day())).")
                         } else {
-                            Text("Quit Day is in ^[\(daysToQuit(clock)) day](inflect: true). Stepping your pouches down first makes stopping feel smaller.")
+                            Text("Day Xero is in ^[\(daysToQuit(clock)) day](inflect: true). Stepping your pouches down first makes stopping feel smaller.")
                         }
                     }
                     .dxType(.footnote).foregroundStyle(g.muted)
@@ -339,9 +339,9 @@ struct TaperSetupView: View {
                         .buttonStyle(.dx(.quiet, on: .reading))
                     }
                 } else {
-                    // Nothing moves on its own: moving Quit Day is a choice, and so is shortening the steps.
+                    // Nothing moves on its own: moving Day Xero is a choice, and so is shortening the steps.
                     let newQuit = PouchTaperPlan.quitDayToFit(steps: steps, now: .now, clock: clock)
-                    Button("Move Quit Day to \(newQuit.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))") {
+                    Button("Move Day Xero to \(newQuit.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))") {
                         withAnimation(motion.animation(.timingCurve(0.2, 0.8, 0.2, 1, duration: 0.7))) {
                             profile.quitDay = newQuit
                         }

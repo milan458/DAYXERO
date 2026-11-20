@@ -141,7 +141,7 @@ struct BaselineMoneyCard: View {
                 .frame(width: 112, height: 100)
                 .accessibilityHidden(true)
             }
-            (Text(verbatim: daily).dxRun(15, weight: 700).foregroundStyle(g.ink) + Text(" Yours again from Quit Day."))
+            (Text(verbatim: daily).dxRun(15, weight: 700).foregroundStyle(g.ink) + Text(" Yours again from Day Xero."))
                 .dxType(.footnote).foregroundStyle(g.muted)
                 .padding(.top, 12)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -1054,7 +1054,7 @@ struct ObstaclesScreen: View {
 
     var body: some View {
         OnboardingScaffold(title: "What usually gets in the way?",
-                           subtitle: "Pick any that might trip you up after Quit Day.",
+                           subtitle: "Pick any that might trip you up after Day Xero.",
                            model: model, skipTitle: "Skip for now") {
             DXFlowLayout(spacing: 8) { ForEach(Self.order, id: \.self) { chip($0) } }
                 .padding(.top, -2)

@@ -2,7 +2,7 @@ import DayXeroCore
 import SwiftUI
 
 // Today's top (v5, cook/site/screens/015, 016, 018). A paper-cut dawn with Xero on his own knoll and a date pill by day;
-// after Quit Day, the latest day badge stamps onto a cream disc in the sky and Xero stands beside it; after 6 PM,
+// after Day Xero, the latest day badge stamps onto a cream disc in the sky and Xero stands beside it; after 6 PM,
 // Glim's midnight meadow. The greeting and the day's line sit under the scene on the page. Scrolling folds it into
 // the slim header pinned at the top (017).
 //
@@ -51,35 +51,35 @@ struct TodayHeroModel {
     enum Mode: Equatable {
         /// Prep: the knoll and Xero.
         case prep
-        /// After Quit Day: the badge earned (a day number, or nil for Day Xero) on its disc.
+        /// After Day Xero: the badge earned (a day number, or nil for Day Xero) on its disc.
         case postQuit(earned: Int?)
     }
 
     let night: Bool
     let mode: Mode
     let greeting: String
-    /// "4 days to Quit Day · Sun, 8 Nov", "Quit Day is today", "Day 4 · 4 of 4 days smoke-free".
+    /// "4 days to Day Xero · Sun, 8 Nov", "Day Xero is today", "Day 4 · 4 of 4 days smoke-free".
     let line: String
     let why: String?
     let profileInitial: String?
     /// The date pill: "Mon, Nov 2 · Prep 4", "Fri, Nov 13".
     let pill: String
-    /// After Quit Day: "6d 14h" and "free", the title with "free" marked.
+    /// After Day Xero: "6d 14h" and "free", the title with "free" marked.
     let titleLead: String
     let titleWord: String
-    /// After Quit Day: money kept and units not used, counted up.
+    /// After Day Xero: money kept and units not used, counted up.
     let moneyKept: Double
     let currencyCode: String
     let avoided: Int
     let avoidedUnit: String
-    /// After Quit Day: the next milestone, its progress, and "Friday · 14 days free".
+    /// After Day Xero: the next milestone, its progress, and "Friday · 14 days free".
     let nextMilestone: Int?
     let nextFraction: Double
     let aheadText: String?
     /// The slim header's title and line.
     let slimTitle: String
     let slimLine: String
-    /// "$49", beside "kept" on the right of the slim header after Quit Day (017).
+    /// "$49", beside "kept" on the right of the slim header after Day Xero (017).
     var slimMoney: String?
     let crewStage: Int
     let accessibilityLabel: String
@@ -91,7 +91,7 @@ struct TodayHero: View {
     let model: TodayHeroModel
     let topInset: CGFloat
     let onProfile: () -> Void
-    /// After Quit Day the badge opens what's changing in the body.
+    /// After Day Xero the badge opens what's changing in the body.
     let onRing: (() -> Void)?
     @State private var cheer = false
     private let motion = MotionPolicy()
@@ -227,7 +227,7 @@ struct TodayHero: View {
         .accessibilityLabel(Text("Profile and settings"))
     }
 
-    /// Under the scene: the greeting and the day's line (prep); the greeting, the title and the stats (after Quit Day).
+    /// Under the scene: the greeting and the day's line (prep); the greeting, the title and the stats (after Day Xero).
     @ViewBuilder
     private var below: some View {
         switch model.mode {

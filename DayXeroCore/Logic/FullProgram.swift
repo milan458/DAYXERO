@@ -49,12 +49,12 @@ public enum FullProgram {
 
     public static func has(_ feature: Feature, isPro: Bool) -> Bool { isPro || !feature.isPaid }
 
-    /// When a trial bought at `start` ends, and how that falls against the Quit Day.
+    /// When a trial bought at `start` ends, and how that falls against the Day Xero.
     public static func trialEnd(startingOn start: Date, calendar: Calendar = .current) -> Date {
         calendar.date(byAdding: .day, value: trialDays, to: start) ?? start
     }
 
-    /// Whole days between the Quit Day and the trial's end: positive when it ends after the Quit Day.
+    /// Whole days between the Day Xero and the trial's end: positive when it ends after the Day Xero.
     public static func trialEndsDaysAfterQuitDay(trialEnd: Date, quitDay: Date, calendar: Calendar = .current) -> Int {
         calendar.dateComponents([.day], from: calendar.startOfDay(for: quitDay), to: calendar.startOfDay(for: trialEnd)).day ?? 0
     }

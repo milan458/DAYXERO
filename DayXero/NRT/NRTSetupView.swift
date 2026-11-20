@@ -50,7 +50,7 @@ struct NRTSetupView: View {
     init(profile: UserProfile, onDone: @escaping () -> Void) {
         self.profile = profile
         self.onDone = onDone
-        // Starts on Quit Day, or today if that's passed.
+        // Starts on Day Xero, or today if that's passed.
         let quit = Calendar.current.startOfDay(for: profile.quitDay)
         _startDate = State(initialValue: max(quit, Calendar.current.startOfDay(for: .now)))
         _dailyTime = State(initialValue: Calendar.current.date(bySettingHour: 7, minute: 30, second: 0, of: .now) ?? .now)

@@ -13,7 +13,7 @@ struct SessionOpen: Identifiable, Hashable {
 enum ProgramV2Access {
     static var freeSessions: Set<String> { FullProgram.freeSessionIds }
     /// The Day Xero session: its completion is the sun moment, and anyone still without the full program gets the
-    /// Quit Day offer after it once (decision 23). Day Xero is paid, so that only happens to someone whose
+    /// Day Xero offer after it once (decision 23). Day Xero is paid, so that only happens to someone whose
     /// subscription ended part-way.
     static let offerAfter = "DX"
 
@@ -40,11 +40,11 @@ struct ProgramToday {
     let minutes: Int
     /// The latest finished session's mission, shown until the next session opens.
     let mission: String?
-    /// Quit Day has come and this is a prep session left over: catch-up that never holds back Day Xero (S27.7).
+    /// Day Xero has come and this is a prep session left over: catch-up that never holds back Day Xero (S27.7).
     let prepRunsOver: Bool
     /// A quit-week session from an earlier day. Today's header counts "Day 3" by the calendar, so a "Day 2" session
     /// is labelled a catch-up rather than "Today", and the screen never shows two different days as today (S27.5).
-    /// Prep left over after the Quit Day is a catch-up too (S27.7).
+    /// Prep left over after the Day Xero is a catch-up too (S27.7).
     let isCatchUp: Bool
 
     @MainActor

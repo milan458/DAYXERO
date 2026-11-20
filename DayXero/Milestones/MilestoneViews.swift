@@ -580,14 +580,14 @@ struct MilestonesRow: View {
         .padding(.top, DX.Space.s)
     }
 
-    /// v5 (036): the kit medallions. Quit Day is the Day Xero coin, the days their day badges; reached ones earned,
+    /// v5 (036): the kit medallions. Day Xero is the Day Xero coin, the days their day badges; reached ones earned,
     /// the next one with its ring toward it, the rest locked.
     private func badge(_ m: Milestone, reached: Bool, isNext: Bool) -> some View {
         let bottom: String = if isNext {
             String(localized: "in \(m.reachedOnDay - daysClear) days")
         } else {
             switch m {
-            case .quitDay: String(localized: "Quit Day")
+            case .quitDay: String(localized: "Day Xero")
             case .days(1): String(localized: "day")
             case .days(365): String(localized: "year")
             case .days: String(localized: "days")

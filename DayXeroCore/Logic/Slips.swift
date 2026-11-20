@@ -14,12 +14,12 @@ public struct SlipRecord: Sendable, Equatable {
     }
 }
 
-/// Rules for slips (S8). A slip never changes days since Quit Day, the Home hero or milestones. Since S27.9 it does
+/// Rules for slips (S8). A slip never changes days since Day Xero, the Home hero or milestones. Since S27.9 it does
 /// take its units off "not smoked", "puffs not taken" and "pouches not used", so those numbers stay true.
 public enum Slips {
     /// From this many slips in one day, the talk-through ends with an offer of NRT help or another look at the plan.
     public static let toughDayThreshold = 3
-    /// Slips on this many of the last `freshStartWindow` days bring Jelli's offer of a fresh Quit Day (S27.9).
+    /// Slips on this many of the last `freshStartWindow` days bring Jelli's offer of a fresh Day Xero (S27.9).
     public static let freshStartThreshold = 4
     public static let freshStartWindow = 7
 
@@ -36,7 +36,7 @@ public enum Slips {
         }
     }
 
-    /// Days among the last `freshStartWindow` (today included) with at least one slip on or after Quit Day.
+    /// Days among the last `freshStartWindow` (today included) with at least one slip on or after Day Xero.
     public static func slipDays(timestamps: [Date], quitDay: Date, now: Date, clock: DayClock) -> Int {
         let today = clock.day(containing: now)
         let quit = clock.startOfDate(quitDay)
@@ -46,7 +46,7 @@ public enum Slips {
         return days.count
     }
 
-    /// Whether Jelli offers a fresh Quit Day. A new Quit Day keeps every log; slips before it stop counting here.
+    /// Whether Jelli offers a fresh Day Xero. A new Day Xero keeps every log; slips before it stop counting here.
     public static func offersFreshStart(timestamps: [Date], quitDay: Date, now: Date, clock: DayClock) -> Bool {
         slipDays(timestamps: timestamps, quitDay: quitDay, now: now, clock: clock) >= freshStartThreshold
     }

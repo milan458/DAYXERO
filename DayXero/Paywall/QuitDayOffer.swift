@@ -2,7 +2,7 @@ import DayXeroCore
 import SwiftData
 import SwiftUI
 
-/// Q3 Quit Day offer (cream, serious tier): shown once after the Day Xero session to anyone without the full
+/// Q3 Day Xero offer (cream, serious tier): shown once after the Day Xero session to anyone without the full
 /// program (decision 23). Under MON-01 Day Xero is paid, so this only reaches someone whose subscription ended
 /// part-way. Prices, trial length and the plan list come from the store; nothing is charged today when there's a
 /// trial. Closing keeps the free version: Prep 1 to 3, the counter, Craving SOS and the breathing timer.

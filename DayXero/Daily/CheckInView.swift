@@ -137,7 +137,7 @@ struct CheckInView: View {
     private var eyebrow: String {
         // The day the check-in counts for: before the day boundary it's still the evening just lived.
         let weekday = DailyRhythm(clock: DayClock(boundaryHour: profile.dayBoundaryHour)).day(at: .now).formatted(.dateTime.weekday(.wide))
-        if prep { return String(localized: "Prep day \(prepDay) check-in · \(stats.daysUntilQuitDay(at: .now)) days to Quit Day") }
+        if prep { return String(localized: "Prep day \(prepDay) check-in · \(stats.daysUntilQuitDay(at: .now)) days to Day Xero") }
         let day = DayClock(boundaryHour: profile.dayBoundaryHour).days(fromDate: profile.quitDay, to: .now) + 1
         return day > 0 ? String(localized: "\(weekday) check-in, Day \(day)") : String(localized: "\(weekday) check-in")
     }
@@ -436,7 +436,7 @@ struct TomorrowPlan: View {
     }
 }
 
-/// When "today" ends (S11.3). Days since Quit Day, lessons and check-ins all follow it. The check-in's "When does your
+/// When "today" ends (S11.3). Days since Day Xero, lessons and check-ins all follow it. The check-in's "When does your
 /// day end?" and Settings › Day ends at both open this one view (S27.14).
 struct DayEndSettings: View {
     let profile: UserProfile

@@ -139,7 +139,7 @@ struct GridShape: Shape {
     }
 }
 
-/// The three plan pieces' paper-cut art (011): a flag for Quit Day, a breaking wave, a heart for the reason.
+/// The three plan pieces' paper-cut art (011): a flag for Day Xero, a breaking wave, a heart for the reason.
 struct PlanPieceArt: View {
     enum Kind { case flag, wave, heart }
     let kind: Kind

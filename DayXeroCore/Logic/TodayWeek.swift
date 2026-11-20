@@ -2,8 +2,8 @@ import Foundation
 
 /// Today's week strip (Today redesign, 4 Nov 2026): seven days with today among them.
 ///
-/// During prep the strip ends on Quit Day once Quit Day is within the week, so the countdown has somewhere to land;
-/// with Quit Day further off it starts the day before today. From Quit Day on, it starts on Quit Day for the first
+/// During prep the strip ends on Day Xero once Day Xero is within the week, so the countdown has somewhere to land;
+/// with Day Xero further off it starts the day before today. From Day Xero on, it starts on Day Xero for the first
 /// days, then keeps three days behind today.
 ///
 /// A tick means the same thing the numbers around it mean: during prep, a session was finished that day; from Quit
@@ -12,9 +12,9 @@ public struct TodayWeek: Equatable, Sendable {
     public enum Mark: Equatable, Sendable {
         /// Before the program started: just the date.
         case before
-        /// Prep: a session was finished that day. From Quit Day: no slip logged that day.
+        /// Prep: a session was finished that day. From Day Xero: no slip logged that day.
         case done
-        /// Prep: no session that day. From Quit Day: a slip was logged. Drawn plainly, never as a failure.
+        /// Prep: no session that day. From Day Xero: a slip was logged. Drawn plainly, never as a failure.
         case quiet
         /// Today, still under way.
         case today
@@ -30,7 +30,7 @@ public struct TodayWeek: Equatable, Sendable {
     }
 
     public let days: [Day]
-    /// Quit Day's date, which may be outside the seven days: before it a tick is a session, from it a day with no slip.
+    /// Day Xero's date, which may be outside the seven days: before it a tick is a session, from it a day with no slip.
     public let quitDay: Date
 
     public init(days: [Day], quitDay: Date) {
@@ -70,7 +70,7 @@ public struct TodayWeek: Equatable, Sendable {
             if date > today {
                 mark = .future
             } else if date < quit {
-                // Prep, including today before Quit Day.
+                // Prep, including today before Day Xero.
                 if sessionDays.contains(date) {
                     mark = .done
                 } else if date == today {
@@ -89,7 +89,7 @@ public struct TodayWeek: Equatable, Sendable {
     }
 }
 
-/// How far the ring on Today has come after Quit Day: from Quit Day to the next change in the body that is counted
+/// How far the ring on Today has come after Day Xero: from Day Xero to the next change in the body that is counted
 /// down (CLIN-01 "felt" changes never are), 0...1. Nil once every counted change has started.
 public enum TodayRing {
     public static func fraction(elapsedHours: Double, nextChangeFromHours: Double?) -> Double? {

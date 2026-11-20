@@ -107,14 +107,14 @@ struct ProgramUnlockTests {
         #expect(states(prep, quitDay: 10, now: at(10, 6))["DX"] == .available)
     }
 
-    /// 19 Nov 2026: Day Xero waits for prep. A Quit Day that comes with prep unfinished doesn't open it.
+    /// 19 Nov 2026: Day Xero waits for prep. A Day Xero that comes with prep unfinished doesn't open it.
     @Test func dayXeroWaitsForPrepEvenOnTheQuitDay() {
         var unfinished: [String: ProgramUnlock.Record] = ["P1": .init(completedAt: at(1)), "P2": .init(completedAt: at(2))]
-        // Before the Quit Day the next prep session is the one waiting, and Day Xero stays locked behind it.
+        // Before the Day Xero the next prep session is the one waiting, and Day Xero stays locked behind it.
         let before = states(unfinished, quitDay: 10, now: at(9))
         #expect(before["P3"] == .available)
         #expect(before["DX"] == .locked)
-        // On the Quit Day, prep is still the session to do and Day Xero stays locked.
+        // On the Day Xero, prep is still the session to do and Day Xero stays locked.
         let quitDay = states(unfinished, quitDay: 10, now: at(10, 6))
         #expect(quitDay["P3"] == .available)
         #expect(quitDay["DX"] == .locked)
@@ -151,7 +151,7 @@ struct ProgramUnlockTests {
     @Test func prepCatchUpHasNoOneADayWaitAfterTheQuitDay() {
         let quit = at(10, 8)
         var records: [String: ProgramUnlock.Record] = ["P1": .init(completedAt: at(1)), "DX": .init(completedAt: quit)]
-        // P2 opens straight away after the Quit Day, and P3 the same day once P2 is done.
+        // P2 opens straight away after the Day Xero, and P3 the same day once P2 is done.
         #expect(states(records, quitTimestamp: quit, now: at(10, 9))["P2"] == .available)
         records["P2"] = .init(completedAt: at(10, 9))
         #expect(states(records, quitTimestamp: quit, now: at(10, 10))["P3"] == .available)
@@ -162,7 +162,7 @@ struct ProgramUnlockTests {
     @Test func homeShowsPrepCatchUpWhileTheWeekChainWaits() {
         let quit = at(10, 8)
         let records: [String: ProgramUnlock.Record] = ["P1": .init(completedAt: at(1)), "DX": .init(completedAt: quit)]
-        // Evening of the Quit Day: Day 2 waits for tomorrow, so the open catch-up comes first.
+        // Evening of the Day Xero: Day 2 waits for tomorrow, so the open catch-up comes first.
         let home = unlock.current(records: records, quitDay: at(10, 0), quitTimestamp: quit, now: at(10, 20))
         #expect(home?.id == "P2" && home?.state == .available)
         // Next morning the week chain is open again and leads.
@@ -171,7 +171,7 @@ struct ProgramUnlockTests {
     }
 
     @Test func theDayXeroDateIsTheQuitDay() {
-        // The same date the old "prep finished early" case waited for: the Quit Day's calendar date.
+        // The same date the old "prep finished early" case waited for: the Day Xero's calendar date.
         #expect(unlock.dayXeroDate(quitDay: at(10, 15)) == unlock.clock.startOfDate(at(10, 0)))
     }
 

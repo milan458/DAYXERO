@@ -159,7 +159,7 @@ struct RootView: View {
             .onChange(of: scenePhase, initial: true) { _, phase in
                 if phase == .background { WidgetSync.refresh(in: modelContext, isPro: entitlement.isPro) }
                 guard phase == .active else { return }
-                // Prep fallen behind moves the Quit Day back before anything reads it (19 Nov 2026).
+                // Prep fallen behind moves the Day Xero back before anything reads it (19 Nov 2026).
                 if let profile = profiles.first { QuitDaySlide.apply(profile, in: modelContext) }
                 WidgetSync.refresh(in: modelContext, isPro: entitlement.isPro)
                 NRTReminders.refresh(profile: profiles.first)

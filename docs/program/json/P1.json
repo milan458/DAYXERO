@@ -249,20 +249,20 @@
         {
           "id": "P1.4h",
           "type": "info",
-          "title": "Your Quit Day",
-          "body": "One more thing. Your Quit Day is {quit_date}. You don't need to feel ready yet. That's what the next six days are for."
+          "title": "Your Day Xero",
+          "body": "One more thing. Your Day Xero is {quit_date}. You don't need to feel ready yet. That's what the next six days are for."
         },
         {
           "id": "P1.4i",
           "type": "commit",
-          "text": "Hold to commit to your Quit Day: {quit_date}",
+          "text": "Hold to commit to your Day Xero: {quit_date}",
           "holdSeconds": 2
         },
         {
           "id": "P1.4j",
           "type": "info",
           "title": "All set",
-          "body": "Your reasons are saved, your check-ins are set, and your Quit Day is on the calendar. Keep using as normal. Just watch."
+          "body": "Your reasons are saved, your check-ins are set, and your Day Xero is on the calendar. Keep using as normal. Just watch."
         }
       ]
     },

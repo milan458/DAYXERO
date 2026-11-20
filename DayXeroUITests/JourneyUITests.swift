@@ -1,6 +1,6 @@
 import XCTest
 
-/// The whole journey on a real build (S16.1): onboarding → prep → Quit Day → first week → maintenance.
+/// The whole journey on a real build (S16.1): onboarding → prep → Day Xero → first week → maintenance.
 /// The hard paywall follows onboarding (16 Nov 2026): the run starts the free trial there on the mock store.
 /// The clock can't move forward in a UI test, so the later stages launch with a seeded scenario.
 /// Each step saves a screenshot: as a test attachment, and to $DX_SHOTS when CI sets it (S16.2).
@@ -21,7 +21,7 @@ final class JourneyUITests: XCTestCase {
         // F02 Welcome: the 18+ confirmation is the footer.
         snap(app, "01-welcome")
         tapSettled(app, "Get started")
-        // How it works: prep, Quit Day, four weeks. Nothing to answer.
+        // How it works: prep, Day Xero, four weeks. Nothing to answer.
         snap(app, "01b-how-it-works")
         tapSettled(app, "Continue")
         tap(button(app, "Disposables"), timeout: 10)
@@ -59,12 +59,12 @@ final class JourneyUITests: XCTestCase {
         // Your day: the morning pledge and the night check-in.
         snap(app, "03c-your-day")
         tapSettled(app, "Continue")
-        // F04 Quit Day: hold for 1.5 s.
+        // F04 Day Xero: hold for 1.5 s.
         snap(app, "04-quit-day")
         let hold = app.buttons["onboarding.hold"]
         XCTAssert(hold.waitForExistence(timeout: 5))
         hold.press(forDuration: 2.2)
-        // The hold hands over to Continue once Quit Day is set (010).
+        // The hold hands over to Continue once Day Xero is set (010).
         tapSettled(app, "Continue")
         // F06 the plan is ready: nothing is charged on it. (The "plan builds" screen before it was removed, 19 Nov 2026.)
         XCTAssert(app.buttons["Start my prep week"].waitForExistence(timeout: 10), "Plan screen didn't appear")
@@ -124,7 +124,7 @@ final class JourneyUITests: XCTestCase {
         let app = launch(["-dx.homeScenario", "day3", "-dx.store", "pro"])
         XCTAssert(app.buttons["Craving SOS"].waitForExistence(timeout: 10))
         snap(app, "20-home-day3")
-        // A use after Quit Day is a slip: talked through, and nothing resets (S8).
+        // A use after Day Xero is a slip: talked through, and nothing resets (S8).
         tap(button(app, "Log"))
         tapWhenStill(app, logSheetRow(app, "vape"), name: "Vaped")
         XCTAssert(app.staticTexts["Thanks for telling me."].waitForExistence(timeout: 5))

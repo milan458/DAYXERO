@@ -330,8 +330,8 @@ struct PaywallOffer: View {
 
     private static let features: [Feature] = [
         Feature(id: 0, title: "Your 7-day prep", detail: "A short session a day, before you quit", icon: Glyph.path),
-        Feature(id: 1, title: "Quit Day, hour by hour", detail: "Your first day planned before it starts", icon: Glyph.sun),
-        Feature(id: 2, title: "Four weeks of coaching", detail: "A weekly session after Quit Day", icon: Glyph.chat),
+        Feature(id: 1, title: "Day Xero, hour by hour", detail: "Your first day planned before it starts", icon: Glyph.sun),
+        Feature(id: 2, title: "Four weeks of coaching", detail: "A weekly session after Day Xero", icon: Glyph.chat),
         Feature(id: 3, title: "Craving SOS with Jelli", detail: "Breathe through any craving, any time", icon: Glyph.wave),
         Feature(id: 4, title: "Mornings and nights", detail: "A pledge with Xero, a check-in with Glim", icon: Glyph.moon),
         Feature(id: 5, title: "NRT tracker", detail: "Patches and gum, stepped down weekly", icon: Glyph.patch),
@@ -363,7 +363,7 @@ struct PaywallOffer: View {
                     .accessibilityAddTraits(.isHeader)
                     .padding(.top, 14)
                     .dxArrive(0)
-                    Text("Built around your Quit Day, \(quitDay, format: dayFormat).")
+                    Text("Built around your Day Xero, \(quitDay, format: dayFormat).")
                         .dxFace(.body, 16, weight: 400)
                         .foregroundStyle(PW2.muted)
                         .multilineTextAlignment(.center)
@@ -558,7 +558,7 @@ struct PaywallOffer: View {
         }
     }
 
-    /// What happens when: the trial's three dates, or for a paid start today, the Quit Day and the renewal.
+    /// What happens when: the trial's three dates, or for a paid start today, the Day Xero and the renewal.
     private var stops: [Stop] {
         guard let option = model.selectedOption else { return [] }
         let price = option.priceText
@@ -581,7 +581,7 @@ struct PaywallOffer: View {
         var list = [Stop(id: 0, when: today, what: String(localized: "\(price), your full program opens"), icon: Glyph.lock,
                          fill: PW2.coral, ink: PW2.cream)]
         if calendar.startOfDay(for: quitDay) > calendar.startOfDay(for: .now) {
-            list.append(Stop(id: 1, when: quitDay.formatted(dayFormat), what: String(localized: "Your Quit Day"), icon: Glyph.sun,
+            list.append(Stop(id: 1, when: quitDay.formatted(dayFormat), what: String(localized: "Your Day Xero"), icon: Glyph.sun,
                              fill: PW2.gold, ink: PW2.navy))
         }
         let renews: Date? = switch option.plan {

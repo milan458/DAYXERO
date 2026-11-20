@@ -18,7 +18,7 @@ public extension DX {
     enum Ground: String, CaseIterable, Sendable {
         /// First breath, beginnings. Brand use pending decision 18.
         case coral
-        /// Xero: days, pledge, Quit Day, welcome, reminders.
+        /// Xero: days, pledge, Day Xero, welcome, reminders.
         case apricot
         /// Talking with Xero (chat) only.
         case lilac

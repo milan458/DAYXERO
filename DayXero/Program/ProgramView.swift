@@ -460,7 +460,7 @@ struct ProgramView: View {
             .padding(.top, DX.Space.xs)
         }
         if prep, profile.pouchTaper == nil, profile.products.contains(where: { $0.product == .pouches }) {
-            NRTInviteRow(title: "Step down your pouches", detail: "Optional, before Quit Day", systemImage: "chart.line.downtrend.xyaxis") {
+            NRTInviteRow(title: "Step down your pouches", detail: "Optional, before Day Xero", systemImage: "chart.line.downtrend.xyaxis") {
                 nrt.sheet = .taper
             }
         }

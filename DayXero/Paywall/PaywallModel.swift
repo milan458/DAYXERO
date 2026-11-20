@@ -128,7 +128,7 @@ final class PaywallModel {
     var notice: LocalizedStringResource?
     /// Whether we can keep the "we'll remind you" promise (notifications allowed or not yet asked).
     private(set) var canRemind = true
-    /// The Quit Day, so a paywall can say where the trial ends against it. Every plan is sold whenever the Quit Day is.
+    /// The Day Xero, so a paywall can say where the trial ends against it. Every plan is sold whenever the Day Xero is.
     var quitDay: Date?
     /// The person's usual nicotine spend, for the price anchor (MON-03). nil hides it.
     var spend: Spend?
@@ -174,8 +174,8 @@ final class PaywallModel {
         return calendar.date(byAdding: .day, value: days, to: now())
     }
 
-    /// How many days after the Quit Day the selected plan's trial ends: 0 on the Quit Day, negative before it.
-    /// nil without a trial or a Quit Day.
+    /// How many days after the Day Xero the selected plan's trial ends: 0 on the Day Xero, negative before it.
+    /// nil without a trial or a Day Xero.
     var trialEndsAfterQuitDay: Int? {
         guard let end = trialEndDate, let quitDay else { return nil }
         return FullProgram.trialEndsDaysAfterQuitDay(trialEnd: end, quitDay: quitDay, calendar: calendar)

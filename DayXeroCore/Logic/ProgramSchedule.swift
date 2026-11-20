@@ -2,10 +2,10 @@ import Foundation
 
 /// The program's day list and when each day opens.
 ///
-/// Prep days run from the day someone finishes onboarding to the day before Quit Day. The quit week
-/// is seven days starting on Quit Day; the maintenance arc is four weekly sessions after that.
+/// Prep days run from the day someone finishes onboarding to the day before Day Xero. The quit week
+/// is seven days starting on Day Xero; the maintenance arc is four weekly sessions after that.
 /// A day opens once the previous day is done (plan §1). Quit-week and maintenance days also wait for
-/// their calendar day, because they line up with real days after Quit Day (S4.8, default pending Milan).
+/// their calendar day, because they line up with real days after Day Xero (S4.8, default pending Milan).
 public struct ProgramSchedule: Sendable {
     public static let quitWeekDays = 7
     public static let maintenanceWeeks = 4
@@ -16,7 +16,7 @@ public struct ProgramSchedule: Sendable {
 
     /// - Parameters:
     ///   - startedOn: the day onboarding finished (Day 1 of prep).
-    ///   - quitDay: Quit Day's calendar date.
+    ///   - quitDay: Day Xero's calendar date.
     public init(startedOn: Date, quitDay: Date, clock: DayClock) {
         let prepDays = max(clock.calendar.dateComponents([.day], from: clock.startOfDate(startedOn), to: clock.startOfDate(quitDay)).day ?? 0, 0)
         var outline = (0..<prepDays).map { ProgramDayID(phase: .prep, index: $0 + 1) }

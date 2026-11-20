@@ -1,6 +1,6 @@
 import Foundation
 
-/// Milestones to celebrate (S13.1): Quit Day, then days 1, 3, 7, 14, 30, 60, 90, 100, 180 and 365.
+/// Milestones to celebrate (S13.1): Day Xero, then days 1, 3, 7, 14, 30, 60, 90, 100, 180 and 365.
 /// They follow days clear, so a slip never takes one away.
 public enum Milestone: Hashable, Sendable, Identifiable {
     case quitDay
@@ -19,7 +19,7 @@ public enum Milestone: Hashable, Sendable, Identifiable {
         if id == "quitDay" { self = .quitDay } else if let n = Int(id), Milestones.days.contains(n) { self = .days(n) } else { return nil }
     }
 
-    /// Reached on Quit Day itself (day 1 on Home), the first full day the day after,
+    /// Reached on Day Xero itself (day 1 on Home), the first full day the day after,
     /// and every other milestone on the day days clear reaches it, matching Home.
     public func isReached(daysClear: Int) -> Bool {
         switch self {
@@ -64,7 +64,7 @@ public enum Milestone: Hashable, Sendable, Identifiable {
     /// Drafted by Claude for Milan to edit (S13.2). Lines that make a claim name a source from the health timeline.
     public var title: String {
         switch self {
-        case .quitDay: String(localized: "Quit Day")
+        case .quitDay: String(localized: "Day Xero")
         case .days(1): String(localized: "One day free")
         case .days(3): String(localized: "Three days free")
         case .days(7): String(localized: "One week free")
@@ -91,7 +91,7 @@ public enum Milestone: Hashable, Sendable, Identifiable {
         case .days(90): String(localized: "Three months. This is becoming your normal.")
         case .days(100): String(localized: "Triple digits.")
         case .days(180): String(localized: "Half a year. Look how far you've come.")
-        case .days(365): String(localized: "A full year since your Quit Day.")
+        case .days(365): String(localized: "A full year since your Day Xero.")
         case .days: ""
         }
     }
@@ -160,12 +160,12 @@ public enum Milestone: Hashable, Sendable, Identifiable {
         }
     }
 
-    /// "days since Quit Day" under the number; milestones count time since Quit Day so a slip never makes them untrue (S27.9).
+    /// "days since Day Xero" under the number; milestones count time since Day Xero so a slip never makes them untrue (S27.9).
     public var caption: String {
         switch self {
-        case .quitDay: String(localized: "Quit Day")
-        case .days(1): String(localized: "full day since Quit Day")
-        case .days: String(localized: "days since Quit Day")
+        case .quitDay: String(localized: "Day Xero")
+        case .days(1): String(localized: "full day since Day Xero")
+        case .days: String(localized: "days since Day Xero")
         }
     }
 }

@@ -12,7 +12,7 @@ public struct HealthTimeline: Sendable {
 
     public struct Item: Codable, Sendable, Equatable, Identifiable {
         public let id: String
-        /// The change starts this many hours after Quit Day begins…
+        /// The change starts this many hours after Day Xero begins…
         public let fromHours: Double
         /// …and is complete by this many. Equal for a single point in time.
         public let toHours: Double
@@ -128,13 +128,13 @@ public struct HealthTimeline: Sendable {
         }
     }
 
-    /// Hours since the start of Quit Day. Negative before it. Slips don't reset it, like days clear.
+    /// Hours since the start of Day Xero. Negative before it. Slips don't reset it, like days clear.
     public static func elapsedHours(quitDay: Date, now: Date, clock: DayClock) -> Double {
         now.timeIntervalSince(clock.startOfDate(quitDay)) / 3600
     }
 
     /// What Home and Progress feature: the change under way now (the latest to start, if several overlap) and the
-    /// next one still ahead. Before Quit Day nothing is under way and `next` is the first item.
+    /// next one still ahead. Before Day Xero nothing is under way and `next` is the first item.
     public static func nowAndNext(_ items: [Item], elapsedHours: Double) -> (now: Item?, next: Item?) {
         let underWay = items.filter { if case .underWay = state(of: $0, elapsedHours: elapsedHours) { true } else { false } }
         let ahead = items.filter { state(of: $0, elapsedHours: elapsedHours) == .ahead }

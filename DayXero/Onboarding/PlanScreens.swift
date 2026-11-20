@@ -1,9 +1,9 @@
 import DayXeroCore
 import SwiftUI
 
-// MARK: Quit Day calendar ("Pick another date" on F04)
+// MARK: Day Xero calendar ("Pick another date" on F04)
 
-/// Weeks from this one to the last allowed Quit Day. Prep days are tinted as one track that runs into Quit Day.
+/// Weeks from this one to the last allowed Day Xero. Prep days are tinted as one track that runs into Day Xero.
 struct QuitDayCalendar: View {
     @Binding var quitDay: Date
     let today: Date
@@ -40,9 +40,9 @@ struct QuitDayCalendar: View {
             HStack {
                 Text(verbatim: header).dxFont(15, weight: 600, style: .headline).foregroundStyle(Onb.ink)
                 Spacer()
-                // Each key matches its cell: prep days are the soft green track, Quit Day the solid green circle.
+                // Each key matches its cell: prep days are the soft green track, Day Xero the solid green circle.
                 legend(Onb.accentSoft, "Prep", outlined: true)
-                legend(Onb.accent, "Quit Day")
+                legend(Onb.accent, "Day Xero")
             }
             .accessibilityElement(children: .combine)
             HStack(spacing: 0) {
@@ -114,10 +114,10 @@ struct QuitDayCalendar: View {
         }
         .buttonStyle(.dxPress)
         .disabled(!selectable)
-        // Only the day becoming Quit Day buzzes, not the one it leaves.
+        // Only the day becoming Day Xero buzzes, not the one it leaves.
         .sensoryFeedback(DX.Haptic.select, trigger: quit) { _, isQuit in isQuit }
         .accessibilityLabel(Text(day, format: .dateTime.weekday(.wide).day().month(.wide)))
-        .accessibilityValue(Text(quit ? "Quit Day" : (prep ? (isToday ? "Today, prep day" : "Prep day") : "")))
+        .accessibilityValue(Text(quit ? "Day Xero" : (prep ? (isToday ? "Today, prep day" : "Prep day") : "")))
         .accessibilityAddTraits(quit ? [.isButton, .isSelected] : .isButton)
     }
 }

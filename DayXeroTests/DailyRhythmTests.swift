@@ -45,7 +45,7 @@ struct DailyRhythmTests {
         #expect(calendar.component(.weekday, from: r.day(at: at(26, 4))) == 2)
     }
 
-    /// The pledge shows Today's days clear: 0 in prep, 1 on Quit Day and its small hours, 3 two days later.
+    /// The pledge shows Today's days clear: 0 in prep, 1 on Day Xero and its small hours, 3 two days later.
     @Test func pledgeDaysClearMatchesToday() {
         let stats = ProgressStats(quitDay: at(20, 0), baselines: [], clock: DayClock(calendar: calendar, boundaryHour: 4))
         #expect(stats.isPrep(at: at(19, 9)) && stats.daysClear(at: at(19, 9)) == 0)

@@ -88,7 +88,7 @@ struct SlipFlow: View {
             if let profile { NRTSetupView(profile: profile) { showNRT = false } }
         }
         .dxCover(isPresented: $showQuitDay) {
-            // Settings › Quit Day sets the new date; logs, plans and history are untouched.
+            // Settings › Day Xero sets the new date; logs, plans and history are untouched.
             if let profile { SettingsSheet(profile: profile, start: .quitDay) }
         }
         .fullProgramPaywall(isPresented: $showPaywall, profile: profile)
@@ -397,12 +397,12 @@ struct SlipFlow: View {
         .dxReadingCard(radius: 22)
     }
 
-    /// After slips on 4 of the last 7 days (S27.9): Jelli offers a fresh Quit Day. Picking one keeps every log;
+    /// After slips on 4 of the last 7 days (S27.9): Jelli offers a fresh Day Xero. Picking one keeps every log;
     /// "Keep going as I am" just hides the card.
     private var freshStart: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("From Jelli").dxType(.caption).foregroundStyle(ground.muted)
-            Text("You've slipped on four of the last seven days. That's information, not failure. Want to pick a fresh Quit Day? Everything you've learned and logged stays.")
+            Text("You've slipped on four of the last seven days. That's information, not failure. Want to pick a fresh Day Xero? Everything you've learned and logged stays.")
                 .dxType(.footnote)
                 .fixedSize(horizontal: false, vertical: true)
             ViewThatFits {
@@ -415,7 +415,7 @@ struct SlipFlow: View {
     }
 
     private var freshPickButton: some View {
-        V4Chip(text: String(localized: "Pick a fresh Quit Day"), isOn: false, fill: DX.Fill.raised, ink: DX.Ground.reading.ink) {
+        V4Chip(text: String(localized: "Pick a fresh Day Xero"), isOn: false, fill: DX.Fill.raised, ink: DX.Ground.reading.ink) {
             showQuitDay = true
         }
     }
@@ -720,7 +720,7 @@ private struct PlanPathGlyph: View {
     }
 }
 
-/// "Since Quit Day · 7 days" with the Day Xero sun and a tick per day (043).
+/// "Since Day Xero · 7 days" with the Day Xero sun and a tick per day (043).
 private struct SinceQuitTile: View {
     let quitDay: Date
     let days: Int
@@ -731,7 +731,7 @@ private struct SinceQuitTile: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 6) {
                 DXIcon(.calendar, size: 16, weight: 2.4)
-                Text("Since Quit Day")
+                Text("Since Day Xero")
             }
             .dxType(.caption).foregroundStyle(ground.muted)
             HStack(alignment: .firstTextBaseline, spacing: 0) {
@@ -753,7 +753,7 @@ private struct SinceQuitTile: View {
         .frame(maxWidth: .infinity, minHeight: 116, alignment: .topLeading)
         .dxCardChrome(on: .reading)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("Since Quit Day, \(days) days"))
+        .accessibilityLabel(Text("Since Day Xero, \(days) days"))
     }
 
     @ViewBuilder

@@ -57,8 +57,8 @@ public enum TimeFree {
     }
 }
 
-/// Resilience on Today's post-quit hero (UX-09, CLIN-07): days since Quit Day with no slip logged, out of all days since
-/// Quit Day, as "45 of 46 days · 98%". Quit Day counts as day 1, as in "days since Quit Day". It never resets to zero:
+/// Resilience on Today's post-quit hero (UX-09, CLIN-07): days since Day Xero with no slip logged, out of all days since
+/// Day Xero, as "45 of 46 days · 98%". Day Xero counts as day 1, as in "days since Day Xero". It never resets to zero:
 /// a slip takes one day off the clear count, and every clear day after it adds one back.
 public enum Resilience {
     public struct Days: Sendable, Equatable {
@@ -78,7 +78,7 @@ public enum Resilience {
         }
     }
 
-    /// Clear days and all days since Quit Day. Before Quit Day: 0 of 0.
+    /// Clear days and all days since Day Xero. Before Day Xero: 0 of 0.
     public static func days(quitDay: Date, slips: [Date], now: Date, clock: DayClock) -> Days {
         let start = clock.startOfDate(quitDay)
         let today = clock.day(containing: now)

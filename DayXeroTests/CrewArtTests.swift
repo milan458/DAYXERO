@@ -51,7 +51,7 @@ struct CrewArtTests {
         #expect([0, 6, 7, 13, 14, 27, 28, 365].map(CrewGrowth.stage(daysClear:)) == [1, 1, 2, 2, 3, 3, 4, 4])
     }
 
-    /// Persona checks: Day 1 (Quit Day) 23, Sun 8 Nov (3 days clear) 28, prep 20, capped at 100.
+    /// Persona checks: Day 1 (Day Xero) 23, Sun 8 Nov (3 days clear) 28, prep 20, capped at 100.
     @Test func skyClarityMatchesThePersona() {
         #expect(CrewGrowth.clarity(daysClear: 0) == 20)
         #expect(CrewGrowth.clarity(daysClear: 1) == 23)

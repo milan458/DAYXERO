@@ -2,7 +2,7 @@ import SwiftUI
 
 /// The one medallion family (kit.js `badge`): milestones only, no XP or points.
 /// - `prep` 1-7: scalloped stamps, one per finished prep session.
-/// - `xero`: Day Xero, the zero with a sunrise in its window, earned when the Quit Day commit is held.
+/// - `xero`: Day Xero, the zero with a sunrise in its window, earned when the Day Xero commit is held.
 /// - `day` 1, 3, 7, 14, 30, 60, 90, 180, 365; `wave` 1, 10, 25, 50, 100; `night` 3, 7, 14, 30.
 /// States: earned (full colour), next (dashed ring, or a progress arc toward it), locked (dashed outline and a padlock).
 /// Everything is drawn in the kit's 100 × 100 box and scaled to `size`.

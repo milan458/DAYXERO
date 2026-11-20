@@ -3,11 +3,11 @@ import Foundation
 import Observation
 import SwiftData
 
-/// Quit Day defaults. Placeholder until the ported program content sets the prep length (S2.8).
+/// Day Xero defaults. Placeholder until the ported program content sets the prep length (S2.8).
 enum QuitDayPolicy {
     /// A full prep week: one prep session a day.
     static let recommendedDaysAhead = 7
-    /// The range the old date picker allowed (S27.7). Onboarding no longer offers a date (19 Nov 2026): Quit Day is
+    /// The range the old date picker allowed (S27.7). Onboarding no longer offers a date (19 Nov 2026): Day Xero is
     /// set a week out and follows prep from there (`QuitDaySlide`).
     static let earliestDaysAhead = 3
     static let latestDaysAhead = 30

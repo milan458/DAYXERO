@@ -4,7 +4,7 @@ import SwiftUI
 
 /// The free tier's upgrade point (S3.5): shown when someone without the full program taps a program session; none is
 /// free (16 Nov 2026). Same honest terms as the paywall, one plan up front, both plans one tap away. The 3-day trial
-/// is sold here whenever the Quit Day is, with the price in the person's own habit (MON-03).
+/// is sold here whenever the Day Xero is, with the price in the person's own habit (MON-03).
 struct UpgradeSheet: View {
     let dayTitle: String
     @State var model: PaywallModel

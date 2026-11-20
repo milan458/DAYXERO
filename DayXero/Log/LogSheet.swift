@@ -187,7 +187,7 @@ struct LogSheet: View {
                     .dxArrive(5, delay: 0)
                 }
                 if isSlip {
-                    Text("A use after Quit Day is logged as a slip. Nothing resets.")
+                    Text("A use after Day Xero is logged as a slip. Nothing resets.")
                         .dxType(.footnote).foregroundStyle(ground.muted)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.top, 18)

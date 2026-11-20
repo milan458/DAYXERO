@@ -428,7 +428,7 @@
           "type": "share",
           "cardType": "support_message",
           "optional": true,
-          "prefill": "It's my Quit Day today. If I go quiet or get a bit short, that's why. A message from you later would really help."
+          "prefill": "It's my Day Xero today. If I go quiet or get a bit short, that's why. A message from you later would really help."
         },
         {
           "id": "DX.4l",

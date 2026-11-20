@@ -36,7 +36,7 @@ struct LogEntryCounts: TimelineEntry {
     }
 
     let date: Date
-    /// True before Quit Day: the widget logs uses. After, it offers a craving log and SOS.
+    /// True before Day Xero: the widget logs uses. After, it offers a craving log and SOS.
     let isPrep: Bool
     let daysClear: Int?
     let prepDay: Int?
@@ -90,7 +90,7 @@ struct LogWidget: Widget {
                 .containerBackground(DX.Ground.reading.background, for: .widget)
         }
         .configurationDisplayName("Quick log")
-        .description("Log a use with one tap during prep, or a craving after Quit Day.")
+        .description("Log a use with one tap during prep, or a craving after Day Xero.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
@@ -132,7 +132,7 @@ struct LogWidgetView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         } else {
             VStack(alignment: .leading, spacing: DX.Space.xxs) {
-                if let days = entry.daysClear { Text("Day \(days) since Quit Day").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 700)).textCase(.uppercase).foregroundStyle(DX.Ground.reading.muted) }
+                if let days = entry.daysClear { Text("Day \(days) since Day Xero").font(DX.Typeface4.swiftUIFont(.body, size: 12, weight: 700)).textCase(.uppercase).foregroundStyle(DX.Ground.reading.muted) }
                 Text("Log a craving").font(DX.Typeface4.swiftUIFont(.body, size: 16, weight: 600)).foregroundStyle(DX.Ground.reading.ink)
                 Spacer(minLength: 0)
                 HStack(spacing: DX.Space.xs) {

@@ -37,7 +37,7 @@ public struct DayClock: Sendable {
         return calendar.startOfDay(for: shifted)
     }
 
-    /// Start of a calendar date such as Quit Day. Dates aren't moments, so the boundary doesn't shift them.
+    /// Start of a calendar date such as Day Xero. Dates aren't moments, so the boundary doesn't shift them.
     public func startOfDate(_ date: Date) -> Date {
         calendar.startOfDay(for: date)
     }
@@ -53,7 +53,7 @@ public struct DayClock: Sendable {
     }
 }
 
-/// Home and Progress numbers. Slips never reduce days since Quit Day or the progress visual; since S27.9 they do
+/// Home and Progress numbers. Slips never reduce days since Day Xero or the progress visual; since S27.9 they do
 /// reduce units avoided.
 public struct ProgressStats: Sendable {
     public let quitDay: Date
@@ -70,25 +70,25 @@ public struct ProgressStats: Sendable {
         clock.day(containing: now) < clock.startOfDate(quitDay)
     }
 
-    /// Days until Quit Day during prep; 0 on and after Quit Day.
+    /// Days until Day Xero during prep; 0 on and after Day Xero.
     public func daysUntilQuitDay(at now: Date) -> Int {
         max(clock.days(from: now, toDate: quitDay), 0)
     }
 
-    /// Days since Quit Day, counting Quit Day itself as day 1 (shown as "days since Quit Day", S27.9). Logged slips
+    /// Days since Day Xero, counting Day Xero itself as day 1 (shown as "days since Day Xero", S27.9). Logged slips
     /// are deliberately not an input: this number never resets.
     public func daysClear(at now: Date) -> Int {
         isPrep(at: now) ? 0 : clock.days(fromDate: quitDay, to: now) + 1
     }
 
-    /// Time since Quit Day began (its date plus the day boundary), in days. Zero during prep.
+    /// Time since Day Xero began (its date plus the day boundary), in days. Zero during prep.
     public func elapsedDays(at now: Date) -> Double {
         let start = clock.startOfDate(quitDay)
         let realStart = clock.calendar.date(byAdding: .hour, value: clock.boundaryHour, to: start) ?? start
         return max(now.timeIntervalSince(realStart) / 86_400, 0)
     }
 
-    /// Units not used, per product, since Quit Day.
+    /// Units not used, per product, since Day Xero.
     public func unitsAvoided(at now: Date) -> [Product: Int] {
         let elapsed = elapsedDays(at: now)
         var result: [Product: Int] = [:]
@@ -98,8 +98,8 @@ public struct ProgressStats: Sendable {
         return result
     }
 
-    /// Units not used since Quit Day, less what logged slips used (S27.9), never below zero. A slip with no product
-    /// counts against `primary`; slips before Quit Day or after `now` are not counted.
+    /// Units not used since Day Xero, less what logged slips used (S27.9), never below zero. A slip with no product
+    /// counts against `primary`; slips before Day Xero or after `now` are not counted.
     public func unitsAvoided(at now: Date, slips: [SlipRecord], primary: Product?) -> [Product: Int] {
         var result = unitsAvoided(at: now)
         let quit = clock.startOfDate(quitDay)
@@ -110,7 +110,7 @@ public struct ProgressStats: Sendable {
         return result
     }
 
-    /// Money kept across all products since Quit Day, rounded down to cents.
+    /// Money kept across all products since Day Xero, rounded down to cents.
     public func moneyKept(at now: Date) -> Decimal {
         let elapsed = Decimal(elapsedDays(at: now))
         let total = baselines.reduce(Decimal(0)) { $0 + $1.costPerDay * elapsed }

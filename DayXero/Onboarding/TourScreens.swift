@@ -3,9 +3,9 @@ import SwiftUI
 
 // What DayXero is, shown where it answers a question the person has just then (16 Nov 2026), drawn to the v5 canvas
 // (artifact "DayXero onboarding: three new screens", critic-loop best, 16 Nov 2026).
-//   How it works   after Welcome: a full-bleed sunrise with Xero, then prep, Quit Day, four weeks.
+//   How it works   after Welcome: a full-bleed sunrise with Xero, then prep, Day Xero, four weeks.
 //   Craving SOS    after the triggers: Jelli breathing in the SOS ring, and where SOS lives in the tab bar.
-//   Your day       before the Quit Day pick: two windows, the morning pledge with Xero and the night check-in with Glim.
+//   Your day       before the Day Xero pick: two windows, the morning pledge with Xero and the night check-in with Glim.
 // None of them asks anything, so Continue is never held back.
 
 // MARK: How it works · apricot
@@ -13,7 +13,7 @@ import SwiftUI
 /// The three parts of the program under a sunrise. The sky starts as hazy as prep and clears as each part lands.
 ///
 /// Motion: the scene fades in full-bleed behind the header, hazy, and clears as the three phases settle one by one
-/// (900 ms each, 700 ms apart); the sun rises; the Quit Day sun pops in with a spring; Xero idles. Dark: a pre-dawn
+/// (900 ms each, 700 ms apart); the sun rises; the Day Xero sun pops in with a spring; Xero idles. Dark: a pre-dawn
 /// sky over the far ridge, stars twinkling. Reduce Motion shows the end state at once.
 struct HowItWorksScreen: View {
     let model: OnboardingModel
@@ -39,10 +39,10 @@ struct HowItWorksScreen: View {
             Phase(id: 0, name: "Prep", span: "up to 7 days",
                   detail: "Keep using as normal. Each day Xero coaches you through a guided session, maps your cravings and builds your plan.",
                   clarity: Double(CrewGrowth.prepClarity)),
-            Phase(id: 1, name: "Quit Day", span: "the day you pick",
+            Phase(id: 1, name: "Day Xero", span: "the day you pick",
                   detail: "You stop, with a plan for every trigger and Craving SOS ready the moment an urge hits.",
                   clarity: 48),
-            Phase(id: 2, name: "Four weeks", span: "after Quit Day",
+            Phase(id: 2, name: "Four weeks", span: "after Day Xero",
                   detail: "Daily support through the hardest stretch: a morning pledge, a night check-in, weekly coaching and Craving SOS whenever you need it.",
                   clarity: 100),
         ]
@@ -65,7 +65,7 @@ struct HowItWorksScreen: View {
                         .foregroundStyle(ground.ink)
                         .accessibilityAddTraits(.isHeader)
                         .dxArrive(0)
-                    Text("A guided plan from today to four weeks past your Quit Day.")
+                    Text("A guided plan from today to four weeks past your Day Xero.")
                         .dxType(.body)
                         .foregroundStyle(ground.muted)
                         .fixedSize(horizontal: false, vertical: true)
@@ -199,7 +199,7 @@ struct HowItWorksScreen: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// Prep an open ring, Quit Day the sun (the one emphasis), the four weeks a filled dot.
+    /// Prep an open ring, Day Xero the sun (the one emphasis), the four weeks a filled dot.
     @ViewBuilder
     private func marker(_ id: Int) -> some View {
         switch id {

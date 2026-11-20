@@ -76,7 +76,7 @@ struct SettingsSheet: View {
 
                 SettingsSection("Your plan", top: 14, index: 2)
                 DXList {
-                    link(.quitDay, "Quit Day", icon: .calendar, value: Text(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day())))
+                    link(.quitDay, "Day Xero", icon: .calendar, value: Text(profile.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day())))
                     link(.products, "What you use", icon: .cig, value: Text(verbatim: productNames))
                     link(.currency, "Currency", icon: .globe, value: Text(verbatim: profile.currencyCode))
                 }
@@ -143,7 +143,7 @@ struct SettingsSheet: View {
             Group {
                 if prep {
                     DXBadge(.prep, n: stats.daysUntilQuitDay(at: .now), state: .next(nil), size: 44,
-                            label: String(localized: "To Quit Day"))
+                            label: String(localized: "To Day Xero"))
                 } else {
                     DXBadge(.day, n: stats.daysClear(at: .now), size: 44, label: String(localized: "Days free"))
                 }
@@ -170,7 +170,7 @@ struct SettingsSheet: View {
                 }))
                 .accessibilityIdentifier("settings.demoMode")
             }
-            Text("Unlocks everything, opens every program session at any time, and lets you pick any Quit Day, past ones too. Only in test builds.")
+            Text("Unlocks everything, opens every program session at any time, and lets you pick any Day Xero, past ones too. Only in test builds.")
                 .dxType(.caption).foregroundStyle(ground.muted)
                 .padding(.horizontal, 4)
                 .padding(.top, 8)

@@ -2,7 +2,7 @@ import DayXeroCore
 import SwiftUI
 
 // v5 art for NRT setup and the pouch taper (kit screens 047–052): the duotone product glyphs, the step-down
-// silhouettes on the schedule list, the plan's step chart and the taper chart with its Quit Day marker.
+// silhouettes on the schedule list, the plan's step chart and the taper chart with its Day Xero marker.
 
 /// The apricot tints the NRT screens share (kit `.gl`, `--t1…3`, `--edge`).
 enum NRTPalette {
@@ -354,8 +354,8 @@ struct NRTStepChart: View {
 
 // MARK: - Taper chart (052)
 
-/// The pouch taper: one bar per step plus the 0 mg column; the coral dot is Quit Day on the axis, and the part of
-/// the taper that runs past it is striped. When it doesn't fit, a target ring marks the Quit Day that would.
+/// The pouch taper: one bar per step plus the 0 mg column; the coral dot is Day Xero on the axis, and the part of
+/// the taper that runs past it is striped. When it doesn't fit, a target ring marks the Day Xero that would.
 struct TaperChart: View {
     let schedule: StepSchedule
     let quitDay: Date
@@ -377,14 +377,14 @@ struct TaperChart: View {
             HStack(spacing: 18) {
                 HStack(spacing: 6) {
                     Circle().fill(g.mark).frame(width: 11, height: 11)
-                    Text("Quit Day")
+                    Text("Day Xero")
                 }
                 if !fits {
                     HStack(spacing: 6) {
                         Hatch().frame(width: 18, height: 12)
                             .clipShape(RoundedRectangle(cornerRadius: 3))
                             .overlay(RoundedRectangle(cornerRadius: 3).strokeBorder(NRTPalette.taperEdge, lineWidth: 1.5))
-                        Text("Runs past Quit Day")
+                        Text("Runs past Day Xero")
                     }
                 }
             }
@@ -406,7 +406,7 @@ struct TaperChart: View {
                             .animation(motion.reduce ? nil : DX.Move.settle.delay(0.25 + Double(i) * 0.15), value: grown)
                             .position(x: x(i, 0.5), y: base - h / 2)
                     }
-                    // The 0 mg column: a short track, and the ring Quit Day would move into.
+                    // The 0 mg column: a short track, and the ring Day Xero would move into.
                     UnevenRoundedRectangle(topLeadingRadius: 3, topTrailingRadius: 3)
                         .fill(g.track)
                         .frame(width: colW, height: 4)
@@ -419,7 +419,7 @@ struct TaperChart: View {
                             .position(x: x(spans.count, 0.5), y: base + 1)
                             .dxFade(delay: 1.0)
                     }
-                    // Quit Day: a coral hairline up from the axis to its date tag, and the dot on the axis.
+                    // Day Xero: a coral hairline up from the axis to its date tag, and the dot on the axis.
                     ZStack {
                         Capsule().fill(g.mark).frame(width: 2, height: 120)
                             .position(x: qx, y: base - 60)
@@ -483,7 +483,7 @@ struct TaperChart: View {
         .animation(motion.animation(.timingCurve(0.2, 0.8, 0.2, 1, duration: 0.7)), value: past)
     }
 
-    /// Where Quit Day falls: the column and how far into it. Past the last step it sits in the 0 mg column's middle.
+    /// Where Day Xero falls: the column and how far into it. Past the last step it sits in the 0 mg column's middle.
     private var quitPosition: (column: Int, fraction: Double) {
         let cal = clock.calendar
         let quit = clock.startOfDate(quitDay)
@@ -504,12 +504,12 @@ struct TaperChart: View {
     private var accessibilitySummary: String {
         let steps = schedule.spans.map { NRTReminderPlan.strength($0.step.strengthMg) }.joined(separator: ", ")
         let quit = quitDay.formatted(.dateTime.weekday(.wide).day().month())
-        return fits ? String(localized: "Steps \(steps), ending before Quit Day, \(quit).")
-            : String(localized: "Steps \(steps). Quit Day, \(quit), comes before the taper ends.")
+        return fits ? String(localized: "Steps \(steps), ending before Day Xero, \(quit).")
+            : String(localized: "Steps \(steps). Day Xero, \(quit), comes before the taper ends.")
     }
 }
 
-/// Runs past Quit Day: the bar's own apricot in diagonal stripes.
+/// Runs past Day Xero: the bar's own apricot in diagonal stripes.
 private struct Hatch: View {
     var body: some View {
         Canvas { ctx, size in

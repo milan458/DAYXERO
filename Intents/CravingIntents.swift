@@ -58,7 +58,7 @@ enum LoggedProduct: String, AppEnum {
     }
 }
 
-/// Logs one use from the widget, Siri or Shortcuts. Before Quit Day it's tracking; after, it's a slip.
+/// Logs one use from the widget, Siri or Shortcuts. Before Day Xero it's tracking; after, it's a slip.
 struct LogUseIntent: AppIntent {
     static let title: LocalizedStringResource = "Log a use"
     static let description = IntentDescription("Logs a cigarette, a vape or a pouch.")

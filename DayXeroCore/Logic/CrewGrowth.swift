@@ -12,10 +12,10 @@ public enum CrewGrowth {
         }
     }
 
-    /// Sky clarity during the prep week, before Quit Day.
+    /// Sky clarity during the prep week, before Day Xero.
     public static let prepClarity = 20
 
-    /// Sky clarity 0–100 after Quit Day: min(100, round(20 + 2.8 × days clear)).
+    /// Sky clarity 0–100 after Day Xero: min(100, round(20 + 2.8 × days clear)).
     public static func clarity(daysClear: Int) -> Int {
         guard daysClear > 0 else { return prepClarity }
         return min(100, Int((20 + 2.8 * Double(daysClear)).rounded()))

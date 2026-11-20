@@ -100,8 +100,8 @@ struct DaysFreeWidget: Widget {
                 }
             }
         }
-        .configurationDisplayName("Days since Quit Day")
-        .description("Your days since Quit Day, at a glance.")
+        .configurationDisplayName("Days since Day Xero")
+        .description("Your days since Day Xero, at a glance.")
         .supportedFamilies([.systemSmall, .accessoryInline])
     }
 }

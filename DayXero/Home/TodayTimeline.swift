@@ -15,9 +15,9 @@ enum TodayNode: Equatable {
     /// The step under way.
     case now
     case later
-    /// Quit Day ahead.
+    /// Day Xero ahead.
     case quitDay
-    /// A milestone ahead after Quit Day.
+    /// A milestone ahead after Day Xero.
     case milestone
 }
 
@@ -146,7 +146,7 @@ struct TodayRowCard: View {
     }
 }
 
-/// What's ahead at the end of the day: Quit Day (the Day Xero coin waiting) or the next milestone (its badge, next).
+/// What's ahead at the end of the day: Day Xero (the Day Xero coin waiting) or the next milestone (its badge, next).
 struct TodayAheadRow: View {
     let text: String
     let isQuitDay: Bool
@@ -381,7 +381,7 @@ struct MorningBand: View {
 
 // MARK: Prep countdown (015)
 
-/// The one meter during prep: "4 days to Quit Day" (counting down from 7) and the quit date, then a stamp per prep
+/// The one meter during prep: "4 days to Day Xero" (counting down from 7) and the quit date, then a stamp per prep
 /// session: done ones stamped, today's open slot breathing its coral outline, the rest in dashed rings, and the
 /// Day Xero coin waiting at the end.
 struct TodayPrepStamps: View {
@@ -399,12 +399,12 @@ struct TodayPrepStamps: View {
             HStack(alignment: .firstTextBaseline) {
                 Group {
                     if daysToQuit == 0 {
-                        Text("Quit Day is today")
+                        Text("Day Xero is today")
                     } else if daysToQuit == 1 {
-                        Text("1 day to Quit Day")
+                        Text("1 day to Day Xero")
                     } else {
                         CountingText(Double(daysToQuit), from: Double(max(total, daysToQuit)), delay: 0.6) { value in
-                            String(localized: "\(Int(value.rounded())) days to Quit Day")
+                            String(localized: "\(Int(value.rounded())) days to Day Xero")
                         }
                     }
                 }

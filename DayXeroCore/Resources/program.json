@@ -11,7 +11,7 @@
 
   "phases": [
     { "id": "prep",    "title": "Prep",     "subtitle": "Learn your habit. Keep using as normal.", "sessionIds": ["P1","P2","P3","P4","P5","P6","P7"] },
-    { "id": "dayxero", "title": "Day Xero", "subtitle": "Your Quit Day.",                          "sessionIds": ["DX"] },
+    { "id": "dayxero", "title": "Day Xero", "subtitle": "The day you stop.",                          "sessionIds": ["DX"] },
     { "id": "w1",      "title": "Week 1",   "subtitle": "Through the hardest stretch.",            "sessionIds": ["W1D1","W1D2","W1D3","W1D4","W1D5","W1D6","W1D7"] },
     { "id": "w2",      "title": "Week 2",   "subtitle": "Rebuild your days.",                      "sessionIds": ["W2S1","W2S2","W2S4","W2S3"] },
     { "id": "w3",      "title": "Week 3",   "subtitle": "Hard moments, handled.",                  "sessionIds": ["W3S1","W3S2","W3S3"] },
@@ -272,20 +272,20 @@
             {
               "id": "P1.4h",
               "type": "info",
-              "title": "Your Quit Day",
-              "body": "One more thing. Your Quit Day is {quit_date}. You don't need to feel ready yet. That's what the next six days are for."
+              "title": "Your Day Xero",
+              "body": "One more thing. Your Day Xero is {quit_date}. You don't need to feel ready yet. That's what the next six days are for."
             },
             {
               "id": "P1.4i",
               "type": "commit",
-              "text": "Hold to commit to your Quit Day: {quit_date}",
+              "text": "Hold to commit to your Day Xero: {quit_date}",
               "holdSeconds": 2
             },
             {
               "id": "P1.4j",
               "type": "info",
               "title": "All set",
-              "body": "Your reasons are saved, your check-ins are set, and your Quit Day is on the calendar. Keep using as normal. Just watch."
+              "body": "Your reasons are saved, your check-ins are set, and your Day Xero is on the calendar. Keep using as normal. Just watch."
             }
           ]
         },
@@ -503,7 +503,7 @@
             {
               "front": "Why does getting in the car make you reach for it?",
               "answer": "Hands busy, mind free, the same route at the same time. The car is a private, repeated space, so it's become one of the strongest places for the habit.",
-              "deeper": "Driving is the same few routes, the same times of day and the same seat, over and over. That makes it a perfect place for a cue to form. The car can also feel like your own space, where nobody minds what you do. When you notice the pull as you start the engine, name it: \"That's the car.\" To help on and after Day Xero, give your hands and mouth something else: water, gum, a podcast you save only for driving. And take {product_plural} and anything that goes with them out of the car before your Quit Day.",
+              "deeper": "Driving is the same few routes, the same times of day and the same seat, over and over. That makes it a perfect place for a cue to form. The car can also feel like your own space, where nobody minds what you do. When you notice the pull as you start the engine, name it: \"That's the car.\" To help on and after Day Xero, give your hands and mouth something else: water, gum, a podcast you save only for driving. And take {product_plural} and anything that goes with them out of the car before your Day Xero.",
               "trigger": "driving"
             },
             {
@@ -2475,7 +2475,7 @@
           "minutes": 6,
           "ground": "mint",
           "commit": "I know my plan",
-          "intro": "Two things today. Tell one person your Quit Day. Then decide, ahead of time, what you'll do at your three biggest moments. Both make Day Xero lighter.",
+          "intro": "Two things today. Tell one person your Day Xero. Then decide, ahead of time, what you'll do at your three biggest moments. Both make Day Xero lighter.",
           "after": "You've got people and a plan. On Day Xero you won't be making it up as you go.",
           "beats": [
             {
@@ -3445,7 +3445,7 @@
               "type": "share",
               "cardType": "support_message",
               "optional": true,
-              "prefill": "It's my Quit Day today. If I go quiet or get a bit short, that's why. A message from you later would really help."
+              "prefill": "It's my Day Xero today. If I go quiet or get a bit short, that's why. A message from you later would really help."
             },
             {
               "id": "DX.4l",
@@ -4047,7 +4047,7 @@
       ],
       "beats": [
         { "id": "B45.1", "type": "breathe", "pattern": "wave", "cycles": 2, "label": "One wave now, to keep the skill fresh." },
-        { "id": "B45.2", "type": "quiz", "prompt": "A strong craving shows up weeks after your Quit Day. That means…",
+        { "id": "B45.2", "type": "quiz", "prompt": "A strong craving shows up weeks after your Day Xero. That means…",
           "options": [
             { "id": "a", "text": "I'm back at the start" },
             { "id": "b", "text": "An old cue fired. Ride it and it'll fade" },

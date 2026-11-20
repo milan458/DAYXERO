@@ -18,7 +18,7 @@ struct HomeTests {
     }
 
     func schedule() -> ProgramSchedule {
-        // Onboarded Thu 22 Oct, Quit Day Thu 29 Oct: 7 prep days.
+        // Onboarded Thu 22 Oct, Day Xero Thu 29 Oct: 7 prep days.
         ProgramSchedule(startedOn: date(22), quitDay: date(29, 0), clock: DayClock(calendar: calendar, boundaryHour: 4))
     }
 
@@ -43,7 +43,7 @@ struct HomeTests {
         var done = Set((1...7).map { ProgramDayID(phase: .prep, index: $0) })
         done.insert(ProgramDayID(phase: .quit, index: 1))
         let day2 = ProgramDayID(phase: .quit, index: 2)
-        // Day 1 finished on Quit Day evening: Day 2 opens Friday.
+        // Day 1 finished on Day Xero evening: Day 2 opens Friday.
         #expect(s.availability(of: day2, completed: done, at: date(29, 20)) == .opensOn(calendar.startOfDay(for: date(30))))
         #expect(s.availability(of: day2, completed: done, at: date(30, 8)) == .available)
     }
@@ -128,7 +128,7 @@ struct HomeTests {
         #expect(!TodayView.firstPrepWaiting(store))
     }
 
-    /// A Quit Day nine days out still has seven prep sessions: the total is the program's, not the calendar's.
+    /// A Day Xero nine days out still has seven prep sessions: the total is the program's, not the calendar's.
     @Test func prepTotalIsTheProgramsSevenSessions() throws {
         let context = ModelContext(try DataStore.makeContainer(inMemory: true))
         let p = UserProfile(name: "Milan", quitDay: date(31, 0), currencyCode: "USD", createdAt: date(22, 9))
@@ -150,7 +150,7 @@ struct HomeTests {
         #expect((snap.counters.first?.avoided ?? 0) > 400)
         #expect(snap.nextMilestone == 7)
         #expect(snap.quitWeekDone == 2)
-        // Quit Day (Thu 29) is past by Saturday, so it shows as a clear day, not the upcoming-Quit-Day ring.
+        // Day Xero (Thu 29) is past by Saturday, so it shows as a clear day, not the upcoming-Quit-Day ring.
         #expect(snap.weekStrip.first { calendar.isDate($0.date, inSameDayAs: date(29)) }?.state == .clear)
         #expect(snap.lesson?.availability == .available)
     }
@@ -176,7 +176,7 @@ struct HomeTests {
         #expect(pro.lesson?.needsUpgrade == false)
     }
 
-    /// S27.9: a slip never resets days since Quit Day or money kept, but it does come off "puffs not taken", so the
+    /// S27.9: a slip never resets days since Day Xero or money kept, but it does come off "puffs not taken", so the
     /// counter stays true. A slip with no amount counts as one unit (`Slips.units`).
     @Test func aLoggedSlipOnlyLowersTheAvoidedCount() throws {
         let context = ModelContext(try DataStore.makeContainer(inMemory: true))

@@ -17,7 +17,7 @@ struct AdherenceTests {
 
     var clock: DayClock { DayClock(calendar: calendar, boundaryHour: 4) }
 
-    /// Onboarded Thu 22 Oct, Quit Day Thu 29 Oct: 7 prep days.
+    /// Onboarded Thu 22 Oct, Day Xero Thu 29 Oct: 7 prep days.
     var schedule: ProgramSchedule { ProgramSchedule(startedOn: date(22), quitDay: date(29, 0), clock: clock) }
 
     func prep(_ n: Int...) -> Set<ProgramDayID> { Set(n.map { ProgramDayID(phase: .prep, index: $0) }) }

@@ -8,13 +8,13 @@ import SwiftUI
 
 /// Which of Today's two layouts shows.
 enum TodayState: Equatable {
-    /// Prep day 1 to Quit Day, until Day Xero's commit is held.
+    /// Prep day 1 to Day Xero, until Day Xero's commit is held.
     case prep
     /// After Day Xero: time free, money kept, recovery and urges surfed.
     case postQuit
 
     /// After Day Xero's commit; for anyone without one (an older program, or Day Xero left for later), once the
-    /// calendar is past Quit Day itself.
+    /// calendar is past Day Xero itself.
     init(snap: HomeSnapshot, quitTimestamp: Date?) {
         if quitTimestamp != nil {
             self = .postQuit
