@@ -46,17 +46,17 @@
   const fog = x => 1 - clarity(x) / 100;
   const hazeC = ramp([[0, '#F6EEE4'], [2900, '#F6EEE4'], [3150, '#EAD8EE'], [3500, '#9C8ED0'], [3900, '#9C8ED0'], [4050, '#F6EEE4']]);
   /* a hazed colour: depth 0 (foreground) .. 1 (sky). Haze lifts with clarity, more on far layers. */
-  const hz = (c, x, depth) => mix(c, hazeC(x), Math.min(0.92, fog(x) * (0.3 + 0.55 * depth)));
+  const hz = (c, x, depth) => mix(c, hazeC(x), Math.min(0.9, fog(x) * (0.12 + 0.72 * depth)));
 
   /* ------------------------------------------------------------ palettes along the journey */
   // sky: zenith (top) and horizon colours. The caption band (y < 260) keeps the zenith colour; text colour per frame
   // is chosen against it and measured (see README: ink on frames 1-7 and 10, cream on 8 and 9).
   const zen = ramp([[0, '#FF8A66'], [440, '#FF9A70'], [720, '#FFB487'], [990, '#86BDF6'], [1100, '#5CA8F7'], [1540, '#62ACF8'],
     [1980, '#70B6FA'], [2420, '#7BBAF4'], [2780, '#8CBBEA'], [3010, '#A8B6E2'], [3160, '#4A3592'], [3420, '#2B2170'],
-    [3620, '#1A1450'], [3850, '#1C1654'], [4075, '#FF8360'], [4400, '#FF8A64']]);
+    [3620, '#1A1450'], [3868, '#1E1756'], [4036, '#FF8360'], [4400, '#FF8A64']]);
   const hor = ramp([[0, '#FFD29E'], [440, '#FFDCA6'], [760, '#FFE6C0'], [990, '#E4F0F7'], [1100, '#D3ECFF'], [1540, '#D8F0FF'],
     [1980, '#E4F6EF'], [2420, '#FFF0D4'], [2800, '#FFD6A2'], [3020, '#FFBE88'], [3200, '#F49AA6'], [3420, '#B572B8'],
-    [3640, '#4E3A9C'], [3820, '#5D3FA4'], [3980, '#F7A08A'], [4120, '#FFE3BC'], [4400, '#FFE8C4']]);
+    [3640, '#4E3A9C'], [3740, '#6040A4'], [3900, '#E08A9E'], [4020, '#FFC9A2'], [4150, '#FFE3BC'], [4400, '#FFE8C4']]);
   const land = {
     far: ramp([[0, '#FFB582'], [760, '#FFBE8C'], [960, '#93B4E6'], [1700, '#93B4E6'], [1880, '#A9DDB8'], [2780, '#B9DCB0'], [3000, '#E9B990'], [3170, '#B572C9'], [3420, '#7350C6'], [3620, '#5A3CC4'], [3900, '#5A3CC4'], [4050, '#FFB27E']]),
     mid: ramp([[0, '#FF9A6C'], [800, '#FF9A6C'], [1760, '#79C99A'], [2780, '#86C493'], [3000, '#C59A72'], [3170, '#8E55BF'], [3620, '#432AA6'], [3900, '#432AA6'], [4050, '#FF9D6E']]),
@@ -126,6 +126,7 @@
       hgrad('sea0', x => hz('#5E9BF2', x, 0.65)), hgrad('sea1', x => hz('#8CC2FF', x, 0.6)), hgrad('sea2', x => hz('#4E8EF2', x, 0.42)),
       `<linearGradient id="seav" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2F72F2" stop-opacity="0"/><stop offset="1" stop-color="#1C4FCC" stop-opacity=".55"/></linearGradient>`,
       `<radialGradient id="glow"><stop offset="0" stop-color="#FFF8D6" stop-opacity=".95"/><stop offset=".3" stop-color="#FFE7A6" stop-opacity=".6"/><stop offset="1" stop-color="#FFD27A" stop-opacity="0"/></radialGradient>`,
+      `<radialGradient id="glows"><stop offset="0" stop-color="#FFF3B0" stop-opacity="1"/><stop offset=".22" stop-color="#FFD978" stop-opacity=".8"/><stop offset=".55" stop-color="#FFB27A" stop-opacity=".3"/><stop offset="1" stop-color="#FFB27A" stop-opacity="0"/></radialGradient>`,
       `<radialGradient id="glowp"><stop offset="0" stop-color="#FFD9A8" stop-opacity=".9"/><stop offset=".35" stop-color="#FFB38A" stop-opacity=".45"/><stop offset="1" stop-color="#F49AA6" stop-opacity="0"/></radialGradient>`,
       `<radialGradient id="glowm"><stop offset="0" stop-color="#FFF1C2" stop-opacity=".45"/><stop offset="1" stop-color="#FFF1C2" stop-opacity="0"/></radialGradient>`,
       `<radialGradient id="sun" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#FFF6C8"/><stop offset="1" stop-color="#FFC23A"/></radialGradient>`,
@@ -137,10 +138,10 @@
     let s = `<rect width="${W}" height="${H}" fill="url(#zen)"/><rect width="${W}" height="${H}" fill="url(#hor)" mask="url(#skym)"/>`;
 
     // glows: dawn behind Xero (seam 1/2), the day sun (seam 4/5), sunset behind Xero (seam 7/8), moonlight, the clear dawn (seam 9/10)
-    s += `<circle cx="440" cy="560" r="300" fill="url(#glow)" opacity=".85"/>`;
+    s += `<circle cx="440" cy="600" r="280" fill="url(#glows)" opacity=".9"/>`;
     s += `<circle cx="1760" cy="420" r="150" fill="url(#glow)" opacity=".7"/><circle cx="1760" cy="420" r="38" fill="url(#sun)"/>`;
     s += `<circle cx="3080" cy="600" r="260" fill="url(#glowp)"/>`;
-    s += `<circle cx="3960" cy="560" r="300" fill="url(#glow)" opacity=".95"/>`;
+    s += `<circle cx="3960" cy="590" r="300" fill="url(#glows)"/>`;
 
     // stars: dusk to night, kept out of the caption blocks (only in the seam gaps above y 260)
     let stars = '', seed = 7;
@@ -157,7 +158,7 @@
 
     // clouds: paper clouds, more and softer where the haze is thick
     const cloud = (x, y, k, c, o) => `<g transform="translate(${x} ${y}) scale(${k})" fill="${c}" opacity="${o}" filter="url(#soft)"><ellipse cx="0" cy="0" rx="62" ry="15"/><ellipse cx="-22" cy="-11" rx="30" ry="15"/><ellipse cx="18" cy="-14" rx="26" ry="13"/></g>`;
-    [[230, 300, 1.4], [600, 330, 1.1], [80, 520, 1.0], [800, 470, 0.9], [1180, 330, 1.0], [1420, 470, 0.8], [1990, 330, 1.1], [2330, 470, 0.9], [2560, 330, 1.0], [2900, 420, 0.9]]
+    [[230, 300, 1.4], [600, 330, 1.1], [80, 520, 1.0], [800, 470, 0.9], [1180, 330, 1.0], [1420, 470, 0.8], [1880, 560, 0.9], [1990, 330, 1.1], [2240, 420, 1.0], [2330, 520, 0.8], [2560, 330, 1.0], [2700, 470, 0.9], [2900, 420, 0.9], [4240, 300, 0.9]]
       .forEach(([x, y, k]) => { s += cloud(x, y, k, hz('#FFFFFF', x, 0.6), (0.55 + 0.4 * fog(x)).toFixed(2)); });
     [[3150, 420, 0.9]].forEach(([x, y, k]) => { s += cloud(x, y, k, '#F2B8C8', 0.7); });
     // haze bands that sit low over the land at the start and thin out by frame 4

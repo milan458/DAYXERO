@@ -69,7 +69,7 @@ window.FRAMES = [
     title: 'What\'s changing in your body',
     sub: 'Timings quoted from the American Cancer Society.',
     screen: 'health.html', time: '9:40',
-    card: { width: 324, z: 0.82, cover: ['.card.item.now'], center: true, html: `
+    card: { width: 324, z: 0.82, cover: ['.card.item.now + .card', '.card.item.now + .card + .card + .card'], pad: 4, html: `
       <div class="fact">
         <span class="k"><i></i>Happening now · A few days</span>
         <b>Carbon monoxide in your blood drops to normal</b>
@@ -88,7 +88,7 @@ window.FRAMES = [
     title: 'SOS on your Lock Screen',
     sub: 'Start from a widget. Ride it out from the Live Activity.',
     screen: 'lock.html', time: '',
-    zoom: { sel: '#la', scale: 0.86, dy: 0 }
+    zoom: { sel: '#la', scale: 0.8, dy: 0 }
   },
   { // 10 ── the next dawn, fully clear: the whole crew
     id: '10', tone: 'ink',
