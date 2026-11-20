@@ -17,5 +17,35 @@
     "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/f6/9a/12/f69a12c6-a28f-d4f5-c808-a302411d3f9b/APP_IPHONE_55-4.png/392x696bb.png"
   ],
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "subtitle": "Your personalized health coach",
+  "webPagePhoneScreenshots": [
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/fa/ca/00/faca0063-fd3f-13cd-5a95-a4e7d17eb8c8/APP_IPHONE_65-0.png/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/61/a7/43/61a74381-4fdc-ce80-31cb-5ad51a1cccdc/APP_IPHONE_65-1.png/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/8a/15/27/8a1527c4-08a8-e662-eaa3-87094e3198c3/APP_IPHONE_65-2.png/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/36/44/f5/3644f567-12a9-4353-edea-bd6a0f518f9e/APP_IPHONE_65-3.png/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/96/31/49/963149e5-1a07-44a7-7c68-e24a52b6cf87/APP_IPHONE_65-4.png/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    }
+  ],
+  "webPagePhoneVideoItems": 0,
+  "note": "Root 01.jpg.. = iPhone set shown on apps.apple.com/us web page (largest display class, e.g. 6.9in). api-lookup-set/ = images from itunes lookup screenshotUrls (often an older 5.5in/6.5in set)."
 }

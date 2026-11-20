@@ -20,5 +20,56 @@
     "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/d7/a9/71/d7a97141-8833-89aa-beb5-ec2d92fb82a8/9-BC-iOS-5.5-ENG.jpg/392x696bb.jpg"
   ],
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "subtitle": "Workouts for everyone",
+  "webPagePhoneScreenshots": [
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/4c/67/5f/4c675f56-2ce3-b6eb-5a6f-f6ab2f74f43f/1-Cover-iOS-6.9-ENG.jpg/{w}x{h}{c}.{f}",
+      "width": 1260,
+      "height": 2736
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/48/c3/b0/48c3b0aa-34c1-f3cc-5cfa-59462f95394b/3-ActivityTracker-iOS-6.9-ENG.jpg/{w}x{h}{c}.{f}",
+      "width": 1260,
+      "height": 2736
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/1e/51/2b/1e512b00-e7c3-19f7-ee45-f7c045861252/4-FitnessPRofile-iOS-6.9-ENG.jpg/{w}x{h}{c}.{f}",
+      "width": 1260,
+      "height": 2736
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/be/97/f2/be97f23e-4674-fb85-0d0f-1d94f247b039/5-Workouts-iOS-6.9-ENG.jpg/{w}x{h}{c}.{f}",
+      "width": 1260,
+      "height": 2736
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/a8/37/03/a83703e1-f5c8-10a7-ac0a-33cb2f3a40b7/6-CrowdMeter-iOS-6.9-ENG.jpg/{w}x{h}{c}.{f}",
+      "width": 1260,
+      "height": 2736
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/51/40/a8/5140a888-62b6-4821-fdf4-94ad8d3ec832/7-Perks-iOS-6.9-ENG.jpg/{w}x{h}{c}.{f}",
+      "width": 1260,
+      "height": 2736
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/61/c2/2e/61c22e6d-9b0c-125c-e6d9-6874404dcf2e/8-RAF-iOS-6.9-ENG.jpg/{w}x{h}{c}.{f}",
+      "width": 1260,
+      "height": 2736
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/58/c6/56/58c65675-0014-81d5-d294-f8cad43b156b/9-BC-iOS-6.9-ENG.jpg/{w}x{h}{c}.{f}",
+      "width": 1260,
+      "height": 2736
+    }
+  ],
+  "webPagePhoneVideoItems": 1,
+  "note": "Root 01.jpg.. = iPhone set shown on apps.apple.com/us web page (largest display class, e.g. 6.9in). api-lookup-set/ = images from itunes lookup screenshotUrls (often an older 5.5in/6.5in set).",
+  "appPreviewVideo": {
+    "position": "first in gallery",
+    "videoUrl": "https://apptrailers.itunes.apple.com/itunes-assets/PurpleVideo211/v4/04/d1/5a/04d15ab8-1c05-59e0-75f3-d68c3cf34ee1/P1479232333_default.m3u8",
+    "posterTemplate": "https://is1-ssl.mzstatic.com/image/thumb/PurpleVideo221/v4/cd/18/d8/cd18d86a-5785-46af-a5c5-2deeedc21cee/OBJECT_PROXYbd41e042-b370-4d23-a4ac-1d3f06ab83b8_KEY_FRAME_OUTPUT_4033_OBJECT_PROXYbd41e042-b370-4d23-a4ac-1d3f06ab83b8.png/{w}x{h}{c}.{f}",
+    "posterFile": "00_video-poster.jpg"
+  }
 }

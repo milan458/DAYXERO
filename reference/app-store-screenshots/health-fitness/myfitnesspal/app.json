@@ -22,5 +22,60 @@
     "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/4f/5e/b2/4f5eb29b-c31d-3842-5896-2b8e94060f24/MFP_iOS_US_6.9_Screen_10.jpg/320x480bb.jpg"
   ],
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "subtitle": "AI Coach & Nutrition Tracker",
+  "webPagePhoneScreenshots": [
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/4e/ca/6c/4eca6c37-086d-caeb-ebe3-d83f7de5bae7/MFP_iOS_US_6.5_Screen_1.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/aa/0d/62/aa0d6210-da79-4fcc-72c1-e8128c9005b7/MFP_iOS_US_6.5_Screen_2.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/62/97/1f/62971fa0-b478-7350-7c09-b3bfdfe828e0/MFP_iOS_US_6.5_Screen_3.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/51/a3/9d/51a39d55-b7d2-7531-27b4-99c08320e3bd/MFP_iOS_US_6.5_Screen_4.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/f1/d5/1d/f1d51db1-25fc-6b0c-9dd0-b42ce349e50b/MFP_iOS_US_6.5_Screen_5.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/48/09/cb/4809cb54-1712-2aba-32db-1d8fe2be9f67/MFP_iOS_6.5_Screen_6.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/64/b6/fc/64b6fce4-bcd8-8c76-6f73-c32b2267f65c/MFP_iOS_US_6.5_Screen_6.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/eb/af/77/ebaf7761-e0f6-51ad-6af6-b98fdfc369b6/MFP_iOS_US_6.5_Screen_7.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/4e/44/7d/4e447d2a-ce77-1189-3666-fc4caf308fff/MFP_iOS_US_6.5_Screen_8.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/be/cd/5e/becd5ef1-54bb-605d-ad24-e953bf084682/MFP_iOS_US_6.5_Screen_10.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    }
+  ],
+  "webPagePhoneVideoItems": 0,
+  "note": "Root 01.jpg.. = iPhone set shown on apps.apple.com/us web page (largest display class, e.g. 6.9in). api-lookup-set/ = images from itunes lookup screenshotUrls (often an older 5.5in/6.5in set)."
 }

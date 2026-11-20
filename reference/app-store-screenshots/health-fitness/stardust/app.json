@@ -22,5 +22,60 @@
     "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/77/de/c4/77dec491-56b6-8688-d7ff-6296196047ea/AppStore_6_5_10.png/392x696bb.png"
   ],
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "subtitle": "Track your cycle or pregnancy",
+  "webPagePhoneScreenshots": [
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/46/a1/97/46a19789-2211-a052-48b1-f0f20ef8d340/AppStore_6_5_01__U00284_U0029.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/4f/0a/bd/4f0abdfc-6399-1749-0864-2f84a548e10d/AppStore_6_5_02.png/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/09/2b/b4/092bb4ba-0f40-7be2-38c4-52651e439871/AppStore_6_5_03.png/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a4/1b/5e/a41b5e2d-0572-70d2-19c0-d14aeb70fd7d/AppStore_6_5_04.png/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/00/b4/7a/00b47a10-cca1-1893-ddb5-56757fd21225/AppStore_6_5_05.png/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ad/42/e9/ad42e994-2e4a-5469-76c3-17bd9e0ab487/AppStore_6_5_06.png/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c6/6d/ad/c66dadcf-e566-31ba-78c4-56c9ecb4fe98/AppStore_6_5_07.png/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/0a/4d/1d/0a4d1dc1-a485-18df-403f-8f71a4eea1e3/AppStore_6_5_08.png/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b1/28/15/b12815c6-d0bb-63e5-ff4b-a6b4790943eb/AppStore_6_5_09.png/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/60/e0/4a/60e04af2-1715-3dbd-2628-f13d1e053653/AppStore_6_5_10.png/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    }
+  ],
+  "webPagePhoneVideoItems": 0,
+  "note": "Root 01.jpg.. = iPhone set shown on apps.apple.com/us web page (largest display class, e.g. 6.9in). api-lookup-set/ = images from itunes lookup screenshotUrls (often an older 5.5in/6.5in set)."
 }

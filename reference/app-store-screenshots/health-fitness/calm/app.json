@@ -18,5 +18,40 @@
     "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/9a/07/6c/9a076c52-e15e-7fe6-48aa-7a969e17f0c4/App_Store_iOS_Day_-_6__U005b5.5in_U005d.jpg/392x696bb.jpg"
   ],
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "subtitle": "Sleep, Meditation, Relaxation",
+  "webPagePhoneScreenshots": [
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/59/bc/81/59bc81b2-1c07-6976-1f68-957878db2bcc/App_Store_iOS_Day_-_1__U005b6.9in_U005d.jpg/{w}x{h}{c}.{f}",
+      "width": 1320,
+      "height": 2868
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/df/30/da/df30dafa-1a2e-f9af-0e36-6a0f0c147dde/App_Store_iOS_Day_-_2__U005b6.9in_U005d.jpg/{w}x{h}{c}.{f}",
+      "width": 1320,
+      "height": 2868
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/8b/7e/f4/8b7ef40d-34d8-33c9-7200-3e31e3dc24a9/App_Store_iOS_Day_-_3__U005b6.9in_U005d.jpg/{w}x{h}{c}.{f}",
+      "width": 1320,
+      "height": 2868
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ca/a9/ab/caa9abdf-202c-9523-8325-3afb1767ec33/App_Store_iOS_Day_-_4__U005b6.9in_U005d.jpg/{w}x{h}{c}.{f}",
+      "width": 1320,
+      "height": 2868
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c2/95/15/c2951513-a280-1397-3f52-b0e45e2cc8d4/App_Store_iOS_Day_-_5__U005b6.9in_U005d.jpg/{w}x{h}{c}.{f}",
+      "width": 1320,
+      "height": 2868
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d3/fa/dd/d3fadd72-b5ba-513c-b6fb-c192a0b1b5f4/App_Store_iOS_Day_-_6__U005b6.9in_U005d.jpg/{w}x{h}{c}.{f}",
+      "width": 1320,
+      "height": 2868
+    }
+  ],
+  "webPagePhoneVideoItems": 0,
+  "note": "Root 01.jpg.. = iPhone set shown on apps.apple.com/us web page (largest display class, e.g. 6.9in). api-lookup-set/ = images from itunes lookup screenshotUrls (often an older 5.5in/6.5in set)."
 }

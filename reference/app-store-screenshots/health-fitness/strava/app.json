@@ -22,5 +22,61 @@
     "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/70/e1/5c/70e15cb4-beca-dfb6-0e70-69798784b9d8/07ASO-5.5-Leaderboards-en-US.jpg/392x696bb.jpg"
   ],
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "subtitle": "Track & share with friends",
+  "webPagePhoneScreenshots": [
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d8/5d/38/d85d3879-493c-5ba6-36cd-1ca6e44e8f07/AppStore-TodayTab-6.5-en-US.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/74/eb/e5/74ebe5ae-be65-fe71-86ff-3429f6778d5d/ASO-6.5-Community-en-US-CopyA0805.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/91/4d/82/914d8235-d689-dd03-ff95-b1100dbdfaa9/ASO-6.5-TrackWorkouts-en-US1201.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/35/34/27/35342763-a02b-a58a-5d86-1ab868464a4e/ASO-6.5-TrackWorkouts-en-US1201.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/9b/15/5d/9b155d63-6743-392c-3a35-c90e1f3634e0/12-ASO-6.5-Hiking.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/e7/64/16/e76416a1-038c-7b13-43ad-3dcd7a732267/ASO-6.5-ShareWithFriends-en-US1102.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c4/f0/84/c4f084dd-c332-6759-ac6f-0ed394a0ba8a/ASO-6.5-ProgressComparison-en-US0112.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/e4/67/de/e467de4e-8e6f-928d-dec0-f5fad20443a3/ASO-6.5-Routes-en-US1003.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    },
+    {
+      "template": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/3c/99/11/3c9911c4-1ca0-5c39-a0eb-f13005a97d3a/ASO-6.5-SyncWithDevices-en-US0904.jpg/{w}x{h}{c}.{f}",
+      "width": 1242,
+      "height": 2688
+    }
+  ],
+  "webPagePhoneVideoItems": 1,
+  "note": "Root 01.jpg.. = iPhone set shown on apps.apple.com/us web page (largest display class, e.g. 6.9in). api-lookup-set/ = images from itunes lookup screenshotUrls (often an older 5.5in/6.5in set).",
+  "appPreviewVideo": {
+    "position": "first in gallery",
+    "videoUrl": "https://apptrailers.itunes.apple.com/itunes-assets/PurpleVideo221/v4/a6/f2/50/a6f250e3-79cf-dcd3-af53-82f6b1b93b35/P1126263724_default.m3u8",
+    "posterTemplate": "https://is1-ssl.mzstatic.com/image/thumb/PurpleVideo211/v4/e0/d5/ba/e0d5bada-3325-13fe-9799-e90936372ddf/Job526596b9-b7e7-403c-ae07-33e552c63cb1-192533578-PreviewImage_Preview_Image_Intermediate_nonvideo_377108963_2161501954-Time1747260600683.png/{w}x{h}{c}.{f}",
+    "posterFile": "00_video-poster.jpg"
+  }
 }
