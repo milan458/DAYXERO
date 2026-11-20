@@ -1,0 +1,12 @@
+[
+  { "id": "01", "file": "01-main.html", "dc": "Main.dc.html", "board": "01 · Hook · meet the crew", "title": "DayXero · App Store shot 1 · Meet the crew" },
+  { "id": "02", "file": "02-plan.html", "dc": "Plan.dc.html", "board": "02 · The 7-day plan to Day Xero", "title": "DayXero · App Store shot 2 · The 7-day plan" },
+  { "id": "03", "file": "03-xero.html", "dc": "Xero.dc.html", "board": "03 · Meet Xero · your days", "title": "DayXero · App Store shot 3 · Meet Xero" },
+  { "id": "04", "file": "04-cards.html", "dc": "Cards.dc.html", "board": "04 · Your daily hand of cards", "title": "DayXero · App Store shot 4 · Daily cards" },
+  { "id": "05", "file": "05-jelli.html", "dc": "Jelli.dc.html", "board": "05 · Meet Jelli · your waves", "title": "DayXero · App Store shot 5 · Meet Jelli" },
+  { "id": "06", "file": "06-slip.html", "dc": "Slip.dc.html", "board": "06 · Jelli after a slip · nothing resets", "title": "DayXero · App Store shot 6 · After a slip" },
+  { "id": "07", "file": "07-glim.html", "dc": "Glim.dc.html", "board": "07 · Meet Glim · your evenings", "title": "DayXero · App Store shot 7 · Meet Glim" },
+  { "id": "08", "file": "08-calm.html", "dc": "Calm.dc.html", "board": "08 · Calm tools · any time", "title": "DayXero · App Store shot 8 · Calm tools" },
+  { "id": "09", "file": "09-rewards.html", "dc": "Rewards.dc.html", "board": "09 · Progress, not perfection", "title": "DayXero · App Store shot 9 · Progress" },
+  { "id": "10", "file": "10-finale.html", "dc": "Finale.dc.html", "board": "10 · Your Day Xero is waiting", "title": "DayXero · App Store shot 10 · Your Day Xero is waiting" }
+]

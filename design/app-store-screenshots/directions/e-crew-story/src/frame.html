@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DayXero App Store frame · Direction E</title>
+<!-- One page for all ten frames: frame.html?f=01 … ?f=10, served from the e-crew-story folder (render.mjs does that).
+     It loads frames/NN-*.html (plain HTML with inline styles, the same markup as the canvas artboards), swaps
+     <x-waves frame="N"> for the landscape (waves.js) and <x-char who expr size> for a crew member (char.js), and
+     scales the 1320 x 2868 stage with ?scale= for the 1206 x 2622 set. Open it at 1320 x 2868 to preview. -->
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  html, body { margin: 0; padding: 0; overflow: hidden; background: #000; }
+  body { -webkit-font-smoothing: antialiased; }
+  #stage { width: 1320px; transform-origin: 0 0; }
+  #stage * { box-sizing: content-box; }
+  #stage img { image-rendering: auto; }
+</style>
+<script src="char.js"></script>
+<script src="waves.js"></script>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+(async function () {
+  const q = new URLSearchParams(location.search);
+  const id = (q.get('f') || '01').padStart(2, '0');
+  const scale = parseFloat(q.get('scale') || '1');
+  const list = await (await fetch('frames.json')).json();
+  const meta = list.find((m) => m.id === id);
+  document.title = meta.title;
+  const html = await (await fetch('frames/' + meta.file)).text();
+  const stage = document.getElementById('stage');
+  stage.innerHTML = html;
+  stage.querySelectorAll('x-waves').forEach((el) => { el.outerHTML = window.dxWavesSVG(Number(el.getAttribute('frame'))); });
+  stage.querySelectorAll('x-char').forEach((el) => {
+    el.outerHTML = window.DXCHAR({ who: el.getAttribute('who'), expr: el.getAttribute('expr'), size: Number(el.getAttribute('size')) });
+  });
+  const root = stage.firstElementChild;
+  if (scale !== 1) {
+    stage.style.transform = 'scale(' + scale + ')';
+    // the 6.3" canvas is a hair taller than 1320 x 2868 scaled: let the frame's ground run on to the bottom edge
+    const extra = Math.ceil(innerHeight / scale) - 2868;
+    if (extra > 0) { root.style.height = (2868 + extra) + 'px'; root.querySelector('svg').style.overflow = 'visible'; }
+  }
+  document.body.style.background = root.style.background;
+  await document.fonts.ready;
+  await Promise.all([...document.images].map((i) => i.complete ? i.decode().catch(() => {}) : new Promise((ok) => { i.onload = i.onerror = ok; })));
+  document.body.dataset.ready = '1';
+})().catch((e) => { document.body.dataset.error = String(e); console.error(e); });
+</script>
+</body>
+</html>
