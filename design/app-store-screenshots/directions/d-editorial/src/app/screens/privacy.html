@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>069 Privacy and your data</title>
+<!-- Direction D addition. Drawn from DayXero/Settings/SettingsPages.swift, PrivacySettingsView (v5, 069), on the reading
+     ground, with the v5 kit. Every string is the Swift string verbatim:
+       SettingsPage("Privacy and your data", lead: "No account, no ads, no selling. Here is exactly what happens.")
+       lead card: SettingsDawn tile (Xero at 34 pt) + "It stays on this phone" / "Your plan, reasons, logs and notes never leave this iPhone."
+       DXList: SettingsSwitchRow "Share anonymous usage" (.chart) "Counts like “lesson started”. Never your words."
+               (on: AnalyticsConsent.defaultValue is true outside the EU/EEA, so a US device shows it on)
+               SettingsRow "Export my data" (.share) "A file you can keep or move"
+               SettingsRow "Privacy policy" (.shield) "Purchases go through Apple and RevenueCat"
+       card: "Delete all my data" / "Erases your plan, days, badges and notes from this phone. This cannot be undone." / "Delete everything…"
+     SettingsTile: 32 pt, radius 11, card-2 fill, ink line icon. Row titles 16 semibold, details footnote muted. -->
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .head { margin-top: 2px; }
+  .head .t-foot { color: var(--muted); margin-top: 8px; }
+  .leadc { margin-top: 18px; display: flex; gap: 14px; align-items: center; padding: 14px; background: var(--card); border-radius: var(--r-card); box-shadow: inset 0 0 0 1px var(--line); }
+  .ph { position: relative; flex: none; width: 62px; height: 90px; padding: 3px; border-radius: 12px; background: #1E1A3A; }
+  .ph .dawn { position: relative; width: 56px; height: 84px; border-radius: 9px; overflow: hidden; background: linear-gradient(#FFE6BF, #FFC994); }
+  .ph .dawn::before { content: ""; position: absolute; left: 14px; top: -16px; width: 68px; height: 68px; border-radius: 50%; background: radial-gradient(circle, rgba(255,244,210,.95) 0, rgba(255,239,198,.5) 35%, rgba(255,239,198,0) 70%); }
+  .ph .x { position: absolute; left: 11px; bottom: 2px; }
+  .ph .x svg { display: block; }
+  .ph .notch { position: absolute; left: 50%; top: 7px; width: 18px; height: 5px; margin-left: -9px; border-radius: 3px; background: #1E1A3A; }
+  .leadc .t-head { font-size: 18px; }
+  .leadc .t-foot { color: var(--muted); margin-top: 4px; font-size: 14px; line-height: 1.38; }
+  .list { margin-top: 16px; }
+  .list > .row { align-items: flex-start; padding: 14px 16px; gap: 12px; }
+  .tile { width: 32px; height: 32px; border-radius: 11px; background: var(--card-2); display: grid; place-items: center; flex: none; color: var(--ink); }
+  .tile svg { width: 19px; height: 19px; }
+  .row .grow p:first-child { font: 600 16px/1.3 var(--body); margin: 0; }
+  .row .grow p + p { font: 500 14px/1.38 var(--body); color: var(--muted); margin: 2px 0 0; }
+  .row .chev { align-self: center; }
+  .row .toggle { margin-top: -2px; }
+  .del { margin-top: 16px; padding: 16px 18px 12px; background: var(--card); border-radius: var(--r-card); box-shadow: inset 0 0 0 1px var(--line); }
+  .del .t-head { font-size: 18px; }
+  .del .t-foot { color: var(--muted); font-size: 14px; margin-top: 6px; }
+  .del hr { border: 0; height: 1px; background: var(--line); margin: 12px -18px 0; }
+  .del .go { display: block; margin-top: 10px; font: 700 16px/1 var(--body); color: #C2410C; }
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+  <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back"></button></div>
+  <div class="scroll" style="padding-top:112px">
+    <div class="pad">
+      <div class="head">
+        <h1 class="t-large" data-a>Privacy and your data</h1>
+        <p class="t-foot" data-a style="--i:1">No account, no ads, no selling. Here is exactly what happens.</p>
+      </div>
+      <div class="leadc" data-a style="--i:2">
+        <div class="ph" aria-hidden="true"><div class="dawn"><span class="x" id="xero"></span></div><span class="notch"></span></div>
+        <div class="grow">
+          <p class="t-head">It stays on this phone</p>
+          <p class="t-foot">Your plan, reasons, logs and notes never leave this iPhone.</p>
+        </div>
+      </div>
+      <div class="list" data-a style="--i:3">
+        <div class="row"><span class="tile" data-ic="chart"></span><div class="grow"><p>Share anonymous usage</p><p>Counts like “lesson started”. Never your words.</p></div><span class="toggle on" aria-label="On"></span></div>
+        <div class="row"><span class="tile" data-ic="share"></span><div class="grow"><p>Export my data</p><p>A file you can keep or move</p></div><span class="chev" data-ic="chev"></span></div>
+        <div class="row"><span class="tile" data-ic="shield"></span><div class="grow"><p>Privacy policy</p><p>Purchases go through Apple and RevenueCat</p></div><span class="chev" data-ic="chev"></span></div>
+      </div>
+      <div class="del" data-a style="--i:4">
+        <p class="t-head">Delete all my data</p>
+        <p class="t-foot">Erases your plan, days, badges and notes from this phone. This cannot be undone.</p>
+        <hr><span class="go">Delete everything…</span>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20, w: 2.2 })));
+  document.getElementById('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 34, stage: 1, animate: false });
+</script>
+</body></html>

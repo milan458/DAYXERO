@@ -1,0 +1,70 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>Finale</title>
+<!-- Screenshots: the finale, ported from DayXero/Milestones/FinaleView.swift (F18 in the design system) with the kit's
+     tokens. Sun ground, the dawn scene at clarity 100 with confetti (finale only), Jelli 88, Xero 140, Glim 88, the caption
+     line, "N days. Clear skies.", three StatTiles (one per character), the money line with the reason, the health card that
+     is starting now with its source, then "Keep going" and "Share my card". Numbers: the Week 4 finale row of the persona
+     (design system section 7). -->
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .hero { position: absolute; left: 0; right: 0; top: 0; height: 268px; overflow: hidden; }
+  .hero .scene, .hero .scene svg { position: absolute; inset: 0; display: block; }
+  .hero .edge { position: absolute; left: 0; bottom: -3px; }
+  .hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--g); } /* hides a subpixel seam at the scaled hero edge */
+  .crew { position: absolute; left: 0; right: 0; bottom: 8px; display: flex; justify-content: center; align-items: flex-end; gap: 4px; }
+  .confetti { position: absolute; inset: 0; pointer-events: none; }
+  .body { position: absolute; left: 0; right: 0; top: 270px; padding: 0 var(--gutter); display: grid; gap: 10px; text-align: center; justify-items: center; }
+  .tiles { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; text-align: left; }
+  .tiles .stat { padding: 12px 12px 13px; display: grid; gap: 4px; align-content: start; }
+  .tiles .num { font-size: 28px; line-height: 1; }
+  .tiles .lbl { font: 600 13px/1.25 var(--body); color: var(--muted); }
+  .money { max-width: 340px; }
+  .fact { width: 100%; text-align: left; display: grid; gap: 3px; padding: 14px 16px; }
+  .fact .k { font: 600 13px/1.3 var(--body); color: var(--muted); }
+  .fact .src { font: 500 13px/1.3 var(--body); color: var(--muted); margin-top: 3px; }
+  .quietbtn { display: flex; align-items: center; justify-content: center; gap: 8px; }
+</style>
+</head><body>
+<div class="screen" data-ground="sun" data-status="on-art">
+  <div class="hero">
+    <div class="scene" id="scene"></div>
+    <svg class="confetti" id="confetti" width="390" height="268" viewBox="0 0 390 268" aria-hidden="true"></svg>
+    <svg class="edge" width="390" height="40" viewBox="0 0 390 40" aria-hidden="true"><path d="M0 22 C110 -2 280 -2 390 22 L390 40 L0 40 Z" fill="var(--g)"/></svg>
+    <div class="crew"><div id="jelli"></div><div id="xero"></div><div id="glim"></div></div>
+  </div>
+  <div class="body">
+    <p class="t-cap muted">Week 4 · program complete · Thu, Dec 3</p>
+    <h1 class="t-display">28 days.<br>Clear <span class="mark">skies.</span></h1>
+    <div class="tiles">
+      <div class="stat"><span class="num">28</span><span class="lbl">days since Quit Day · Xero</span></div>
+      <div class="stat"><span class="num">61</span><span class="lbl">waves ridden · Jelli</span></div>
+      <div class="stat"><span class="num">26</span><span class="lbl">check-ins · Glim</span></div>
+    </div>
+    <p class="t-body money">$196.00 kept and 336 cigarettes not smoked. Your reason: To keep up with Maya at the park.</p>
+    <div class="card fact">
+      <span class="k">Starting now · 2 weeks to 3 months</span>
+      <span class="t-head" style="font-size:17px">Circulation and lung function improve</span>
+      <span class="src">Source: American Cancer Society</span>
+    </div>
+  </div>
+  <div class="dock">
+    <button class="btn">Keep going</button>
+    <button class="link quietbtn"><span id="share"></span>Share my card</button>
+  </div>
+</div>
+<script>
+  const $ = s => document.querySelector(s);
+  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 268, clarity: 100 });
+  $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 88, stage: 4 });
+  $('#xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 140, stage: 4 });
+  $('#glim').innerHTML = DX.char('glim', { mood: 'cheer', size: 88, stage: 4 });
+  $('#share').innerHTML = DX.icon('share', { size: 18 });
+  /* Confetti: the six confetti tokens (design system 5.2), resting where FinaleView's pieces fall to. */
+  const C = ['#FF7A55', '#2A52DB', '#4A3596', '#0F6E43', '#FF8FB8', '#FFF8EE'];
+  const P = [[34, 62, 0, 28], [70, 128, 1, -20], [104, 40, 2, 50], [150, 92, 3, 12], [196, 30, 4, -36], [238, 70, 5, 60], [282, 118, 0, -12], [318, 46, 1, 30], [356, 98, 2, -48], [22, 170, 3, 20], [366, 168, 4, -24], [128, 176, 5, 40], [262, 18, 3, 0], [52, 10, 4, 66]];
+  $('#confetti').innerHTML = P.map(([x, y, c, r], i) => i % 3 === 2
+    ? `<circle cx="${x}" cy="${y}" r="4" fill="${C[c]}"/>`
+    : `<rect x="${x - 3.5}" y="${y - 6}" width="7" height="12" rx="2" fill="${C[c]}" transform="rotate(${r} ${x} ${y})"/>`).join('');
+</script>
+</body></html>

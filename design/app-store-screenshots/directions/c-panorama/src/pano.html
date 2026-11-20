@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DayXero panorama (Direction C)</title>
+<!-- The whole panorama, art only, at 4400 x 956 CSS px. check.mjs renders it at 3x (13200 x 2868) and compares each
+     440 px slice with the art of that frame, to prove the seams line up. Open it in a browser to see the scene. -->
+<style>html, body { margin: 0; overflow: hidden; } .stage { position: relative; width: 4400px; height: 956px; overflow: hidden; background: #FFE6C4; } .art { position: absolute; left: 0; top: 0; } .art svg { position: absolute; display: block; }</style>
+<script src="app/kit/chars.js"></script>
+<script src="pano.js"></script>
+</head>
+<body>
+<div class="stage"><div class="art back" id="b"></div><div class="art front" id="f"></div></div>
+<script>
+  document.getElementById('b').innerHTML = PANO.svg('back', 0);
+  document.getElementById('f').innerHTML = PANO.svg('front', 0);
+  document.fonts.ready.then(() => setTimeout(() => { document.body.dataset.ready = '1'; }, 250));
+</script>
+</body>
+</html>

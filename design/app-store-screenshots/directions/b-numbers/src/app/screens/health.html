@@ -1,0 +1,133 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>037 Health timeline</title>
+<meta name="motion" content="Title and the Vaping / Smoking chips arrive; each card's larger paper-cut spot (its own motif: sunrise, clouds blowing away, a summit flag, a calm lake, a hand mirror with a sparkle) lifts in with the card, then the rail draws top to bottom (900ms clip reveal from 300ms) as one continuous line through the node centres, solid through today and dashed on to Ahead, while timeline cards arrive with a 90ms stagger. The rail node is each card's one status signal (plain dot for the start, green tick for each finished change, half-filled for under way, open ring for ahead); the line under each title is only its timing. The under-way card leads with a warm tint (an apricot hairline in dark mode); its node sends out a soft pulse ring every 2.4s (from 1.2s) while its 4px apricot bar fills to 50% (900ms settle). All spots and text sit on one column. Every card ends in a chevron and opens its detail. Switching chips cross-fades the list (250ms) with a selection haptic.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .tl { position: relative; margin-top: 20px; padding-left: 30px; display: grid; gap: 12px; }
+  /* one continuous rail through the node centres (measured), solid through today, dashed on to Ahead; it draws top to bottom */
+  .rail { position: absolute; left: 0; top: 0; bottom: 0; width: 20px; }
+  .rail svg { display: block; overflow: visible; }
+  .play .rail { animation: rail-in 900ms var(--ease) 300ms both; }
+  @keyframes rail-in { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+  .tl { --rail: color-mix(in srgb, var(--fg) 50%, var(--g)); }
+  [data-theme="dark"] .tl { --rail: color-mix(in srgb, var(--fg) 34%, var(--g)); }
+  .node { position: absolute; left: -30px; top: 50%; margin-top: -10px; width: 20px; height: 20px; border-radius: 99px; display: grid; place-items: center; background: var(--g); }
+  .node.done { background: var(--tick); color: #fff; }
+  .node.done svg { width: 12px; height: 12px; }
+  /* under way: a half-filled node (the right half, like a ring at 50%) with a soft pulse while the change is happening */
+  .node.now { background: conic-gradient(var(--fg) 0 50%, var(--g) 0); box-shadow: inset 0 0 0 2.5px var(--fg); }
+  .node.now::before { content: ""; position: absolute; inset: -5px; border-radius: 99px; box-shadow: 0 0 0 2px var(--fg); opacity: 0; }
+  .play .node.now::before { animation: pulse 2.4s ease-out 1.2s infinite; }
+  @keyframes pulse { 0% { opacity: .35; transform: scale(.7); } 100% { opacity: 0; transform: scale(1.25); } }
+  .still .node.now::before { animation: none !important; opacity: 0; }
+  .node.ahead { box-shadow: inset 0 0 0 2.5px var(--muted); }
+  .node.past::after { content: ""; width: 12px; height: 12px; border-radius: 99px; background: var(--muted); }
+  .item { position: relative; display: flex; gap: 12px; align-items: center; padding: 10px 10px 10px 10px; }
+  .item .grow { flex: 1; min-width: 0; display: grid; gap: 4px; }
+  .item .t-head { font-size: 17px; line-height: 1.22; }
+  .ill { width: 64px; height: 64px; border-radius: 17px; overflow: hidden; flex: none; display: block; }
+  .ill svg { width: 100%; height: 100%; display: block; }
+  .st { font: 600 14px/1.25 var(--body); color: var(--muted); }
+  .chev { display: grid; color: var(--muted); }
+  .chev svg { width: 18px; height: 18px; }
+  .item.past { background: transparent; }
+  /* the under-way card leads: a soft warm tint and a little more height; its spot and text stay on the same column as the rest */
+  .screen .tl .item.now { padding: 14px 10px 14px 10px; background: color-mix(in srgb, #FF9A5C 16%, #FFFFFF); box-shadow: inset 0 0 0 1.5px rgba(232,120,70,.45), 0 12px 26px rgba(30,26,58,.1); }
+  /* dark: a warm navy tint with an apricot hairline */
+  [data-theme="dark"] .screen .tl .item.now { background: color-mix(in srgb, #FFB27A 9%, var(--card)); box-shadow: inset 0 0 0 1.5px rgba(255,178,122,.7), 0 12px 26px rgba(0,0,0,.3); }
+  .item.now .t-head { font-size: 18px; }
+  .item.now .st { color: var(--fg); }
+  .item.now .progress { height: 4px; margin-top: 6px; border-radius: 99px; background: rgba(232,120,70,.2); }
+  .item.now .progress > i { background: #F08A4B; border-radius: 99px; }
+  [data-theme="dark"] .item.now .progress { background: rgba(255,178,122,.2); }
+  [data-theme="dark"] .item.now .progress > i { background: #FFB27A; }
+</style>
+</head><body>
+<div class="screen" data-ground="reading">
+  <div class="nav"><button class="icon-btn" aria-label="Back" data-ic="back" data-go="036-progress"></button></div>
+  <div class="scroll" style="padding-top:108px">
+    <div class="pad">
+      <h1 class="t-large" data-a style="--i:0">What's changing</h1>
+      <p class="t-foot muted" data-a style="--i:1;margin-top:6px">Day 3 · your body since Quit Day</p>
+      <div class="chips" data-a style="--i:2;margin-top:16px"><button class="chip on">Smoking</button><button class="chip">Vaping</button></div>
+
+      <div class="tl">
+        <div class="rail" id="rail" aria-hidden="true"></div>
+
+        <div class="card item past" data-a style="--i:3">
+          <span class="node done" data-ic="check" aria-label="Done"></span>
+          <span class="ill" data-spot="rise"></span>
+          <div class="grow"><p class="t-head">Heart rate and blood pressure start to come down</p><span class="st">Within minutes</span></div>
+          <span data-ic="chev" class="chev"></span>
+        </div>
+        <div class="card item now" data-a style="--i:4">
+          <span class="node now" aria-label="Under way"></span>
+          <span class="ill" data-spot="cloud"></span>
+          <div class="grow"><p class="t-head">Carbon monoxide in your blood drops to normal</p><span class="st">A few days</span><div class="progress"><i style="--p:69%" id="bar"></i></div></div>
+          <span data-ic="chev" class="chev"></span>
+        </div>
+        <div class="card item past" data-a style="--i:5">
+          <span class="node now" aria-label="Under way"></span>
+          <span class="ill" data-spot="lake"></span>
+          <div class="grow"><p class="t-head">Food starts tasting like food again</p><span class="st">2 to 5 days</span></div>
+          <span data-ic="chev" class="chev"></span>
+        </div>
+        <div class="card item ahead" data-a style="--i:6">
+          <span class="node ahead" aria-label="Ahead"></span>
+          <span class="ill" data-spot="mirror"></span>
+          <div class="grow"><p class="t-head">Fresher breath, brighter smile</p><span class="st">1 to 2 weeks</span></div>
+          <span data-ic="chev" class="chev"></span>
+        </div>
+        <div class="card item ahead" data-a style="--i:7">
+          <span class="node ahead" aria-label="Ahead"></span>
+          <span class="ill" data-spot="peak"></span>
+          <div class="grow"><p class="t-head">Circulation and lung function improve</p><span class="st">2 weeks to 3 months</span></div>
+          <span data-ic="chev" class="chev"></span>
+        </div>
+      </div>
+      <p class="t-cap muted" data-a style="--i:8;margin-top:22px;padding-left:30px">Typical times, everyone is different. Source: <span class="source">American Cancer Society</span></p>
+    </div>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-ic]').forEach(e => e.insertAdjacentHTML('afterbegin', DX.icon(e.dataset.ic, { size: 20, w: e.dataset.ic === 'check' ? 3.2 : 2.2 })));
+  /* One paper-cut spot per change, each with a day palette and a real night palette (navy skies, a low sun or the moon, cream
+     and gold accents; never a dimmed copy of the day art). */
+  const dark = DX.theme === 'dark';
+  const lift = 'filter="url(#pcLift)"';
+  const hills = (c, peak) => `<path ${lift} d="${peak ? 'M0 44 L14 34 L22 38 L36 14 L50 32 L62 28 V62 H0z' : 'M0 40 C14 32 28 36 40 34 S52 30 62 32 V62 H0z'}" fill="${c[0]}"/>
+    <path ${lift} d="M0 47 C16 41 34 49 62 43 V62 H0z" fill="${c[1]}"/><path ${lift} d="M0 55 C20 51 40 57 62 52 V62 H0z" fill="${c[2]}"/>`;
+  const disc = (cx, cy, r, f, glow) => (glow ? `<circle cx="${cx}" cy="${cy}" r="${r * 2.6}" fill="url(#${glow})"/>` : '') + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${f}"/>`;
+  const cloud = (x, y, k, f, o = 1) => `<path transform="translate(${x} ${y}) scale(${k})" d="M2 12h20a5 5 0 000-10 7 7 0 00-13-1 5 5 0 00-7 4 3.5 3.5 0 000 7z" fill="${f}" opacity="${o}"/>`;
+  const stars = (pts) => pts.map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 2 ? .8 : 1.1}" fill="#fff" opacity="${i % 2 ? .55 : .9}"/>`).join('');
+  const mirror = (ink, frame, glass, shine, spark) => `<g transform="rotate(-14 31 32)"><rect x="28.5" y="38" width="5" height="17" rx="2.5" fill="${frame}"/><ellipse cx="31" cy="27" rx="13" ry="15" fill="${frame}"/><ellipse cx="31" cy="27" rx="9.6" ry="11.6" fill="${glass}"/><path d="M25 22 C26 18 29 16 32 15.6" fill="none" stroke="${shine}" stroke-width="2.4" stroke-linecap="round"/></g>
+    <path d="M47 9l1.6 3.6 3.6 1.6-3.6 1.6L47 19.4l-1.6-3.6-3.6-1.6 3.6-1.6z" fill="${spark}"/><path d="M13 14l1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" fill="${spark}" opacity=".8"/>`;
+  const SP = dark ? {
+    rise: ['#1B284A', stars([[10, 9], [26, 6], [48, 12]]) + disc(31, 40, 10, '#FFD27A', 'gSun') + hills(['#2C3D6A', '#1E2B4A', '#16233F'])],
+    cloud: ['#172648', stars([[8, 8], [54, 10]]) + `<g stroke="#8EA2D6" stroke-opacity=".7" stroke-width="2.2" stroke-linecap="round" fill="none"><path d="M6 17h16"/><path d="M10 24h10"/></g>` + cloud(26, 11, 1.05, '#4A5D8E') + cloud(44, 25, .55, '#3A4C7C') + hills(['#26396A', '#1C2D55', '#142343'])],
+    peak: ['#1B284A', disc(12, 13, 5, '#F6E7C1') + stars([[30, 6], [52, 10]]) + hills(['#33446F', '#22335B', '#16233F'], true) + `<path d="M36 14V4" stroke="#E6DCCB" stroke-width="1.8" stroke-linecap="round"/><path d="M36 4.5l9 3-9 3z" fill="#E9886C"/>`],
+    lake: ['#16244A', stars([[9, 8], [50, 6], [20, 16]]) + disc(42, 18, 7, '#F6E7C1', 'gMoon') + `<path ${lift} d="M0 34 C12 28 24 32 34 31 S50 26 62 30 V62 H0z" fill="#22355F"/><rect y="40" width="62" height="22" fill="#2A4677"/><g stroke="#F6E7C1" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"><path d="M34 46h14"/><path d="M38 52h8"/><path d="M8 56h8"/></g>`],
+    mirror: ['#1E2C52', stars([[8, 34], [54, 32]]) + `<path ${lift} d="M0 50 C20 46 40 52 62 47 V62 H0z" fill="#2C3D6A"/>` + mirror('#0F1B33', '#E6DCCB', '#8FB1E8', '#F6EFE2', '#FFD27A')]
+  } : {
+    rise: ['#FFE6C8', disc(31, 40, 13, '#FFD25E') + hills(['#FFAE73', '#FF8A5E', '#E8674A'])],
+    cloud: ['#DCE8FF', `<g stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M6 17h16"/><path d="M10 24h10"/></g>` + cloud(26, 11, 1.05, '#FFFFFF') + cloud(44, 25, .55, '#FFFFFF', .75) + hills(['#A9C2F2', '#7FA0EA', '#5C7FE0'])],
+    peak: ['#FFD9C2', disc(12, 13, 6, '#FFD25E') + hills(['#E8674A', '#FF8A5E', '#FFAE73'], true) + `<path d="M36 14V4" stroke="#1E1A3A" stroke-width="1.8" stroke-linecap="round"/><path d="M36 4.5l9 3-9 3z" fill="#1E1A3A"/>`],
+    lake: ['#D3F1E0', disc(31, 24, 10, '#FFD25E') + `<path ${lift} d="M0 34 C12 28 24 32 34 31 S50 26 62 30 V62 H0z" fill="#7FD3A6"/><rect y="40" width="62" height="22" fill="#8ECDE6"/><g stroke="#FFF8EE" stroke-width="2" stroke-linecap="round"><path d="M22 46h18"/><path d="M26 52h10"/><path d="M8 57h8"/><path d="M46 57h8"/></g><ellipse cx="31" cy="44" rx="7" ry="1.6" fill="#FFD25E" opacity=".9"/>`],
+    mirror: ['#FFE3D6', `<circle cx="31" cy="30" r="24" fill="#FFF1E8" opacity=".8"/><path ${lift} d="M0 50 C20 46 40 52 62 47 V62 H0z" fill="#FFB9A4"/>` + mirror('#1E1A3A', '#FF8A6B', '#CFE1FF', '#FFFFFF', '#F5B83D')]
+  };
+  document.body.insertAdjacentHTML('beforeend', `<svg width="0" height="0" style="position:absolute"><filter id="pcLift" x="-5%" y="-20%" width="110%" height="140%"><feDropShadow dx="0" dy="-1.2" stdDeviation="1.2" flood-color="#1A0B2E" flood-opacity="${dark ? .5 : .22}"/></filter><radialGradient id="gSun"><stop offset=".3" stop-color="#FFB25E" stop-opacity=".5"/><stop offset="1" stop-color="#FFB25E" stop-opacity="0"/></radialGradient><radialGradient id="gMoon"><stop offset=".3" stop-color="#F6E7C1" stop-opacity=".35"/><stop offset="1" stop-color="#F6E7C1" stop-opacity="0"/></radialGradient></svg>`);
+  document.querySelectorAll('[data-spot]').forEach(e => e.innerHTML = `<svg viewBox="0 0 62 62" aria-hidden="true"><rect width="62" height="62" fill="${SP[e.dataset.spot][0]}"/>${SP[e.dataset.spot][1]}</svg>`);
+  /* rail: measured from the laid-out node centres (offsets ignore the arrive transforms) */
+  DX.beat(0, () => {
+    const tl = document.querySelector('.tl'), nodes = [...tl.querySelectorAll('.node')];
+    const ys = nodes.map(n => n.parentElement.offsetTop + n.offsetTop + n.offsetHeight / 2);
+    let solid = '', dash = '';
+    for (let i = 0; i < ys.length - 1; i++) { const seg = `M10 ${ys[i]}V${ys[i + 1]}`; if (nodes[i + 1].classList.contains('ahead')) dash += seg; else solid += seg; }
+    document.getElementById('rail').innerHTML = `<svg width="20" height="${tl.offsetHeight}"><path d="${solid}" stroke="var(--rail)" stroke-width="2"/><path d="${dash}" stroke="var(--rail)" stroke-width="2" stroke-dasharray="3 5" stroke-linecap="round"/></svg>`;
+  });
+  const bar = document.getElementById('bar');
+  DX.after(0, () => { bar.style.transition = 'none'; bar.style.width = '0%'; });
+  DX.after(700, () => { bar.style.transition = ''; bar.style.width = ''; });
+</script>
+</body></html>

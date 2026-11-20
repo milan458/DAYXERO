@@ -1,0 +1,85 @@
+/* DayXero App Store screenshots: the shared stylesheet.
+   The stage is designed at 440 x 956 CSS px (1320 x 2868 at 3x). render.mjs scales the same stage to 402 px wide for the
+   1206 x 2622 set, so both sizes are rendered natively, never resampled. */
+@import url("./fonts/fonts.css");
+
+:root {
+  --ink: #1E1A3A; --cream: #FFF8EE; --coral: #FF7A55; --sun: #FFD966;
+  --display: "Bricolage Grotesque", system-ui, sans-serif;
+  --body: "DM Sans", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; overflow: hidden; }
+body { -webkit-font-smoothing: antialiased; font-family: var(--body); }
+
+/* ---------- the stage: no grounds in Direction C; the panorama (pano.js) is the background of every frame ---------- */
+.stage { position: relative; width: 440px; overflow: hidden; transform-origin: 0 0; background: #FFE6C4; --fg: var(--ink); }
+.stage[data-tone="cream"] { --fg: var(--cream); }
+
+/* ---------- caption: one type style for all ten frames, top, centred, over the sky ---------- */
+.cap { position: absolute; z-index: 10; left: 24px; right: 24px; top: 58px; text-align: center; color: var(--fg); }
+.cap h1 { margin: 0 auto; max-width: 372px; font: 800 44px/1.03 var(--display); letter-spacing: -1.4px; text-wrap: balance; }
+.cap .sub { margin: 12px auto 0; max-width: 340px; font: 600 17.5px/1.34 var(--body); text-wrap: balance; }
+.cap .fine { margin: 8px auto 0; font: 600 12.5px/1.3 var(--body); }
+
+/* ---------- phone: a modern iPhone drawn in CSS (screen 390 x 844, scaled with --k) ---------- */
+.phone { position: absolute; z-index: 4; width: 418px; height: 872px; transform: scale(var(--k, .84)); transform-origin: 0 0; }
+.phone .body { position: absolute; inset: 0; border-radius: 70px; padding: 14px;
+  background: linear-gradient(145deg, #4A4750 0%, #2A2830 22%, #1B1A20 55%, #2C2A32 82%, #504C56 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.22), inset 0 0 0 4px #121116, 0 40px 70px -18px rgba(20,10,40,.38), 0 16px 30px -12px rgba(20,10,40,.28); }
+.phone .glass { position: relative; width: 390px; height: 844px; border-radius: 56px; overflow: hidden; background: #000; box-shadow: 0 0 0 1px #000; }
+.phone iframe { position: absolute; left: 0; top: 0; width: 390px; height: 844px; border: 0; display: block; }
+.phone .island { position: absolute; z-index: 5; left: 50%; top: 11px; width: 122px; height: 36px; margin-left: -61px; border-radius: 20px; background: #050507; }
+.phone .island::after { content: ""; position: absolute; right: 22px; top: 12px; width: 12px; height: 12px; border-radius: 6px; background: radial-gradient(circle at 40% 35%, #2A3550 0%, #0B0E18 60%); }
+.phone .btn-l, .phone .btn-r { position: absolute; width: 4px; border-radius: 2px; background: linear-gradient(90deg, #2A2830, #55515C); }
+.phone .btn-l { left: -3px; } .phone .btn-r { right: -3px; }
+
+/* ---------- breakouts: a zoomed, lifted piece of the same screen, or a card in the app's own style ---------- */
+.stage[data-tone="cream"] .zoom { outline: 1.5px solid rgba(255,255,255,.16); }
+.zoom { position: absolute; z-index: 6; overflow: hidden; box-shadow: 0 26px 50px -14px rgba(20,10,40,.40), 0 6px 16px -6px rgba(20,10,40,.20); }
+.zoom iframe { position: absolute; left: 0; top: 0; width: 390px; height: 844px; border: 0; transform-origin: 0 0; }
+.card-out { position: absolute; z-index: 6; border-radius: 26px; background: #FFFFFF; color: var(--ink); box-shadow: 0 26px 50px -14px rgba(20,10,40,.36), 0 6px 16px -6px rgba(20,10,40,.18), inset 0 0 0 1px rgba(30,26,58,.08); }
+
+/* ---------- art layers ---------- */
+.art { position: absolute; left: 0; top: 0; width: 440px; height: 956px; pointer-events: none; }
+.art.back { z-index: 2; } .art.front { z-index: 5; }
+.art svg.pano { position: absolute; display: block; overflow: hidden; }
+.card-out .zin { display: block; }
+
+/* ---------- breakout card contents (frames 5, 6, 7) ---------- */
+.kept { padding: 14px 14px 16px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
+.kept .sky { position: relative; height: 112px; border-radius: 16px; overflow: hidden; }
+.kept .sky > svg { position: absolute; inset: 0; }
+.kept .sky .x { position: absolute; right: 18px; bottom: 2px; }
+.kept .sky .pill { position: absolute; z-index: 2; left: 10px; bottom: 10px; height: 30px; padding: 0 12px; border-radius: 99px; background: rgba(255,248,238,.94); display: inline-flex; align-items: center; font: 600 13.5px/1 var(--body); color: var(--ink); }
+.kept .row1, .kept .grid, .kept .foot { margin-inline: 10px; }
+.kept .row1 { display: flex; align-items: baseline; gap: 9px; }
+.kept .row1 .big { font: 800 60px/1 var(--display); letter-spacing: -2.4px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.kept .row1 span { font: 600 17px/1.2 var(--body); color: #5E5975; }
+.kept .grid { padding-top: 14px; border-top: 1px solid rgba(30,26,58,.12); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.kept .grid div { display: grid; gap: 4px; }
+.kept .grid b { font: 800 34px/1 var(--display); letter-spacing: -.8px; }
+.kept .grid span { font: 500 14px/1.25 var(--body); color: #5E5975; }
+.kept .foot { margin: 0 10px; padding-top: 12px; border-top: 1px solid rgba(30,26,58,.12); font: 500 15px/1.3 var(--body); color: #5E5975; }
+
+.week { padding: 16px 16px 8px; }
+.week .h { padding: 0 4px 10px; display: grid; gap: 2px; }
+.week .h b { font: 700 19px/1.2 var(--display); letter-spacing: -.2px; }
+.week .h span { font: 500 14px/1.3 var(--body); color: #5E5975; }
+.week .r { display: flex; align-items: center; gap: 12px; padding: 10px 4px; border-top: 1px solid rgba(30,26,58,.10); }
+.week .r .ic { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; flex: none; background: #F1EBE2; color: var(--ink); }
+.week .r .ic.done { background: #E3F2EA; color: #0F6E43; }
+.week .r .ic.now { background: #FF7A55; color: #fff; }
+.week .r .ic.lock { color: #8A8599; }
+.week .r .t { display: grid; gap: 2px; flex: 1; min-width: 0; }
+.week .r .t b { font: 700 16px/1.25 var(--body); }
+.week .r .t span { font: 500 13.5px/1.25 var(--body); color: #5E5975; }
+.week .r.today { background: #FFF1E6; margin: 0 -8px; padding: 10px 12px; border-radius: 14px; border-top-color: transparent; }
+.week .r.today + .r { border-top-color: transparent; }
+
+.fact { padding: 18px 20px 16px; display: grid; gap: 5px; }
+.fact .k { display: flex; align-items: center; gap: 8px; font: 600 14px/1.3 var(--body); color: #5E5975; }
+.fact .k i { width: 10px; height: 10px; border-radius: 99px; background: #FF7A55; box-shadow: 0 0 0 4px rgba(255,122,85,.2); }
+.fact b { font: 700 21px/1.22 var(--display); letter-spacing: -.3px; }
+.fact .l { font: 400 16px/1.4 var(--body); }
+.fact .src { margin-top: 6px; padding-top: 10px; border-top: 1px solid rgba(30,26,58,.10); font: 600 13.5px/1.3 var(--body); color: #5E5975; }

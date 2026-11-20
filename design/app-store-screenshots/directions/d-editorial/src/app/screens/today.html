@@ -1,0 +1,133 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>016 Today, after Quit Day</title>
+<meta name="motion" content="The dawn sun rises (2.6s) behind the centred cream disc as it fades up (700ms). At 600ms the 7-day badge stamps onto the disc (spring, 620ms) and a shine crosses it (1.4s, from 1.2s); Xero's own paper-cut knoll rises 20px into place on the hills beside it (900ms settle) and Xero settles onto it (900ms), does one cheer hop at 1.3s, then bobs. The date pill, greeting, '7-day badge earned' and the stats line arrive with a 90ms stagger while $49 and 84 count up (1.1s). The '7 days to your 14-day badge' chip arrives next and its small 14 ring sweeps to half (1.4s). Last, 'Now' and the top of the Now card rise into the bottom of the screen (600ms) so the page reads as the top of one scroll. Success haptic on the stamp.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  .screen[data-ground="apricot"] { --cream-card: #FFFCF7; --well: #F6EDE1; --lift: 0 1px 0 rgba(74,40,16,.04), 0 10px 26px rgba(74,40,16,.10); }
+  [data-theme="dark"] .screen[data-ground="apricot"] { --cream-card: var(--card); --well: var(--card-2); --lift: 0 10px 24px rgba(0,0,0,.3); }
+
+  .hero { position: absolute; left: 0; right: 0; top: 0; height: 404px; border-radius: 0 0 36px 36px; overflow: hidden; }
+  .hero .scene { position: absolute; inset: 0; }
+  /* the badge, centred in the hero on a cream disc; Xero stands beside it on the hills */
+  .stage { position: absolute; left: 95px; top: 100px; width: 200px; height: 200px; }
+  .stage .disc { position: absolute; inset: 0; border-radius: 50%; background: rgba(255,248,238,.74); box-shadow: 0 0 34px rgba(255,248,238,.45); }
+  [data-theme="dark"] .stage .disc { background: rgba(255,248,238,.1); box-shadow: 0 0 40px rgba(255,195,138,.12); }
+  .stage .medal { position: absolute; left: 22px; top: 22px; width: 156px; height: 156px; }
+  .stage .medal .shine { border-radius: 99px; filter: drop-shadow(0 8px 14px rgba(150,50,20,.28)); }
+  [data-theme="dark"] .stage .medal .shine { filter: drop-shadow(0 8px 16px rgba(0,0,0,.45)); }
+  /* Xero's own ground: a paper-cut knoll inside the hero (a lighter hill, never the page colour, so the hero's corner stays whole) */
+  .knoll { --kn: #FFDDB8; --kn-b: #FFCC9A; --kn-rim: rgba(255,250,242,.95); --kn-front: #B9422D; }
+  [data-theme="dark"] .knoll { --kn: #26355E; --kn-b: #151F3A; --kn-rim: rgba(246,231,193,.42); --kn-front: #0A1326; }
+  .knoll { position: absolute; left: 244px; top: 336px; width: 160px; height: 68px; }
+  .knoll svg { display: block; filter: drop-shadow(0 -3px 6px rgba(120,40,10,.22)); }
+  [data-theme="dark"] .knoll svg { filter: drop-shadow(0 -3px 8px rgba(0,0,0,.5)); }
+  .play .knoll { animation: kn 900ms var(--settle) 250ms both; }
+  @keyframes kn { from { transform: translateY(20px); opacity: 0; } }
+  .xero { position: absolute; left: 272px; top: 246px; }
+  /* a thin cream paper edge keeps Xero clear of the coral hills behind him */
+  .xero #xero { filter: drop-shadow(0 0 1.2px rgba(255,248,238,.95)) drop-shadow(0 0 1px rgba(255,248,238,.8)) drop-shadow(0 6px 10px rgba(120,40,10,.2)); }
+  [data-theme="dark"] .xero #xero { filter: drop-shadow(0 6px 12px rgba(0,0,0,.35)); }
+  .pill { position: absolute; left: 95px; width: 200px; top: 318px; display: flex; justify-content: center; }
+  .pill span { background: var(--card); color: var(--fg); border-radius: 99px; padding: 10px 16px; font: 600 14px/1 var(--body); box-shadow: 0 6px 16px rgba(30,26,58,.12); white-space: nowrap; }
+  [data-theme="dark"] .pill span { box-shadow: inset 0 0 0 1px var(--line), 0 6px 16px rgba(0,0,0,.3); }
+
+  .content { position: absolute; left: 0; right: 0; top: 434px; padding: 0 var(--gutter); }
+  .hi { color: var(--muted); }
+  .content .t-large { margin-top: 2px; }
+  .stats { margin-top: 8px; display: flex; align-items: baseline; gap: 10px; font: 500 17px/1.3 var(--body); color: var(--muted); }
+  .stats b { font: 800 20px/1 var(--display); color: var(--fg); letter-spacing: -.4px; font-variant-numeric: tabular-nums; margin-right: 3px; }
+  .stats i { width: 4px; height: 4px; border-radius: 99px; background: currentColor; opacity: .5; align-self: center; }
+  .togo { margin-top: 18px; display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 18px 0 10px; border-radius: 99px; background: var(--cream-card); box-shadow: inset 0 0 0 1px var(--line), 0 4px 12px rgba(74,40,16,.08); }
+  [data-theme="dark"] .togo { box-shadow: inset 0 0 0 1px var(--line); }
+  /* a 28px progress ring toward the 14-day badge, with a readable 14 inside */
+  .togo .mini { position: relative; width: 28px; height: 28px; flex: none; color: var(--fg); }
+  .togo .mini b { position: absolute; inset: 0; display: grid; place-items: center; font: 800 12.5px/1 var(--display); letter-spacing: -.3px; color: var(--fg); }
+  .togo .t-foot { color: var(--fg); font-weight: 600; }
+  .togo .t-foot b { font-weight: 800; }
+
+  /* the top of the Now card (same card as 017), peeking above the tab bar */
+  .peek { position: absolute; left: 0; right: 0; top: 640px; padding: 0 var(--gutter); }
+  .grp { font: 700 19px/1.2 var(--display); letter-spacing: -.2px; margin: 0 0 10px 2px; }
+  .now { position: relative; background: var(--cream-card); border-radius: 26px; box-shadow: inset 0 0 0 1px var(--line), var(--lift); overflow: hidden; }
+  .art { position: relative; height: 172px; }
+  .art svg.scene { position: absolute; inset: 0; display: block; }
+  .art .fig { position: absolute; left: 244px; top: 62px; }
+  .art .txt { position: absolute; left: 18px; top: 18px; width: 208px; }
+  .art .txt .t-foot { color: var(--muted); font-size: 14px; }
+  .art .txt .t-title { margin-top: 4px; font-size: 23px; }
+</style>
+</head><body>
+<div class="screen" data-ground="apricot" data-status="on-art">
+  <div class="hero">
+    <div class="scene" id="scene"></div>
+    <div class="stage">
+      <div class="disc" data-fade style="--d:100ms"></div>
+      <div class="medal" data-stamp style="--d:600ms"><div class="shine" id="b7" style="--d:1200ms"></div></div>
+    </div>
+    <div class="knoll" aria-hidden="true"><svg width="160" height="68" viewBox="0 0 160 68">
+      <defs><linearGradient id="kf16" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--kn)"/><stop offset="1" stop-color="var(--kn-b)"/></linearGradient>
+        <linearGradient id="kr16" gradientUnits="userSpaceOnUse" x1="0" y1="10" x2="0" y2="58"><stop offset="0" stop-color="var(--kn-rim)"/><stop offset="1" stop-color="var(--kn-rim)" stop-opacity="0"/></linearGradient></defs>
+      <path d="M0 68 C10 32 44 10 82 10 C118 10 150 30 160 54 V68Z" fill="url(#kf16)"/>
+      <path d="M0 68 C10 32 44 10 82 10 C118 10 150 30 160 54" fill="none" stroke="url(#kr16)" stroke-width="2.5"/>
+      <path d="M0 58 C40 52 100 54 160 48 V68 H0Z" fill="var(--kn-front)"/>
+    </svg></div>
+    <div class="xero" data-settle style="--d:400ms"><div class="bob" id="xero"></div></div>
+    <div class="pill" data-a style="--i:1;--d:500ms"><span>Sun, Nov 8</span></div>
+  </div>
+
+  <div class="content">
+    <p class="t-body hi" data-a style="--i:2">Good morning, Sam</p>
+    <h1 class="t-large" data-a style="--i:3">3-day badge <span class="mark">earned</span></h1>
+    <p class="stats" data-a style="--i:4"><span><b data-count="15" data-prefix="$" data-dur="1100">$15</b>kept</span><i></i><span><b data-count="25" data-dur="1100">25</b>cigarettes not smoked</span></p>
+    <div class="togo" data-a style="--i:5"><span class="mini" id="b14"></span><span class="t-foot"><b>4 days</b> to your 7-day badge</span></div>
+  </div>
+
+  <div class="peek" data-a style="--i:6" aria-label="Now: carbon monoxide in your blood drops to normal">
+    <h2 class="grp">Now</h2>
+    <div class="now">
+      <div class="art" aria-hidden="true">
+        <svg class="scene" id="nscene" width="346" height="172" viewBox="0 0 346 172"></svg>
+        <div class="fig"><div id="xero2"></div></div>
+        <div class="txt">
+          <p class="t-foot">Happening now &middot; Day 3</p>
+          <p class="t-title">Carbon monoxide in your blood drops to normal</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const $ = s => document.querySelector(s);
+  const dark = DX.theme === 'dark';
+  /* the scene's sun sits behind the badge disc (a warm halo), never beside the numeral */
+  /* dark: keep the stars out of the status bar and off the badge disc */
+  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 404, clarity: 90 })
+    .replace(/<circle cx="([\d.]+)" cy="([\d.]+)" r="(?:1\.2|1\.8)" fill="#fff"[^>]*>(?:<animate[^>]*\/>)?<\/circle>/g, (m, x, y) => (+y < 60 || Math.hypot(x - 195, y - 200) < 118) ? '' : m)
+    /* light: the scene sun sits concentric behind the badge disc, a warm halo */
+    .replace(/(<circle cx="200" cy=")\d+(" r="70" fill="url\(#h2Sun[^)]*\)"><animate attributeName="cy" values=")[^"]*"/, `$1148$2${DX.still ? '148;148' : '208;148'}"`);
+  const xero = mood => DX.char('xero', { mood, size: 104, stage: 1 });
+  $('#xero').innerHTML = xero('hello');
+  /* the badge's own little sun moves down onto its hill so it never crowds the numeral */
+  $('#b7').innerHTML = DX.badge({ kind: 'day', n: 3, size: 156, bare: true, label: '3 days' })
+    .replace('<circle cx="66" cy="64" r="12"', '<circle cx="72" cy="72" r="9"').replace('y="50" text-anchor="middle" dominant-baseline="middle"', 'y="45" text-anchor="middle" dominant-baseline="middle"');
+  $('#b14').innerHTML = DX.ring({ size: 28, stroke: 3, p: 3 / 7, color: '#E8603F' }) + '<b>7</b>';
+  /* the Now card's paper-cut morning (same art as 017) */
+  const c = dark
+    ? { s0: '#1A2442', s1: '#2B3052', s2: '#5A4558', sun: '#FFB877', glow: '#FFB877', h1: '#2C3A60', h2: '#22304F', h3: '#182034', rim: 'rgba(246,231,193,.18)', sh: '#000000' }
+    : { s0: '#FFF6EA', s1: '#FFE9D2', s2: '#FFD3A8', sun: '#FFC93C', glow: '#FFD27A', h1: '#FFC796', h2: '#FFAE73', h3: '#FFFCF7', rim: 'rgba(255,255,255,.55)', sh: '#8A3A12' };
+  $('#nscene').innerHTML = `<defs>
+      <linearGradient id="nk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.s0}"/><stop offset=".6" stop-color="${c.s1}"/><stop offset="1" stop-color="${c.s2}"/></linearGradient>
+      <radialGradient id="ng"><stop offset="0" stop-color="${c.glow}" stop-opacity=".55"/><stop offset="1" stop-color="${c.glow}" stop-opacity="0"/></radialGradient>
+      <filter id="nl" x="-5%" y="-30%" width="110%" height="160%"><feDropShadow dx="0" dy="-2" stdDeviation="3" flood-color="${c.sh}" flood-opacity="${dark ? .45 : .16}"/></filter></defs>
+    <rect width="346" height="172" fill="url(#nk)"/>
+    <circle cx="196" cy="118" r="54" fill="url(#ng)"/><circle cx="196" cy="118" r="20" fill="${c.sun}"/>
+    <g filter="url(#nl)"><path d="M0 128 C50 114 100 112 150 120 C200 128 250 116 300 108 C320 105 334 106 346 108 V172 H0Z" fill="${c.h1}"/></g>
+    <g filter="url(#nl)"><path d="M0 146 C40 136 90 134 140 140 C180 145 210 146 240 140 C270 134 300 126 346 128 V172 H0Z" fill="${c.h2}"/><path d="M0 146 C40 136 90 134 140 140 C180 145 210 146 240 140 C270 134 300 126 346 128" fill="none" stroke="${c.rim}" stroke-width="1.5"/></g>
+    <g filter="url(#nl)"><path d="M0 158 C60 152 120 154 176 156 C214 157 236 148 260 142 C290 135 320 138 346 144 V172 H0Z" fill="${c.h3}"/></g>`;
+  $('#xero2').innerHTML = DX.char('xero', { mood: 'breathe', size: 88, stage: 1, animate: false });
+  $('.screen').insertAdjacentHTML('beforeend', DX.tabbar('today'));
+  DX.after(1300, () => { $('#xero').innerHTML = xero('cheer'); });
+  DX.after(2800, () => { $('#xero').innerHTML = xero('hello'); });
+</script>
+</body></html>
