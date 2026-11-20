@@ -239,7 +239,7 @@ struct TodayView: View {
         let shown = path.days[index]
         let today = day.clock.day(containing: day.now)
         let title: String = !dayCardOpen ? String(localized: "Today")
-            : shown.date == today ? String(localized: "Today's card")
+            : shown.date == today ? String(localized: "Today's program")
             : shown.date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
         return VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 12) {
@@ -261,7 +261,7 @@ struct TodayView: View {
                         .background(TodayInk.well, in: Circle())
                 }
                 .buttonStyle(.dxPress)
-                .accessibilityLabel(dayCardOpen ? Text("Back to today") : Text("Open today's card"))
+                .accessibilityLabel(dayCardOpen ? Text("Show only what's next") : Text("Show all of today's program"))
             }
             .padding(.leading, 2)
             // The week, always in view: every prep day and Day Xero, with what's done. A day opens its card.
@@ -281,15 +281,16 @@ struct TodayView: View {
                     dayCardOpen = true
                 }
             }
-            if dayCardOpen {
-                dayCard(day, path: path, index: index).id("lower")
-            } else {
-                focusCard(day).id("lower").dxArrive(4)
-                if day.night && day.focus != .recovery {
-                    logRows(day).todayCard().dxArrive(6)
-                }
-                timeline(day).padding(.top, 12)
+            // The day's program: folded, the card that's next; open, all five cards of the day's session.
+            programCard(day, path: path, index: index, expanded: dayCardOpen).id("lower")
+            // The day's own tasks and logging stay under it whichever way the dropdown is.
+            if day.focus != .lesson {
+                focusCard(day).dxArrive(4)
             }
+            if day.night && day.focus != .recovery {
+                logRows(day).todayCard().dxArrive(6)
+            }
+            timeline(day).padding(.top, 12)
         }
         .padding(.horizontal, DX.Layout.gutter)
         .padding(.top, 12)
@@ -299,96 +300,68 @@ struct TodayView: View {
         .padding(.top, -28)
     }
 
-    /// One day of the path as its card: the program's session first, then the pledge, the day's log and the
-    /// check-in, each with what was done, what to do now, or that it opens on the day.
-    private func dayCard(_ day: TodayDay, path: TodayPathModel, index: Int) -> TodayDayCard {
+    /// The program for one day of the path: its session and the session's cards, each finished, next (with its
+    /// button) or waiting.
+    private func programCard(_ day: TodayDay, path: TodayPathModel, index: Int, expanded: Bool) -> TodayProgramCard {
         let shown = path.days[index]
         let today = day.clock.day(containing: day.now)
         let isToday = shown.date == today
-        let past = shown.date < today
-        let opens = String(localized: "Opens on the day")
-        let missed = String(localized: "Not done that day")
-        var rows: [TodayDayCard.Row] = []
-
-        if isToday {
-            if let time = day.pledgedAt {
-                rows.append(.init(id: "pledge", mark: .done, title: String(localized: "Morning pledge"), detail: done(at: time)))
-            } else {
-                rows.append(.init(id: "pledge", mark: .open, title: String(localized: "Morning pledge"), detail: String(localized: "10 sec"),
-                                  action: String(localized: "Pledge"), run: { showPledge = true }))
-            }
-        } else if past {
-            let made = pledges.first { $0.day == shown.date }?.madeAt
-            rows.append(.init(id: "pledge", mark: made == nil ? .open : .done, title: String(localized: "Morning pledge"),
-                              detail: made.map(done(at:)) ?? missed))
-        } else {
-            rows.append(.init(id: "pledge", mark: .locked, title: String(localized: "Morning pledge"), detail: opens))
-        }
-
-        // The program's session for the day leads the card, as the Program tab shows it; the day's other steps follow.
         let id = shown.sessionId
-        let cards = shown.cards > 0 ? String(AttributedString(localized: "^[\(shown.cards) card](inflect: true)").characters) : nil
-        let meta = ([shown.label] + (cards.map { [$0] } ?? []) + [String(localized: "\(shown.minutes) min")]).joined(separator: " · ")
-        var program = TodayDayCard.Session(id: id, meta: meta, title: shown.title.isEmpty ? shown.label : shown.title,
-                                           subtitle: shown.subtitle, mark: .locked, status: opens)
+        let store = ProgramStore(context: context, profile: profile)
+        let content = store.content?.session(id)
+        let progress = content.flatMap { SessionFlowView.deckProgress($0, store: store) }
+        let cards = progress?.cards ?? []
+        let count = cards.isEmpty ? nil : String(AttributedString(localized: "^[\(cards.count) card](inflect: true)").characters)
+        let meta = ([shown.label] + (count.map { [$0] } ?? []) + [String(localized: "\(shown.minutes) min")]).joined(separator: " · ")
+
+        var isOpen = false
+        var finished = false
+        var status: String?
         switch shown.state {
-        case let .completed(time):
-            program.mark = .done
-            program.status = done(at: time)
-            program.action = String(localized: "Replay")
-            program.run = { session = SessionOpen(id: id, isReplay: true) }
-        case .available, .inProgress:
-            let inProgress = shown.state == .inProgress
-            let needsUpgrade = ProgramV2Access.needsUpgrade(id, isPro: entitlement.isPro)
-            let title = shown.title
-            program.mark = .open
-            program.status = inProgress ? String(localized: "Xero saved your place.") : nil
-            program.action = needsUpgrade ? String(localized: "Unlock") : inProgress ? String(localized: "Continue") : String(localized: "Start")
-            program.primary = true
-            program.run = { if needsUpgrade { unlock(id, title) } else { openSession(id) } }
-        case .scheduled(.tomorrow):
-            program.status = String(localized: "Opens tomorrow")
-        case .scheduled(.trialEnds):
-            program.status = String(localized: "Opens after your free trial")
-        case .scheduled, .locked:
-            break
+        case .completed: finished = true
+        case .available, .inProgress: isOpen = true
+        case .scheduled(.tomorrow): status = String(localized: "Next session tomorrow")
+        case .scheduled(.trialEnds): status = String(localized: "Opens after your free trial")
+        case .scheduled, .locked: status = String(localized: "Opens on the day")
         }
+        let needsUpgrade = isOpen && ProgramV2Access.needsUpgrade(id, isPro: entitlement.isPro)
+        let sessionTitle = shown.title
+        let begin = { if needsUpgrade { unlock(id, sessionTitle) } else { openSession(id) } }
+        let hour = Calendar.current.component(.hour, from: day.now)
 
-        // The day's use is logged during prep only; from Day Xero on a use is a slip, with its own flow.
-        if index < path.stones.count {
-            let product = day.products.first ?? primaryProduct
-            let count = useCount(product, on: shown.date)
-            if isToday {
-                rows.append(.init(id: "log", mark: count > 0 ? .done : .open, title: logTitle(product),
-                                  detail: count > 0 ? String(localized: "\(count) logged today") : String(localized: "Tonight · 1 min"),
-                                  action: String(localized: "Log"), run: { log.open() }))
-            } else if past {
-                rows.append(.init(id: "log", mark: count > 0 ? .done : .open, title: logTitle(product),
-                                  detail: count > 0 ? String(localized: "\(count) logged") : String(localized: "Nothing logged that day")))
-            } else {
-                rows.append(.init(id: "log", mark: .locked, title: logTitle(product), detail: opens))
+        let steps: [TodayProgramCard.Step] = cards.enumerated().map { i, card -> TodayProgramCard.Step in
+            let cardMeta = String(localized: "Card \(i + 1) · \(card.minutes) min")
+            let title = card.title.resolve(store.variant).map { ProgramInline.resolve($0, store.variant) } ?? ""
+            if finished || (isOpen && (progress?.played.contains(card.id) ?? false)) {
+                return .init(id: card.id, mark: .done, meta: cardMeta, title: title)
             }
-        }
-
-        if isToday {
-            if let time = day.checkedInAt {
-                rows.append(.init(id: "checkin", mark: .done, title: String(localized: "Evening check-in"), detail: done(at: time)))
-            } else {
-                rows.append(.init(id: "checkin", mark: .open, title: String(localized: "Check-in with Glim"), detail: checkInLine,
-                                  action: String(localized: "Check in"), run: { showCheckIn = true }))
+            guard isOpen else {
+                return .init(id: card.id, mark: .locked, meta: cardMeta, title: title, note: status)
             }
-        } else if past {
-            let made = checkIns.first { $0.day == shown.date }?.madeAt
-            rows.append(.init(id: "checkin", mark: made == nil ? .open : .done, title: String(localized: "Evening check-in"),
-                              detail: made.map(done(at:)) ?? missed))
-        } else {
-            rows.append(.init(id: "checkin", mark: .locked, title: String(localized: "Evening check-in"), detail: opens))
+            guard card.id == progress?.next else {
+                return .init(id: card.id, mark: .locked, meta: cardMeta, title: title, note: String(localized: "After the one before"))
+            }
+            // An evening card waits for its hour.
+            if let opensAt = card.opensAt, !card.isOpen(hour: hour, boundaryHour: profile.dayBoundaryHour) {
+                let time = Calendar.current.date(bySettingHour: opensAt, minute: 0, second: 0, of: day.now) ?? day.now
+                return .init(id: card.id, mark: .locked, meta: cardMeta, title: title,
+                             note: String(localized: "Opens \(time.formatted(date: .omitted, time: .shortened))"))
+            }
+            let started = shown.state == .inProgress || !(progress?.played.isEmpty ?? true)
+            return .init(id: card.id, mark: .open, meta: cardMeta, title: title,
+                         action: needsUpgrade ? String(localized: "Unlock") : started ? String(localized: "Continue") : String(localized: "Start"),
+                         run: begin)
         }
+        // Today's next card is an evening one that hasn't opened: say so on the folded card.
+        if isOpen, let waiting = steps.first(where: { $0.id == progress?.next }), waiting.action == nil { status = waiting.note }
 
         let date = shown.date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
-        let kicker = (isToday ? "\(String(localized: "Today")) · \(date)" : date).uppercased()
-        return TodayDayCard(kicker: kicker, isToday: isToday, session: program,
-                            rowsTitle: isToday ? String(localized: "Also today") : String(localized: "Also that day"), rows: rows)
+        return TodayProgramCard(sessionId: id,
+                                kicker: (isToday ? "\(String(localized: "Today")) · \(date)" : date).uppercased(),
+                                isToday: isToday, meta: meta, title: shown.title.isEmpty ? shown.label : shown.title,
+                                subtitle: shown.subtitle, steps: steps, status: status,
+                                replay: finished ? { session = SessionOpen(id: id, isReplay: true) } : nil,
+                                expanded: expanded)
     }
 
     /// The focus card, the prep countdown, the day's log and the rest of the day.
@@ -485,10 +458,13 @@ struct TodayView: View {
                              showsChevron: true) { showPledge = true }
                     .accessibilityHint(Text("Opens the morning pledge"))
             }
-            if let finished = day.sessionDone {
-                TodayStep(node: .done) { TodayDoneRow(title: finished.title, detail: done(at: finished.time)) }
-            } else if day.sessionRow, let today = day.program {
-                readRow(today)
+            // During prep the session has its own card above (the day's program), so it isn't repeated here.
+            if day.state != .prep {
+                if let finished = day.sessionDone {
+                    TodayStep(node: .done) { TodayDoneRow(title: finished.title, detail: done(at: finished.time)) }
+                } else if day.sessionRow, let today = day.program {
+                    readRow(today)
+                }
             }
             if recoveryRow {
                 TodayRowCard(icon: .heart, eyebrow: day.recovery.kicker, title: day.recovery.title, showsChevron: true) { showHealth = true }

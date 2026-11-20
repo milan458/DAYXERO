@@ -323,100 +323,113 @@ struct TodayWeekStrip: View {
     }
 }
 
-// MARK: Day card
+// MARK: The day's program
 
-/// One day of the prep week as a card: the date, then the day's session as the program has it (its art, "Prep 1 ·
-/// 5 cards · 28 min", its title and line, and Start, Continue or Replay), then the day's other steps. Today's rows
-/// carry their buttons; a finished day shows what was done; a day ahead shows what will open.
-struct TodayDayCard: View {
+/// The day's program under the week strip (20 Nov 2026). A prep day's session is five cards; this lists them.
+/// - Folded (the dropdown up): only the card that's next, with Continue or Start.
+/// - Open (the dropdown down): the session's art and title, then every card in order: the finished ones tagged
+///   Completed, the current one with its button, the rest waiting. A finished day shows all five completed with the
+///   session to replay; a day ahead shows them as opening on the day.
+struct TodayProgramCard: View {
     enum Mark { case done, open, locked }
 
-    /// The program session for the day.
-    struct Session {
-        let id: String
-        /// "Prep 1 · 5 cards · 28 min".
-        let meta: String
-        let title: String
-        let subtitle: String
-        var mark: Mark
-        /// "Done · 10:15 AM", "Xero saved your place.", "Opens on the day".
-        var status: String?
-        var action: String?
-        var primary = false
-        var run: (() -> Void)?
-    }
-
-    struct Row: Identifiable {
-        typealias Mark = TodayDayCard.Mark
+    /// One card of the session.
+    struct Step: Identifiable {
         let id: String
         let mark: Mark
+        /// "Card 2 · 5 min".
+        let meta: String
         let title: String
-        let detail: String
+        /// "Opens 6:00 PM", "Opens on the day"; nil for a finished card (it gets the Completed tag).
+        var note: String?
         var action: String?
-        /// The filled button: the one thing to do next.
-        var primary = false
         var run: (() -> Void)?
     }
 
-    /// "TODAY · SUN 22 NOV" or "TUE 24 NOV".
+    let sessionId: String
+    /// "TODAY · FRI, 20 NOV" or "TUE, 24 NOV".
     let kicker: String
     let isToday: Bool
-    let session: Session
-    /// "Also today".
-    let rowsTitle: String
-    let rows: [Row]
+    /// "Prep 1 · 5 cards · 28 min".
+    let meta: String
+    let title: String
+    let subtitle: String
+    let steps: [Step]
+    /// A line under the folded card when nothing is open: "Next session tomorrow", "Opens on the day".
+    var status: String?
+    /// "Replay" once the session is finished.
+    var replay: (() -> Void)?
+    let expanded: Bool
+
+    private var done: Int { steps.filter { $0.mark == .done }.count }
 
     var body: some View {
-        let total = rows.count + 1
-        let done = rows.filter { $0.mark == .done }.count + (session.mark == .done ? 1 : 0)
-        VStack(alignment: .leading, spacing: 12) {
-            Text(verbatim: kicker)
-                .dxFace(.body, 12, weight: 700, tracking: 1)
-                .foregroundStyle(isToday ? TodayInk.coralText : TodayInk.muted)
-            program
-            HStack(spacing: 5) {
-                ForEach(0..<total, id: \.self) { i in
-                    Capsule().fill(i < done ? DX.Fill.done : TodayInk.ink.opacity(0.12)).frame(height: 5)
-                }
-            }
-            .accessibilityElement()
-            .accessibilityLabel(Text("\(done) of \(total) done"))
-            VStack(alignment: .leading, spacing: 0) {
-                Text(verbatim: rowsTitle)
-                    .dxFace(.display, 16, weight: 700, tracking: -0.2)
-                    .foregroundStyle(TodayInk.ink)
-                    .padding(.top, 4)
-                    .accessibilityAddTraits(.isHeader)
-                ForEach(Array(rows.enumerated()), id: \.element.id) { i, row in
-                    if i > 0 { Rectangle().fill(TodayInk.line).frame(height: 1) }
-                    self.row(row)
-                }
-            }
+        Group {
+            if expanded { unfolded } else { folded }
         }
-        .padding(.horizontal, 16).padding(.top, 16).padding(.bottom, 6)
         .frame(maxWidth: .infinity, alignment: .leading)
         .todayCard()
         .environment(\.dxGround, .apricot)
     }
 
-    /// The session, as the Program tab's stop shows it.
-    private var program: some View {
+    /// The dropdown up: the card that's next.
+    private var folded: some View {
+        let current = steps.first { $0.action != nil }
+        return HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(verbatim: current.map { "\(label) · \($0.meta)" } ?? meta)
+                    .dxFace(.body, 13, weight: 600)
+                    .foregroundStyle(TodayInk.muted)
+                Text(verbatim: current?.title ?? title)
+                    .dxFace(.display, 19, weight: 800, tracking: -0.3)
+                    .foregroundStyle(TodayInk.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                if current == nil, let line = status ?? (steps.isEmpty || done < steps.count ? nil : String(localized: "All \(steps.count) cards completed")) {
+                    Text(verbatim: line)
+                        .dxFace(.body, 13, weight: 600)
+                        .foregroundStyle(done == steps.count && !steps.isEmpty ? Self.doneText : TodayInk.muted)
+                }
+                bar.padding(.top, 5)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityElement(children: .combine)
+            if let current, let action = current.action, let run = current.run {
+                Button(action: run) { Text(verbatim: action) }
+                    .buttonStyle(.dx(.small, on: .apricot))
+                    .frame(height: 44)
+                    .fixedSize()
+            } else if let replay {
+                Button(action: replay) { Text("Replay") }
+                    .buttonStyle(.dx(.ghostSmall, on: .apricot))
+                    .frame(height: 44)
+                    .fixedSize()
+            }
+        }
+        .padding(.horizontal, 16).padding(.vertical, 14)
+        .accessibilityIdentifier("today.lesson")
+    }
+
+    /// The dropdown down: the session, then its cards.
+    private var unfolded: some View {
         VStack(alignment: .leading, spacing: 12) {
+            Text(verbatim: kicker)
+                .dxFace(.body, 12, weight: 700, tracking: 1)
+                .foregroundStyle(isToday ? TodayInk.coralText : TodayInk.muted)
             HStack(alignment: .top, spacing: 14) {
-                KitArt(ProgramArt.kind(for: session.id), cornerRadius: 20)
-                    .frame(width: 76, height: 76)
+                KitArt(ProgramArt.kind(for: sessionId), cornerRadius: 20)
+                    .frame(width: 72, height: 72)
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(verbatim: session.meta)
+                    Text(verbatim: meta)
                         .dxFace(.body, 13, weight: 600)
                         .foregroundStyle(TodayInk.muted)
-                    Text(verbatim: session.title)
+                    Text(verbatim: title)
                         .dxFace(.display, 21, weight: 800, tracking: -0.4)
                         .foregroundStyle(TodayInk.ink)
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
-                    if !session.subtitle.isEmpty {
-                        Text(verbatim: session.subtitle)
+                    if !subtitle.isEmpty {
+                        Text(verbatim: subtitle)
                             .dxFace(.body, 14, weight: 500)
                             .foregroundStyle(TodayInk.muted)
                             .fixedSize(horizontal: false, vertical: true)
@@ -424,58 +437,82 @@ struct TodayDayCard: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-            HStack(spacing: 10) {
-                if let status = session.status {
-                    HStack(spacing: 8) {
-                        if session.mark == .done { mark(.done) }
-                        Text(verbatim: status)
-                            .dxFace(.body, 14, weight: 600)
-                            .foregroundStyle(session.mark == .done ? Color(light: 0x1E7A4B, dark: 0x7FE0AE) : TodayInk.muted)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .accessibilityElement(children: .combine)
-                }
-                if let action = session.action, let run = session.run {
-                    if session.primary && session.status == nil {
-                        Button(action: run) { Text(verbatim: action) }
-                            .buttonStyle(.dx(.primary, on: .apricot))
-                            .accessibilityIdentifier("today.card.session")
-                    } else {
-                        Button(action: run) { Text(verbatim: action) }
-                            .buttonStyle(.dx(session.primary ? .small : .ghostSmall, on: .apricot))
-                            .frame(height: 44)
-                            .fixedSize()
-                            .accessibilityIdentifier("today.card.session")
-                    }
+            bar
+            VStack(spacing: 0) {
+                ForEach(Array(steps.enumerated()), id: \.element.id) { i, step in
+                    if i > 0 { Rectangle().fill(TodayInk.line).frame(height: 1) }
+                    row(step)
                 }
             }
+            if steps.isEmpty, let status {
+                Text(verbatim: status).dxFace(.body, 14, weight: 600).foregroundStyle(TodayInk.muted)
+            }
+            if let replay {
+                Button(action: replay) { Text("Replay this session") }
+                    .buttonStyle(.dx(.ghostSmall, on: .apricot))
+                    .frame(height: 44)
+                    .padding(.bottom, 6)
+            }
+        }
+        .padding(.horizontal, 16).padding(.top, 16).padding(.bottom, 8)
+        .accessibilityIdentifier("today.program")
+    }
+
+    /// "Prep 1" from "Prep 1 · 5 cards · 28 min".
+    private var label: String {
+        meta.components(separatedBy: " · ").first ?? meta
+    }
+
+    private static let doneText = Color(light: 0x1E7A4B, dark: 0x7FE0AE)
+
+    /// One segment per card, green once it's done.
+    @ViewBuilder
+    private var bar: some View {
+        if !steps.isEmpty {
+            HStack(spacing: 5) {
+                ForEach(steps.indices, id: \.self) { i in
+                    Capsule().fill(steps[i].mark == .done ? DX.Fill.done : TodayInk.ink.opacity(0.12)).frame(height: 5)
+                }
+            }
+            .accessibilityElement()
+            .accessibilityLabel(Text("\(done) of \(steps.count) cards completed"))
         }
     }
 
-    private func row(_ row: Row) -> some View {
+    private func row(_ step: Step) -> some View {
         HStack(spacing: 12) {
-            mark(row.mark)
+            mark(step.mark)
             VStack(alignment: .leading, spacing: 2) {
-                Text(verbatim: row.title)
+                Text(verbatim: step.meta)
+                    .dxFace(.body, 12, weight: 600)
+                    .foregroundStyle(TodayInk.muted)
+                Text(verbatim: step.title)
                     .dxFace(.body, 16, weight: 600)
                     .foregroundStyle(TodayInk.ink)
                     .fixedSize(horizontal: false, vertical: true)
-                Text(verbatim: row.detail)
-                    .dxFace(.body, 13, weight: 500)
-                    .foregroundStyle(row.mark == .done ? Color(light: 0x1E7A4B, dark: 0x7FE0AE) : TodayInk.muted)
-                    .fixedSize(horizontal: false, vertical: true)
+                if let note = step.note {
+                    Text(verbatim: note)
+                        .dxFace(.body, 13, weight: 500)
+                        .foregroundStyle(TodayInk.muted)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityElement(children: .combine)
-            if let action = row.action, let run = row.run {
+            if step.mark == .done {
+                Text("Completed")
+                    .dxFace(.body, 12, weight: 700)
+                    .foregroundStyle(Self.doneText)
+                    .padding(.horizontal, 10).frame(height: 26)
+                    .background(DX.Fill.done.opacity(0.14), in: Capsule())
+            } else if let action = step.action, let run = step.run {
                 Button(action: run) { Text(verbatim: action) }
-                    .buttonStyle(.dx(row.primary ? .small : .ghostSmall, on: .apricot))
+                    .buttonStyle(.dx(.small, on: .apricot))
                     .frame(height: 44)
                     .fixedSize()
             }
         }
         .padding(.vertical, 11)
-        .frame(minHeight: 56)
+        .frame(minHeight: 60)
     }
 
     @ViewBuilder
@@ -487,13 +524,13 @@ struct TodayDayCard: View {
                 .frame(width: 14, height: 14)
                 .frame(width: 26, height: 26)
                 .background(DX.Fill.done, in: Circle())
-                .accessibilityLabel(Text("Done"))
+                .accessibilityHidden(true)
         case .open:
-            Circle().strokeBorder(TodayInk.muted, lineWidth: 2).frame(width: 26, height: 26)
-                .accessibilityLabel(Text("To do"))
+            Circle().strokeBorder(TodayInk.coral, lineWidth: 2.5).frame(width: 26, height: 26)
+                .accessibilityHidden(true)
         case .locked:
             Circle().strokeBorder(TodayInk.muted, style: StrokeStyle(lineWidth: 2, dash: [3, 4])).frame(width: 26, height: 26)
-                .accessibilityLabel(Text("Not open yet"))
+                .accessibilityHidden(true)
         }
     }
 }

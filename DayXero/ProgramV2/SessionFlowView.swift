@@ -1005,3 +1005,35 @@ private struct DeckCardPanel: ViewModifier {
         }
     }
 }
+
+extension SessionFlowView {
+    /// A deck session's cards in the order they're played, which are finished and which is next, for Today's
+    /// program list (20 Nov 2026). It walks the same steps as `deckSteps` and counts a card as played once its
+    /// "played" screen is behind the saved step, as `playedCards` does.
+    @MainActor
+    static func deckProgress(_ session: ProgramContent.Session, store: ProgramStore)
+        -> (cards: [DeckCard], played: Set<String>, next: String?)? {
+        guard let deck = session.deck, !deck.isEmpty else { return nil }
+        let held = Set(deck.filter { $0.canSaveForLater && store.answer(laterKey($0.id)) != nil }.map(\.id))
+        let order = session.playOrder(savedForLater: held)
+        let record = store.record(session.id)
+        if record?.completedAt != nil { return (order, Set(order.map(\.id)), nil) }
+        let ctx = BeatContext(store: store, session: session, variant: store.variant, nrtActive: store.nrtActive(),
+                              placeholders: store.placeholders(), isReplay: false)
+        let resume = max(record?.currentStep ?? 1, 1)
+        // Step 0 is the hand; each card then takes its before-beats, its own screen, its beats and its played screen.
+        var index = 1
+        var played = Set<String>()
+        var next: String?
+        for card in order {
+            let count = card.before.filter { ctx.shows($0) }.count + 1 + card.beats.filter { ctx.shows($0) }.count + 1
+            if index + count - 1 < resume {
+                played.insert(card.id)
+            } else if next == nil {
+                next = card.id
+            }
+            index += count
+        }
+        return (order, played, next)
+    }
+}
