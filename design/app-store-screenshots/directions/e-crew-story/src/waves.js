@@ -5,7 +5,7 @@
 
    Geometry is a function of the GLOBAL x across all ten frames (0 to 13200), so a ridge leaving frame 4 at its right
    edge enters frame 5 at exactly the same height. Colours are keyed per frame and blend across each seam in OKLab
-   (sky over +-120 px, land over +-260 px), so the colour at a seam is the same in both frames.
+   (over +-260 px), so a layer's colour at a seam is the same in both frames. The sky keeps her flat ground.
 
    DX_WAVES(frame) returns plain data. WAVES_TEMPLATE is the SVG with {{holes}}; dxWavesSVG(frame) fills it here, and the
    canvas component Waves.dc.html carries the same function and the same template, so the canvas draws the same art. */
@@ -105,14 +105,14 @@
     add(sky, G(6) - 420, G(6) + 420, { d: circ(G(6) - off, 1950, 330), fill: '#FFD9B0', op: 0.35 });
     add(sky, G(6) - 300, G(6) + 300, { d: circ(G(6) - off, 1950, 190), fill: '#FFB38A', op: 1 });
     // frame 7: the crescent moon (the designer's: a pale disc cut by the night) with two soft rings, and the stars
-    add(sky, G(6), G(6) + 500, { d: circ(G(6) + 230 - off, 1060, 210), fill: '#FFE9A8', op: 0.06 });
-    add(sky, G(6), G(6) + 500, { d: circ(G(6) + 230 - off, 1060, 150), fill: '#FFE9A8', op: 0.12 });
-    add(sky, G(6), G(6) + 500, { d: 'M' + (G(6) + 230 - off - 104) + ' 1060 a104 104 0 1 0 208 0 a104 104 0 1 0 -208 0Z M' + (G(6) + 291 - off - 92) + ' 1036 a92 92 0 1 1 184 0 a92 92 0 1 1 -184 0Z', fill: '#FFE9A8', op: 1, rule: 'evenodd' });
+    add(sky, G(6), G(6) + 500, { d: circ(G(6) + 300 - off, 905, 200), fill: '#FFE9A8', op: 0.05 });
+    add(sky, G(6), G(6) + 500, { d: circ(G(6) + 300 - off, 905, 140), fill: '#FFE9A8', op: 0.09 });
+    add(sky, G(6), G(6) + 500, { d: 'M' + (G(6) + 300 - off - 96) + ' 905 a96 96 0 1 0 192 0 a96 96 0 1 0 -192 0Z M' + (G(6) + 352 - off - 84) + ' 880 a84 84 0 1 1 168 0 a84 84 0 1 1 -168 0Z', fill: '#FFE9A8', op: 1, rule: 'evenodd' });
     var stars = '';
     for (var i = 0; i < 70; i++) {
       var sx = G(6) - 160 + rnd() * (FW + 320), sy = 930 + rnd() * 950, sr = rnd() < 0.25 ? 6 : 3 + rnd() * 2;
       var fade = smooth((sx - (G(6) - 160)) / 260) * (1 - smooth((sx - (G(7) - 100)) / 260));
-      if (fade > 0.4 && Math.hypot(sx - (G(6) + 230), sy - 1060) > 230) stars += circ(sx - off, sy, f1(sr)) + ' ';
+      if (fade > 0.4 && Math.hypot(sx - (G(6) + 300), sy - 905) > 200) stars += circ(sx - off, sy, f1(sr)) + ' ';
     }
     add(sky, G(6) - 200, G(7) + 200, { d: stars, fill: '#FFF7EE', op: 0.85 });
     // seam 8/9: the sun comes up out of the calm sea into the rewards morning
@@ -173,7 +173,9 @@
 
     /* ---------- flatten to the template's fixed slots ---------- */
     var out = { id: 'dxw' + k, frame: k };
-    stops(SKY, SKY_X, 120).forEach(function (c, i) { out['s' + i] = c; });
+    // the sky stays the designer's flat ground for the whole frame (a hard change at the seam, as on her canvas);
+    // only the land and the sea run on across the seams
+    SKY_X.forEach(function (x, i) { out['s' + i] = SKY[k - 1]; });
     [['far', FAR], ['mid', MID], ['near', NEAR], ['front', FRONT]].forEach(function (p) {
       var o = { d: ridgePath(p[0]) };
       stops(p[1], LAND_X, 260).forEach(function (c, i) { o['c' + i] = c; });

@@ -1,0 +1,17 @@
+{
+  "canvas": "https://claude.ai/artifact/MuTfRJftEMMZStuqPTDEQN",
+  "note": "Uploaded copies of ../../real/*.png in the Design canvas's asset store. build-canvas.mjs swaps each ../real/<name>.png for its /_blob/ url.",
+  "blobs": {
+    "day12-today.png": "/_blob/75de06933e5622d1f44f643a08b2b536",
+    "home-quitday.png": "/_blob/cdd0bfc84e70ff789fac8fc6f45be598",
+    "home-day3.png": "/_blob/35a6fc8ee7acf86262c1d0fd9cd4fd9c",
+    "day3-program.png": "/_blob/893f4c076611ded0ab889a2c644a45c7",
+    "sos-session.png": "/_blob/4ff0fe3ea34873b0f9042358392819ca",
+    "slip.png": "/_blob/6f5a27f7a894379931b1cdabf1f13488",
+    "winddown-dark.png": "/_blob/b831298365c2785aadd9f45b973c9619",
+    "today-later.png": "/_blob/f7046e135367dd9b4176fd976064dd2d",
+    "notice-the-urge.png": "/_blob/7d1eafaa22691883e50247d031c37f13",
+    "box-breathing.png": "/_blob/938ccba8dacaaea35aa9837f13a25a1b",
+    "day12-progress.png": "/_blob/ef02287bc1cf6a6eebe41f8c020fbfc5"
+  }
+}
