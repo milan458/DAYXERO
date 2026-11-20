@@ -33,7 +33,7 @@
   stage.innerHTML = html;
   stage.querySelectorAll('x-waves').forEach((el) => { el.outerHTML = window.dxWavesSVG(Number(el.getAttribute('frame'))); });
   stage.querySelectorAll('x-char').forEach((el) => {
-    el.outerHTML = window.DXCHAR({ who: el.getAttribute('who'), expr: el.getAttribute('expr'), size: Number(el.getAttribute('size')) });
+    el.outerHTML = window.DXCHAR({ who: el.getAttribute('who'), expr: el.getAttribute('expr'), size: Number(el.getAttribute('size')), stage: el.getAttribute('stage'), pose: el.getAttribute('pose'), dark: el.getAttribute('dark') });
   });
   const root = stage.firstElementChild;
   if (scale !== 1) {

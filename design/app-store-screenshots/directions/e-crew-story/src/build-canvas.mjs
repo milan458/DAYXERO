@@ -1,9 +1,11 @@
 // Writes the editable Design canvas for Direction E from the same frame markup the PNGs are rendered from.
 //   node build-canvas.mjs <out-folder>     writes <out-folder>/project/canvas.json, one .dc.html per frame,
-//                                          Char.dc.html (the designer's component, verbatim) and Waves.dc.html
+//                                          Char.dc.html (the app's crew, from char.js) and Waves.dc.html
 // Each frames/NN-*.html becomes a .dc.html artboard: <x-char …> turns into <dc-import name="Char" …>, <x-waves frame="N">
 // into <dc-import name="Waves" frame="N">, and ../real/<name>.png into that file's uploaded /_blob/ url (canvas/assets.json).
 // Waves.dc.html carries waves.js's DX_WAVES function and WAVES_TEMPLATE unchanged, so the canvas draws the same landscape.
+// Char.dc.html carries char.js's DX_CREW function and CREW_TEMPLATE unchanged (the app's Xero, Jelli and Glim), with the
+// idle motion on: the PNGs are its rest pose.
 // Publish the folder to the canvas with the Artifact tool (url + root + file_path + files), canvas.json and Main first.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -60,7 +62,7 @@ for (const f of frames) {
     `<div style="position: absolute; left: 0; top: 0; width: ${W}px; height: ${H}px"><dc-import name="Waves" frame="${n}" hint-size="${W}px,${H}px"></dc-import></div>`);
   html = html.replace(/<x-char ([^>]*)><\/x-char>/g, (_, attrs) => {
     const size = Number(/size="(\d+)"/.exec(attrs)[1]);
-    return `<dc-import name="Char" ${attrs} hint-size="${size}px,${Math.round(size * 1.1)}px"></dc-import>`;
+    return `<dc-import name="Char" ${attrs} hint-size="${size}px,${size}px"></dc-import>`;
   });
   html = html.replace(/\.\.\/real\/([\w-]+\.png)/g, (_, name) => {
     if (!blobs[name]) throw new Error(`no uploaded asset for ${name}`);
@@ -83,14 +85,55 @@ const waves = head('DayXero landscape (Waves)') +
 if (waves.includes("'</script")) throw new Error('script terminator in waves');
 fs.writeFileSync(path.join(P, 'Waves.dc.html'), waves);
 
-// ---------- Char.dc.html, the designer's component, verbatim
-fs.copyFileSync(path.join(SRC, 'canvas/Char.dc.html'), path.join(P, 'Char.dc.html'));
+// ---------- Char.dc.html: the app's crew (char.js), animated
+const cctx = { globalThis: {} }; cctx.window = cctx;
+vm.runInNewContext(fs.readFileSync(path.join(SRC, 'char.js'), 'utf8'), cctx);
+const crewSrc = cctx.DX_CREW.toString();
+const CHAR_PROPS = {
+  who: { editor: 'enum', options: ['xero', 'jelli', 'glim'], default: 'xero' },
+  expr: { editor: 'enum', options: ['hello', 'calm', 'breathe', 'cheer', 'sleepy', 'happy'], default: 'hello' },
+  stage: { editor: 'int', default: 1, min: 0, max: 4 },
+  pose: { editor: 'enum', options: ['standard', 'wave', 'holdFlag', 'hold'], default: 'standard' },
+  size: { editor: 'int', default: 300, min: 40, max: 900 },
+  animate: { editor: 'boolean', default: true },
+  dark: { editor: 'boolean', default: false },
+  delay: { editor: null, default: '0s' },
+  $preview: { width: 300, height: 300 }
+};
+const charFile = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DayXero crew character</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: {{size}}; height: {{size}}; position: relative">
+${cctx.CREW_TEMPLATE}
+</div>` + tail(CHAR_PROPS,
+  `  // Xero, Jelli and Glim as the app draws them (DayXeroCore/DesignSystem/Art on main 6498929): the same function as
+  // src/char.js in the repository. expr is the app's mood (the designer's happy maps to hello); stage 0-4 follows days
+  // clear (Xero's 0 is the kit's full-size Xero); pose is Xero's wave, holdFlag or hold. delay is kept for old imports.
+  renderVals() {
+    const DX_CREW = ${crewSrc.replace(/\n/g, '\n    ')};
+    if (!this.uid) this.uid = 'c' + Math.random().toString(36).slice(2, 8);
+    const p = this.props;
+    return DX_CREW({ who: p.who, expr: p.expr, size: p.size, stage: p.stage, pose: p.pose, dark: p.dark, animate: p.animate ?? true, id: this.uid });
+  }`);
+if (/<\/script/i.test(crewSrc)) throw new Error('script terminator in the crew function');
+fs.writeFileSync(path.join(P, 'Char.dc.html'), charFile);
 
 // ---------- canvas.json
 const boards = {}, order = [];
 frames.forEach((f, i) => { boards[f.dc] = { x: i * (W + GAP), y: 0, w: W, h: H, title: f.board }; order.push(f.dc); });
 const row2 = H + 240;
-boards['Char.dc.html'] = { x: 0, y: row2, w: 300, h: 330, title: 'Crew component (Xero, Jelli, Glim)', is_interactive: true };
+boards['Char.dc.html'] = { x: 0, y: row2, w: 300, h: 300, title: 'Crew component (Xero, Jelli, Glim)', is_interactive: true };
 boards['Waves.dc.html'] = { x: 380, y: row2, w: W, h: H, title: 'Landscape component (Waves · frame 1–10)' };
 order.push('Char.dc.html', 'Waves.dc.html');
 const rowW = frames.length * (W + GAP) - GAP;
@@ -109,7 +152,7 @@ const canvas = {
       text: 'App Store: iPhone 6.9″ 1320×2868 (these artboards, 1:1) and 6.3″ 1206×2622; up to 10, PNG or JPEG, RGB with no alpha. ' +
         'Story: hook and the crew → the 7-day plan → Xero, your days → daily cards → Jelli, your waves → after a slip → Glim, your evenings → calm tools → progress → your Day Xero is waiting. ' +
         'Frames 1–3 must read on their own at 230 px wide in search. No prices, "free", trials, ratings, "#1" or success claims in captions; frames 1 and 10 carry "Requires a DayXero Pro subscription." ' +
-        'Every phone is a real CI capture of main 6498929 (swap the image, never redraw app UI). Crew: the Char component (who, expr). Landscape: the Waves component, one continuous scene; each artboard shows its own slice (frame 1–10), so the waves meet at the seams. ' +
+        'Every phone is a real CI capture of main 6498929 (swap the image, never redraw app UI). Crew: the Char component, drawn as in the app (who, expr = the app mood, stage 0–4). Landscape: the Waves component, one continuous scene; each artboard shows its own slice (frame 1–10), so the waves meet at the seams. ' +
         'Upload-ready PNGs: repo design/app-store-screenshots/directions/e-crew-story, run node src/render.mjs (same markup, bundled fonts, RGB without alpha). Share › Export from here is fine for review.'
     }
   },
