@@ -22,5 +22,26 @@
   ],
   "storeUrl": "https://apps.apple.com/us/app/smoke-free-quit-smoking-now/id577767592?uo=4",
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id577767592",
+    "deviceClass": "6.5\" (1242x2688)",
+    "phoneVideoItems": 1,
+    "subtitle": "We can help you stop for good",
+    "result": "unchanged (identical files)",
+    "productPageScreenshotUrls": [
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/f1/52/25/f15225c0-d2ac-1a58-cfc2-477a3b0a0086/25-App-store-ROW-Slide2-2.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b8/14/f8/b814f875-d059-e58d-f75f-1e6853356535/25-App-store-ROW-Slide3-2.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/cf/32/fd/cf32fdf0-20e3-206a-9366-491e8a114093/c91e42bb-835f-4534-a68e-6cdc52ad2b5a_1284x2778bb-3.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ba/1e/28/ba1e2888-5d2e-c526-419d-a5e014908ad4/16f75b36-10c1-4ca2-b129-713479ef4120_1284x2778bb-4.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/6c/de/23/6cde2334-66fd-31a6-2913-20357da74226/7b5b8e25-99ee-41ef-b71e-800d5c363ee5_1284x2778bb-9.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b4/22/1f/b4221f33-0306-5891-e58f-d0230adcb63c/d82ee2a3-f9c5-4686-bef5-9d61735cb813_1242x2688bb.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/1a/c0/ea/1ac0eac6-fbbb-0002-8757-a366aa74ec6e/7664b887-0c5a-469a-8ee4-f3b0addd2587_1284x2778bb-5.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/93/ae/80/93ae8048-6e0f-62dd-eafb-fb0a6578a79d/435a5088-39ef-4688-98a3-d3b7b680069f_1284x2778bb-6.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/bf/ab/1b/bfab1b42-7300-28e2-6ed0-39776e327773/21cef3bf-7f4b-4c48-8059-3f66ec137fa8_1284x2778bb-7.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/06/7b/7a/067b7a36-fddb-98af-4e3d-0ce3e1281873/bed9af51-f37a-4935-a24f-ad8ff047b67e_1284x2778bb-8.png/600x0w.jpg"
+    ],
+    "note": "Product page phone media starts with an App Preview video (item 0) before screenshot 01; its poster frame is saved as _video_poster.jpg"
+  }
 }

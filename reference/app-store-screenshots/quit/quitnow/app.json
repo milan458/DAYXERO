@@ -19,5 +19,23 @@
   ],
   "storeUrl": "https://apps.apple.com/us/app/quitnow/id483994930?uo=4",
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id483994930",
+    "deviceClass": "6.5\" (1242x2688)",
+    "phoneVideoItems": 1,
+    "subtitle": "Quit smoking for good",
+    "result": "unchanged (same creatives, re-encoded file URLs; root images kept)",
+    "productPageScreenshotUrls": [
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/1e/f6/dd/1ef6dde0-d73b-bfb3-c173-c0d7ffdb7d1a/0_APP_IPHONE_65_0.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/62/c3/2e/62c32e2f-6bf3-5a21-55ba-819e89a8f4b2/1_APP_IPHONE_65_1.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/7e/6a/74/7e6a745a-3708-e970-10fa-8bc8d15e1cc0/2_APP_IPHONE_65_2.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/21/a4/9b/21a49b7a-80b6-d8ea-e9f9-d1073c1e0b08/3_APP_IPHONE_65_3.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/42/6e/e8/426ee851-e127-c432-be2b-65b51a03b79b/4_APP_IPHONE_65_4.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/db/3e/93/db3e93cd-f0cd-18f1-32d7-c07258c87ee5/5_APP_IPHONE_65_5.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/57/d9/03/57d903eb-7103-9e43-23ae-76aeeebabca4/6_APP_IPHONE_65_6.png/600x0w.jpg"
+    ],
+    "note": "Product page phone media starts with an App Preview video (item 0) before screenshot 01; its poster frame is saved as _video_poster.jpg"
+  }
 }

@@ -22,5 +22,25 @@
   ],
   "storeUrl": "https://apps.apple.com/us/app/reframe-drink-less-thrive/id1485756576?uo=4",
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id1485756576",
+    "deviceClass": "6.9\" (1320x2868)",
+    "phoneVideoItems": 0,
+    "subtitle": "Cut Back or Quit Alcohol Habit",
+    "result": "unchanged (identical files)",
+    "productPageScreenshotUrls": [
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/fe/26/08/fe2608eb-a316-8167-35f3-59ffcb02d374/Glucobit_Reframe_iOS_6.9_Screenshots_V1_250625_01.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/65/e1/20/65e12087-8ca9-0491-8b7c-fcbfc084a6dc/Glucobit_Reframe_iOS_6.9_Screenshots_V1_250625_02.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/9c/cf/34/9ccf3454-fa3d-be90-6bce-e92fb1c8a95f/Glucobit_Reframe_iOS_6.9_Screenshots_V1_250625_03.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/e7/3a/e0/e73ae0f6-5fca-80ea-48db-01d204da58c1/Glucobit_Reframe_iOS_6.9_Screenshots_V1_250625_04.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/e7/db/48/e7db4885-64eb-455d-9926-ff8b5c1bd15b/Glucobit_Reframe_iOS_6.9_Screenshots_V1_250625_05.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/fc/e5/d9/fce5d952-65a3-a760-cf06-e5241e254d06/Glucobit_Reframe_iOS_6.9_Screenshots_V1_250625_06.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/79/ec/6a/79ec6ad9-9446-f621-f357-698576f4cee4/Glucobit_Reframe_iOS_6.9_Screenshots_V1_250625_07.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/27/11/5a/27115acf-0b42-04a9-888b-fc962cbb225d/Glucobit_Reframe_iOS_6.9_Screenshots_V1_250625_08.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/e3/1b/5a/e31b5a4b-aa2c-42d7-53e8-f7cfa23f944e/Glucobit_Reframe_iOS_6.9_Screenshots_V1_250625_09.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ea/21/0f/ea210f2a-6b97-2d7c-ce91-bb07581e408f/Glucobit_Reframe_iOS_6.9_Screenshots_V1_250625_10.jpg/600x0w.jpg"
+    ]
+  }
 }

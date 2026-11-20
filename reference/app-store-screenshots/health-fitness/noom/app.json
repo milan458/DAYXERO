@@ -19,5 +19,26 @@
     "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/25/5b/a9/255ba9a2-8021-422e-0fca-0a302c5d9b83/5.5_9.jpg/392x696bb.jpg"
   ],
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id634598719",
+    "deviceClass": "6.3\" (1206x2622)",
+    "phoneVideoItems": 0,
+    "subtitle": "Healthy Habits, Meals & GLP-1s",
+    "result": "changed: new creative set"
+  },
+  "productPageScreenshotUrls": [
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/c7/3e/68/c73e68e1-8a26-bb61-6515-2ed68511d05d/Noom_App-Store_1206_U00d72622_Slide-1.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ca/93/0e/ca930e0d-bd68-e76d-66c0-bc75dc8b06f4/Noom_App-Store_1206_U00d72622_Slide-2.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/95/89/88/95898855-a43f-33a0-4861-7fa6bb463ef4/Noom_App-Store_1206_U00d72622_Slide-3.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/86/41/1e/86411e81-1b90-ce98-f163-45ed3ca55d96/Noom_App-Store_1206_U00d72622_Slide-4.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/7c/36/ce/7c36ce93-435e-c4aa-b0c7-c373fa452533/Noom_App-Store_1206_U00d72622_Slide-5.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/5e/db/77/5edb77ec-f436-6c74-0b68-7bbe865d6559/Noom_App-Store_1206_U00d72622_Slide-6.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c7/3d/fb/c73dfbf7-a8be-ce1f-18be-1db666ed5871/Noom_App-Store_1206_U00d72622_Slide-7.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/25/51/9f/25519f01-1a02-9484-9630-b5af2d2b475a/Noom_App-Store_1206_U00d72622_Slide-8.jpg/600x0w.jpg"
+  ],
+  "productPageDeviceClass": "6.3\" (1206x2622)",
+  "productPageFetched": "2026-11-20",
+  "note": "Root 01.jpg.. = iPhone set shown on apps.apple.com/us product page (largest uploaded display class). api-lookup-set/ = earlier images from iTunes Lookup screenshotUrls (smaller/older device class)."
 }

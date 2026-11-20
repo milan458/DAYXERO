@@ -16,5 +16,21 @@
     "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/af/dc/b3/afdcb3a9-795f-1efd-73a5-0202d26b623b/6.9_en_6.jpg/320x480bb.jpg"
   ],
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id1264546236",
+    "deviceClass": "6.9\" (1290x2796)",
+    "phoneVideoItems": 0,
+    "subtitle": "Pilates, calisthenics, yoga",
+    "result": "unchanged (identical files)",
+    "productPageScreenshotUrls": [
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/4d/91/3e/4d913e2b-118f-47bf-5e0f-733d509816dc/6.9_en_1.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/3c/76/d6/3c76d605-1cf6-2b9b-b41e-e88dd53cbd14/6.9_en_2.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/22/d0/03/22d003fc-dd2a-d55d-7239-6dc50c337159/6.9_en_3.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/3a/09/d7/3a09d7ec-67a6-332e-c68c-4c107458aa3b/6.9_en_4.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/1f/8b/63/1f8b637c-4b1e-dfd3-49e4-acea7de34257/6.9_en_5.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/af/dc/b3/afdcb3a9-795f-1efd-73a5-0202d26b623b/6.9_en_6.jpg/600x0w.jpg"
+    ]
+  }
 }

@@ -22,5 +22,28 @@
   ],
   "storeUrl": "https://apps.apple.com/us/app/quit-smoking-for-good-kwit/id525441365?uo=4",
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id525441365",
+    "deviceClass": "6.5\" (1242x2688)",
+    "phoneVideoItems": 0,
+    "subtitle": "A life without cigarettes!",
+    "result": "changed: new creative set"
+  },
+  "productPageScreenshotUrls": [
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/b6/dc/36/b6dc3642-2685-1589-a793-d9d8ad834fdd/_U00231.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/bd/62/03/bd6203e2-374f-533f-9a26-facad685b02e/_U00232.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/44/ce/c3/44cec34d-cae4-d5c9-7b42-b6a0ad1df8e0/_U00233.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/9f/40/b7/9f40b766-9d88-3ad8-ea38-9a0f97f77440/_U00234.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/c4/e7/ce/c4e7cee2-0bc2-4eb1-87cd-7b787520d3b4/_U00235.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/6b/c8/7f/6bc87f4e-170a-b3a8-a2a5-69f746493a64/_U00236.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/21/21/f6/2121f67a-807f-6c77-d1fb-529e89fd02a9/_U00237.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/14/7c/14/147c1466-4139-a206-1579-5a70eb283607/_U00238.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/fe/0a/69/fe0a69f2-0780-1e1d-b706-bad34219d46a/_U00239.jpg/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/70/ee/6b/70ee6be2-386f-0086-5a91-13bf725464c2/_U002310.jpg/600x0w.jpg"
+  ],
+  "productPageDeviceClass": "6.5\" (1242x2688)",
+  "productPageFetched": "2026-11-20",
+  "note": "Root 01.jpg.. = iPhone set shown on apps.apple.com/us product page (largest uploaded display class). api-lookup-set/ = earlier images from iTunes Lookup screenshotUrls (smaller/older device class)."
 }

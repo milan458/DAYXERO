@@ -17,5 +17,28 @@
     "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ad/e5/ab/ade5abec-87db-9c3f-0d3b-0ac44c58b565/Slide_2_U002c_My_Day.png/392x696bb.png"
   ],
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id331308914",
+    "deviceClass": "6.5\" (1284x2778)",
+    "phoneVideoItems": 0,
+    "subtitle": "Weight Loss and Better Health",
+    "result": "changed: new creative set"
+  },
+  "productPageScreenshotUrls": [
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ed/a6/13/eda613ff-1bb8-b940-09bb-cf73ca698ba7/01_Cover.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/51/66/2c/51662c5a-6843-b59e-a581-b310bd0a1e6c/02_Points.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/13/40/33/134033f5-5c2a-4380-c876-1f8c024e2c5b/06_Meds_Clinicians.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/aa/f7/9e/aaf79e56-51e8-0382-6738-d13b9126b15c/03_GLP-1_Success.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/b9/ac/28/b9ac284b-a4ce-b44a-0e33-60e5c8ec18ca/04_Modes.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/3d/d9/79/3dd9790a-d72a-15ee-25d6-308166e87648/05_Menopause.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/34/47/d7/3447d7e0-33a0-e156-2468-96c0f35b14e3/07_AI_Body_Scanner.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/56/0a/7c/560a7cd3-687c-6fb3-5dee-072464f470cd/08_Food_Scanner.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/50/e2/32/50e23255-4ea7-320d-9ee9-205fdb897e2c/09_ZPFs.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/fe/bf/cc/febfccab-3348-0be9-bedb-5916a91ca123/10_Barcode_Scanner.png/600x0w.jpg"
+  ],
+  "productPageDeviceClass": "6.5\" (1284x2778)",
+  "productPageFetched": "2026-11-20",
+  "note": "Root 01.jpg.. = iPhone set shown on apps.apple.com/us product page (largest uploaded display class). api-lookup-set/ = earlier images from iTunes Lookup screenshotUrls (smaller/older device class)."
 }

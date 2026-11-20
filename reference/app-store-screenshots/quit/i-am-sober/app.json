@@ -21,5 +21,27 @@
   ],
   "storeUrl": "https://apps.apple.com/us/app/i-am-sober/id672904239?uo=4",
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id672904239",
+    "deviceClass": "6.5\" (1242x2688)",
+    "phoneVideoItems": 0,
+    "subtitle": "Sobriety tracker for recovery",
+    "result": "changed: same creative, larger device class only"
+  },
+  "productPageScreenshotUrls": [
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/6f/d3/eb/6fd3eba1-7039-c3dc-5d5c-700ecb1f79bb/369f96c3-a266-46b5-9275-92afaee5f949_0_APP_IPHONE_65_0.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/e4/30/01/e430018b-896f-333a-6e55-0abf3efe735f/6f697343-b314-42f8-a6c6-d323ed270a30_1_APP_IPHONE_65_1.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/8d/99/cb/8d99cb1f-0b69-be39-4bdf-7b9a76bf323b/13f7fc44-fdfb-4c06-9e1d-4ece322f0f11_2_APP_IPHONE_65_2.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/46/28/8e/46288eba-0c05-4136-6bf4-48bb9da87097/ffcc9c6c-7dc0-461a-838b-e004863e4a38_3_APP_IPHONE_65_3.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/a7/df/a6/a7dfa606-d736-c8a5-2900-b46c041c4a4c/e57a9c51-e398-48f3-829d-e51f30826e96_4_APP_IPHONE_65_4.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/37/8e/90/378e9018-ae16-9de0-46dc-f7a8d2f24b0b/b0634c52-ae90-4f22-88a2-445534e628ec_5_APP_IPHONE_65_5.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/9f/fb/7e/9ffb7e39-4997-915c-b2c2-0d1e177d8a43/923da64d-7e64-46f2-855c-d55ded4ec5e6_6_APP_IPHONE_65_6.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/b2/59/10/b25910a3-118b-ecab-9997-7ddb90367c22/2f55fa23-9b47-435f-aa5e-d469be1cec76_7_APP_IPHONE_65_7.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/c5/7d/0b/c57d0b49-9ca5-7252-df02-fb0f4a60001c/b6e84d7d-005a-477a-a063-3957bb3493ca_8_APP_IPHONE_65_8.png/600x0w.jpg"
+  ],
+  "productPageDeviceClass": "6.5\" (1242x2688)",
+  "productPageFetched": "2026-11-20",
+  "note": "Root 01.jpg.. = iPhone set shown on apps.apple.com/us product page (largest uploaded display class). api-lookup-set/ = earlier images from iTunes Lookup screenshotUrls (smaller/older device class)."
 }

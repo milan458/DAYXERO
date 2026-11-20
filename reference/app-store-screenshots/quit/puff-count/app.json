@@ -17,5 +17,20 @@
   ],
   "storeUrl": "https://apps.apple.com/us/app/puff-count-quit-vaping-now/id1488580640?uo=4",
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id1488580640",
+    "deviceClass": "6.5\" (1242x2688)",
+    "phoneVideoItems": 0,
+    "subtitle": "Track Puffs and Quit Vaping",
+    "result": "unchanged (same creatives, re-encoded file URLs; root images kept)",
+    "productPageScreenshotUrls": [
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/44/b4/60/44b46098-4136-12d7-afee-0f2b072125dc/iphone6.5-1.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/5b/d9/fd/5bd9fd02-7e08-2dfd-1c5d-1abc45e27a7e/iphone6.5-2.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/2e/b3/31/2eb33137-a39b-a156-b897-0511fdb7477e/iphone6.5-3.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/77/2f/3f/772f3f3c-cf9c-ffd7-1a44-b2203da94e0d/iphone6.5-4.png/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/3b/ab/81/3bab8126-6267-634c-87d6-efa6a2a82ad2/iphone6.5-5.png/600x0w.jpg"
+    ]
+  }
 }

@@ -22,5 +22,28 @@
   ],
   "storeUrl": "https://apps.apple.com/us/app/quit-vaping/id1479615245?uo=4",
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id1479615245",
+    "deviceClass": "6.9\" (1290x2796)",
+    "phoneVideoItems": 0,
+    "subtitle": "#1 App to Quit Vaping/E-Cigs",
+    "result": "changed: new creative set"
+  },
+  "productPageScreenshotUrls": [
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c9/d5/c8/c9d5c817-5da6-4d8d-18f7-9a0deaf74ee9/01__U00b7_Quit_vaping._For_real_this_time@2x.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/cc/09/36/cc093631-f454-8dd6-5188-14c964dcf242/04_alt__U00b7_Don_U2019t_quit_alone__U0028no_overlap_U0029@2x.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/50/55/89/50558976-1a07-d5d3-ec36-1d4a2f86a6fa/03__U00b7_Cut_down_your_way@2x.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/41/e9/f0/41e9f05e-13d9-bac0-5220-999eb2913f64/02__U00b7_Watch_your_body_heal@2x.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d9/1e/9b/d91e9bbe-e8e6-48ee-6955-5a131053ccc6/09_alt_2__U00b7_Join_the_community__U0028members_U0029@2x.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/77/cc/3b/77cc3baf-3a91-4b5f-7eec-66d1b10aa34f/05__U00b7_Every_day_counts@2x.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/6e/51/60/6e5160a0-54f7-4a9b-6320-c112ee839c56/07__U00b7_Breathe_through_it@2x.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/7b/8f/3b/7b8f3bf8-d69e-a12b-4c05-0ba6aed7faaa/10__U00b7_Compete_to_stay_quit@2x.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ab/73/96/ab739668-f3be-55b9-b224-2b06773d185f/08__U00b7_Beat_your_cravings@2x.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/07/68/56/076856d1-9895-5e05-2c10-5a556fad13a7/06__U00b7_Hit_goals._Earn_badges@2x.png/600x0w.jpg"
+  ],
+  "productPageDeviceClass": "6.9\" (1290x2796)",
+  "productPageFetched": "2026-11-20",
+  "note": "Root 01.jpg.. = iPhone set shown on apps.apple.com/us product page (largest uploaded display class). api-lookup-set/ = earlier images from iTunes Lookup screenshotUrls (smaller/older device class)."
 }

@@ -20,5 +20,25 @@
     "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/57/c5/3b/57c53bf0-97b6-2f65-67c6-365eff519b83/6.9__Non-EN_Master_ASO_iPhone_Screen_10.jpg/320x480bb.jpg"
   ],
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id320606217",
+    "deviceClass": "6.9\" (1260x2736)",
+    "phoneVideoItems": 0,
+    "subtitle": "Alarm Clock and Tracking App",
+    "result": "unchanged (identical files)",
+    "productPageScreenshotUrls": [
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/44/60/a5/4460a53e-70c2-27ce-440e-bc6d9b8aa0dc/6.9__Non-EN_Master_ASO_iPhone_Screen_1.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/28/69/bb/2869bb65-b84c-d4d4-5003-712330d24627/6.9__Non-EN_Master_ASO_iPhone_Screen_2.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/dc/a0/78/dca0786a-bf36-d063-1d93-dcd040f39e32/6.9__Non-EN_Master_ASO_iPhone_Screen_3.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/72/de/c3/72dec3b5-b504-7bf4-e192-560d53cb8e72/6.9__Non-EN_Master_ASO_iPhone_Screen_4.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/bf/11/f9/bf11f9a4-cb2b-f1cd-99cc-b53b0ccfb34e/6.9__Non-EN_Master_ASO_iPhone_Screen_5.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/e2/0d/e3/e20de315-5991-6a57-8233-8ffe70924bab/6.9__Non-EN_Master_ASO_iPhone_Screen_7.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/37/34/01/37340190-07b9-3c11-1681-763e965887e0/6.9__Non-EN_Master_ASO_iPhone_Screen_8.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/93/18/ad/9318adfe-5269-617c-bd92-bec700a2002c/6.9__Non-EN_Master_ASO_iPhone_Screen_9.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/46/1c/ee/461ceea3-333f-86fd-2dcc-c013c77692d7/6.9__Non-EN_Master_ASO_iPhone_Screen_6.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/57/c5/3b/57c53bf0-97b6-2f65-67c6-365eff519b83/6.9__Non-EN_Master_ASO_iPhone_Screen_10.jpg/600x0w.jpg"
+    ]
+  }
 }

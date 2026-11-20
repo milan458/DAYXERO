@@ -19,5 +19,24 @@
     "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/2e/78/2d/2e782d93-5a72-7bee-731c-d38665e1a0d3/9.jpg/320x480bb.jpg"
   ],
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id657189652",
+    "deviceClass": "6.5\" (1242x2688)",
+    "phoneVideoItems": 0,
+    "subtitle": "Ovulation & Fertility Calendar",
+    "result": "unchanged (identical files)",
+    "productPageScreenshotUrls": [
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/67/b4/a4/67b4a478-925c-7d03-47d0-602c260a8fbc/1.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/99/3c/0e/993c0e73-5c9a-4a2e-838e-16eaa36f5f00/2.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d9/af/c7/d9afc792-e170-526a-bd92-1f62c12d0315/3.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/83/f8/21/83f821a3-1a67-3e9b-fdcb-54aced6d67c2/4.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ac/25/28/ac25281f-4c04-6777-51dc-b712ad7da480/5.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/1f/61/b7/1f61b77e-fbeb-1e06-edcf-00e5c8a8809a/6.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/bc/d9/3c/bcd93cdb-8fda-19bc-5ec9-65503dd34397/7.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/39/43/b3/3943b392-b295-05dd-b328-3a00bb8d9919/8.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/2e/78/2d/2e782d93-5a72-7bee-731c-d38665e1a0d3/9.jpg/600x0w.jpg"
+    ]
+  }
 }

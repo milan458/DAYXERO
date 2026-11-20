@@ -1,6 +1,8 @@
 # US App Store screenshot benchmark: Health & Fitness, group B (Lose It!, BetterMe, Noom, Sleep Cycle, Clue, WeightWatchers, Hevy, Ladder, AllTrails, Yuka)
 
-Fetched 2026-11-20 (US storefront, iPhone `screenshotUrls` from the iTunes Lookup API, downloaded at 600px wide).
+**Capture method (refreshed 2026-11-20).** The images analysed are the iPhone set shown on each app's US product page today, not the Lookup API set. I fetched `https://apps.apple.com/us/app/id{ID}` with plain curl, read the `product_media_phone_` shelf from the page's embedded JSON (the largest display class the app uploaded) and downloaded each frame at 600px wide. The iTunes Lookup API `screenshotUrls` used at first often return an older or smaller set (5.5"). Result: 6 of 10 sets are byte-identical (Lose It!, BetterMe, Sleep Cycle, Clue, AllTrails, Yuka). 4 changed: **Noom** and **WeightWatchers** (new creative sets), **Ladder** (revised set), **Hevy** (same captions, new UI and frames). For those 4, the older Lookup images are kept in `{app}/api-lookup-set/`, and `app.json` gains `productPageScreenshotUrls`, `productPageDeviceClass`, `productPageFetched` and `productPageCheck`. None of the 10 has an App Preview video on the iPhone product page. Product-page subtitles (`lockup.subtitle` in the page JSON): Lose It! "Food Tracker for Weight Loss"; BetterMe "Pilates, calisthenics, yoga"; Noom "Healthy Habits, Meals & GLP-1s"; Sleep Cycle "Alarm Clock and Tracking App"; Clue "Ovulation & Fertility Calendar"; WW "Weight Loss and Better Health"; Hevy "Weight Lifting Routine Planner"; Ladder "Fitness Workouts at Home & Gym"; AllTrails "GPS Hiking & Biking Trail Maps"; Yuka "Check What's in Your Products". Change summary: `refresh_current_sets.md` in this folder.
+
+Originally fetched 2026-11-20 (US storefront, iPhone `screenshotUrls` from the iTunes Lookup API, downloaded at 600px wide); per-app analysis below has been updated to the product-page sets.
 Library root: `/home/user/DAYXERO/reference/app-store-screenshots/health-fitness/`. Each app folder has `01.jpg…NN.jpg`, `app.json` (id, name, seller, rating, ratingCount, version, original screenshotUrls, fetch date) and `_sheet.jpg` (contact sheet). Chart evidence snapshot: `/home/user/DAYXERO/reference/app-store-screenshots/health-fitness/_us_health_fitness_charts_2026-11-20_group_b.txt`.
 All headline text and visual descriptions below come from viewing the downloaded images, not from memory. Source for each app = its Lookup API record plus its US App Store page.
 
@@ -29,15 +31,15 @@ All 10 are in the Health & Fitness primary genre on the US store, including AllT
 
 ### Takeaway
 The 10 sets split into three archetypes:
-- **Brand-colour + device-frame feature list:** Lose It!, WW, AllTrails, Hevy, Ladder.
-- **Frameless floating UI cards on a brand colour:** Noom, Clue, Yuka.
-- **Atmospheric / continuous background:** Sleep Cycle, plus the Noom line motif.
+- **Brand-colour + device-frame feature list:** Lose It!, WW, AllTrails, Hevy, Ladder, and now Noom (its current set puts framed phones on slots 2–7).
+- **Frameless floating UI cards on a brand colour:** Clue, Yuka.
+- **Atmospheric / continuous background:** Sleep Cycle, plus the Noom dotted-line motif.
 
 The strongest sets put a claim or proof point on screenshot 1, often as a panorama that spans 1→2. They then run one benefit per screen and close with community, coach or trust content.
 
 ### Cited Findings
 
-**Format caveat for all apps.** Seven sets download at the 6.9"/6.5" ratio (600×~1300): Lose It!, BetterMe, Sleep Cycle, Clue, AllTrails, Yuka. Four come back as the older 5.5" 9:16 set (600×1067; source files tagged `392x696bb`, with filenames like `5.5_1.jpg` for Noom and `1242 x 2208 pixels` for Ladder): Noom, WW, Hevy, Ladder. All are portrait; none use landscape — [Lookup API screenshotUrls in each app.json](https://itunes.apple.com/lookup?id=634598719&country=us)
+**Format for all apps (product-page sets).** Every set is portrait at about 600×1300. Device classes uploaded: 6.9" for Lose It! (1320×2868), BetterMe (1290×2796), Sleep Cycle and AllTrails (1260×2736). 6.5" for Clue, Yuka, Hevy, Ladder (1242×2688) and WW (1284×2778). 6.3" for Noom (1206×2622). The Lookup API had returned the older 5.5" 9:16 set (600×1067) for Noom, WW, Hevy and Ladder; those images are now in each app's `api-lookup-set/` — [product pages, e.g. Noom](https://apps.apple.com/us/app/id634598719)
 
 #### 1. Lose It! – Calorie Counter (id 297368629; FitNow, Inc.; 4.77★, 785,128 ratings). Library: `/home/user/DAYXERO/reference/app-store-screenshots/health-fitness/lose-it/` — [Lookup](https://itunes.apple.com/lookup?id=297368629&country=us) · [App Store](https://apps.apple.com/us/app/id297368629)
 - **Format:** 10 portrait screenshots, no panorama.
@@ -73,22 +75,23 @@ The strongest sets put a claim or proof point on screenshot 1, often as a panora
 - **Proof and extras:** no social proof, awards, ratings, Premium, or watch/widget content anywhere. The listing name says "Well-Being Coach", but the screenshots are fitness-led.
 
 #### 3. Noom Weight Loss, Food Tracker (id 634598719; 4.70★, 874,455 ratings). Library: `/home/user/DAYXERO/reference/app-store-screenshots/health-fitness/noom/` — [Lookup](https://itunes.apple.com/lookup?id=634598719&country=us) · [App Store](https://apps.apple.com/us/app/id634598719)
-- **Format:** 9 portrait screenshots (5.5" set). A thin white connecting line runs across the whole set as a continuous motif, and screenshots 1→2 form a true panorama (a tilted phone showing the "Course Map" crosses the seam).
-- **Background:** uniform salmon/peach.
-- **Captions:** black serif throughout. Screenshots 1, 2 and 9 use very large left-aligned text (5 lines); screenshots 3–8 use small centred 2-line captions at the top. Screenshot 2's headline sits at the *bottom*.
-- **Device:** mostly frameless floating UI cards; only screenshot 1 has a phone outline.
+- **Older set:** the Lookup API's 9-frame 5.5" set (salmon background, all-serif, frameless cards, with a coach frame and a "78% of Noomers lost weight in a six-month study" closer) is no longer on the product page. It is kept in `noom/api-lookup-set/`.
+- **Format (current product page):** 8 portrait screenshots, 6.3" class (1206×2622). Screenshots 1→2 form a panorama: a tilted phone showing "Course Map" crosses the seam. A red-dotted path motif appears on 1 and 8 only.
+- **Background:** uniform pale lavender-grey. Screenshot 8 is a full-bleed lifestyle photo.
+- **Captions:** two typefaces. Screenshots 1 and 8 use large left-aligned dark-plum serif. Screenshots 2–7 use centred 2–3-line geometric sans at the top.
+- **Device:** dark-outline phone frames on 2–7, with cards breaking out (prediction chart, "Check in with your doctor" chip, a Wegovy pen). Screenshot 1 is the tilted panorama phone.
 - **Headlines in order:**
-  1. "Noom uses psychology to help you lose weight and keep it off" (11 words), with a red callout tag "BUILDS NEW HABITS".
-  2. "Understand your food choices with psychology" — weight-prediction chart: "We predict you'll be 150 lbs by May 8", milestones "Lower risk (171 lbs)" and "Wedding (165 lbs)", plan summary "Awesome! By May 8th, we project you'll lose 9 lbs or 5% of your body weight."
-  3. "A personalized program for healthier habits" — daily lessons ("Ditch the doubt", "Crush your thought distortions"), "1 DAY STREAK".
-  4. "A sustainable way to eat healthier" — colour-coded foods: Great choice / Eat moderate portions / Limit your portions.
-  5. "Stay on track with simple food logging" — meal photo capture.
-  6. "Get tailored insights along your journey" — Noomcoins, calories, lessons, weight trend.
-  7. "Celebrate your progress" — weigh-in, water, steps, blood pressure, glucose.
-  8. "Get one-on-one guidance from a supportive coach" — Coach Eva chat: "Progress, not perfection."
-  9. "78% of Noomers lost weight in a six-month study." plus a curved "POWERED BY SCIENCE." stamp over a food photo.
-- **Arc:** mechanism (psychology) → personalised predicted outcome → lessons → food → logging → insights → celebration → human coach → science stat.
-- **Placement of proof:** the stat comes *last*, not first.
+  1. "Noom uses psychology to help you lose weight and keep it off" (11 words), with the tag "BUILD NEW HABITS".
+  2. "Understand your food choices with psychology" — weight-prediction chart "We predict you'll be 150 lbs by May 8", milestones "Lower risk (171 lbs)" and "Wedding (165 lbs)", goal 150 lbs, rows "Reduce stress" and "Age with confidence", plan summary "Awesome! By May 8th, we project you'll lose 9 lbs or 5% of your body weight."
+  3. "A personalized program for healthier habits" — Today's Plan: "Get your steps in", "Track your meals", "Learn with Noom".
+  4. "Stay on track with simple food logging" — camera capture: "Take a photo of your meal or upload one from your camera roll".
+  5. "Get tailored insights along your journey" — Noomcoins, treat days, steps, weight "-0.5 lbs in last 7 days", lessons.
+  6. "Kickstart your health with medication" — "Welcome to Noom", "Check in with your doctor UNDER 3 MINUTES", "New message from your doctor", and a Wegovy HD 7.2 mg (semaglutide) pen. Footnote: "Wegovy is a registered trademark of Novo Nordisk, A/S".
+  7. "Keep the muscle, lose the fat" — Muscle Defense™ videos and programs, "Specially created for weight loss medication", attributed to Jeffrey Egler, MD, Chief Medical Officer at Noom.
+  8. "8 out of 10 members say Noom is a life-changing program" plus a "POWERED BY SCIENCE" tag over a woman eating an orange. Footnote: "63 of 82 Noom members taking an FDA-approved GLP-1 RA who answered Program Satisfaction questions at Month 6 agreed that Noom is a life changing program".
+- **Arc:** mechanism (psychology) → personalised predicted outcome → daily plan → photo logging → insights → **GLP-1 medication** → muscle preservation on medication → satisfaction stat.
+- **What changed versus the older set:** the colour-coded food frame, "Celebrate your progress" and the one-on-one coach frame are gone. Two GLP-1 frames (6, 7) replace them. The closing proof changed from a weight-loss outcome ("78% … lost weight") to a satisfaction rate among GLP-1 users (n = 82). The subtitle is now "Healthy Habits, Meals & GLP-1s".
+- **Placement of proof:** the stat still comes *last*.
 
 #### 4. Sleep Cycle – Tracker & Sounds (id 320606217; 4.68★, 32,437 ratings). Library: `/home/user/DAYXERO/reference/app-store-screenshots/health-fitness/sleep-cycle/` — [Lookup](https://itunes.apple.com/lookup?id=320606217&country=us) · [App Store](https://apps.apple.com/us/app/id320606217)
 - **Format:** 10 portrait screenshots. Every screen shares one background — white sky fading through a cloud layer into dark teal — which reads as a continuous panorama. Screenshots 1→2 are a literal panorama: a large tilted phone crosses the seam, and screenshot 2 has *no caption*.
@@ -127,32 +130,38 @@ The strongest sets put a claim or proof point on screenshot 1, often as a panora
 - **Notifications:** the only set that shows lock-screen notifications.
 
 #### 6. WeightWatchers Program (id 331308914; 4.84★, 2,367,043 ratings). Library: `/home/user/DAYXERO/reference/app-store-screenshots/health-fitness/weightwatchers/` — [Lookup](https://itunes.apple.com/lookup?id=331308914&country=us) · [App Store](https://apps.apple.com/us/app/id331308914)
-- **Format:** 7 portrait screenshots (5.5" set), no panorama.
-- **Background:** solid electric blue-violet with a darker semicircle arch behind the phone.
-- **"NEW!" tab:** coral "NEW!" text in a dark half-circle at top centre on screenshots 2–4.
-- **Captions:** white centred sans, 2–3 lines, 5–10 words, with bold emphasis on key words (e.g. "**Quick tracking** with just one pic").
-- **Device:** minimal phone frame cropped at the bottom, with UI cards popping out.
+- **Older set:** the Lookup API's 7-frame 5.5" set (violet background, slot 1 "#1 doctor-recommended weight-loss program" with a lifestyle photo, no medication content) is no longer on the product page. It is kept in `weightwatchers/api-lookup-set/`.
+- **Format (current product page):** 10 portrait screenshots, 6.5" class (1284×2778), no panorama.
+- **Background:** solid saturated royal/electric blue on every frame.
+- **Captions:** white centred bold condensed sans, 2–4 lines, 4–12 words. A lavender "NEW!" prefix sits on 4 of 10 frames (4–7).
+- **Device:** light-blue rounded phone frames with Dynamic Island, cropped at the bottom. Screenshot 1 has a tilted phone with a burger tile and pill-bottle tile breaking out.
 - **Headlines in order:**
-  1. WeightWatchers wordmark + "#1 doctor-recommended weight-loss program". Lifestyle photo of a smiling woman holding her phone in a grocery store, in a circular crop. Footnote: "*Based on a 2023 survey by Cerner Enviza of 500 doctors who recommend weight-loss programs to patients."
-  2. "Quick tracking with just one pic" — food scanner.
-  3. "Track Points®, macros, weight, and your progress"
-  4. "350+ no-track, no-measure foods" — ZeroPoint foods.
-  5. "Make healthier choices on the go" — barcode scanner.
-  6. "Restaurant guides and cooking hacks"
-  7. "Easy-to-follow nutrition plan, customized by 60+ years of science" — "8 Points left", "1-day streak".
-- **Not shown:** no headline mentions medication/GLP-1, and there are no ratings or widgets.
+  1. "THE NEW WEIGHT WATCHERS APP" (condensed wordmark) + "Weight-loss programs, support, and medications in one place".
+  2. "Points®, macros, and progress—all in one spot" — Nutrition: 22 Points® left, daily summary by meal.
+  3. "Access to weight loss medications through expert Clinicians (if you qualify)" — Medical visit with "Melissa Lang, MD, Your Clinician", Join visit / Reschedule, medication tracker "Next dose is due on Sat Nov 22, 2025", 5 days left.
+  4. "NEW! GLP-1 Success Program Expert support, better results" — medication tracker, side effects, refill reminder.
+  5. "NEW! Modes Flexible settings let you choose how you lose" — "Choose your MODE": ALL-IN / LOSE / MAINTAIN.
+  6. "NEW! Weight Watchers for Menopause" — home with protein/fiber/water rings, "Weight Health Score 50 – In the groove".
+  7. "NEW! AI Body Scanner shows your progress beyond pounds" — body scan, body fat 27 lbs, lean mass 15.9 lbs.
+  8. "Simple, fast meal tracking: See it, snap it, log it" — food scanner.
+  9. "350+ ZeroPoint® foods to keep you full and make healthy eating easier"
+  10. "Barcode scanning for effortless tracking"
+- **Arc:** "new app" + medications promise → core Points tracking → **medication access via clinicians** → GLP-1 program → new modes → menopause → AI body scan → the classic tracking features (photo, ZeroPoint, barcode) at the end.
+- **Proof:** none. The "#1 doctor-recommended" claim and its survey footnote are gone. There are no ratings, press or awards. The only authority cue is the named MD clinician in the UI.
+- **Not shown:** lifestyle photography (the older set had a woman on slot 1), widgets and price.
 
 #### 7. Hevy – Workout Tracker Gym Log (id 1458862350; 4.92★, 104,475 ratings). Library: `/home/user/DAYXERO/reference/app-store-screenshots/health-fitness/hevy/` — [Lookup](https://itunes.apple.com/lookup?id=1458862350&country=us) · [App Store](https://apps.apple.com/us/app/id1458862350)
-- **Format:** 10 portrait screenshots (5.5" set). Screenshots 1→2 form a panorama: a tilted phone mostly in screenshot 2, with *no caption* on 2.
+- **Older set:** the Lookup API's 5.5" set had the same captions in the same order, but older iPhone frames (one with a home button), a gold "PR" medal on 3 and a "Nice work man! Keep it up!" bubble on 5. It is kept in `hevy/api-lookup-set/`.
+- **Format (current product page):** 10 portrait screenshots, 6.5" class (1242×2688). Screenshots 1→2 form a panorama: a tilted phone mostly in screenshot 2. Screenshot 2 has no caption, only the "HEVY" wordmark top right.
 - **Background:** light grey on the top two-thirds and a royal-blue band on the bottom third, consistent across the set. Screenshot 10 inverts to dark.
 - **Captions:** heavy black ALL-CAPS sans, centred at the top, 2 lines, 3–4 words. Screenshot 1 is a left-aligned stack in black and blue: "LOG **WORKOUTS** / GET **STRONGER** / STAY **MOTIVATED**", with an "Apps We Love" laurel and ★★★★★ in the blue band.
-- **Device:** older-style iPhone frames (one has a home button), cropped at the bottom, with pop-out cards: a green set rows card and a gold "PR" ribbon.
+- **Device:** modern black iPhone frames with a notch, cropped at the bottom. The green completed-set rows pop out of the frame on 1→2. The UI is refreshed: an exercise summary for Squat (Barbell) with a progress chart and a "Personal Records" link on 3, progress photos on 6, and a Routines grid on 8.
 - **Headlines in order:**
   1. "LOG WORKOUTS / GET STRONGER / STAY MOTIVATED"
-  2. (panorama continuation, no caption)
-  3. "ANALYZE YOUR WORKOUTS" — Heaviest Weight chart with a PR medal.
+  2. (panorama continuation, no caption; HEVY wordmark)
+  3. "ANALYZE YOUR WORKOUTS" — Squat (Barbell) heaviest-weight chart.
   4. "PLAN YOUR ROUTINES"
-  5. "JOIN A GROWING COMMUNITY" — feed post, "Nice work man! Keep it up!".
+  5. "JOIN A GROWING COMMUNITY" — feed post "Chest Day" plus Suggested Athletes.
   6. "TRACK MEASUREMENTS"
   7. "COMPARE YOUR STRENGTH" — head-to-head users, "STRONGER" tag.
   8. "FOLLOW FRIENDS' PROGRESS"
@@ -161,21 +170,23 @@ The strongest sets put a claim or proof point on screenshot 1, often as a panora
 - **Social emphasis:** social features take 3 of 10 slots.
 
 #### 8. LADDER Strength Training Plans (id 1502936453; 4.95★, 224,608 ratings). Library: `/home/user/DAYXERO/reference/app-store-screenshots/health-fitness/ladder/` — [Lookup](https://itunes.apple.com/lookup?id=1502936453&country=us) · [App Store](https://apps.apple.com/us/app/id1502936453)
-- **Format:** 10 portrait screenshots (5.5" set). Screenshots 1→2 are a panorama on a neon-yellow gradient fading to white: three tilted dark-UI phones, with *no caption* on 2.
-- **Background:** screenshot 1 has the LADDER logo, a huge black extended ALL-CAPS headline "GET STRONGER, WITH A PLAN." and two laurel awards: "2024 Women's Health – Best Strength Training Program" and "2024 CNET – Best Strength Training App". Screenshots 3–10 are plain white.
-- **Captions:** heavy extended black ALL-CAPS, centred at the top, 2 lines, 4–5 words.
-- **Device:** dark-mode UI in iPhone 15-style frames. Real coaches and athletes are prominent inside the UI.
+- **Older set:** the Lookup API's 5.5" set had 2024 awards (Women's Health, CNET), a "PREVIEW EVERY MOVEMENT" frame and no nutrition frame. It is kept in `ladder/api-lookup-set/`.
+- **Format (current product page):** 10 portrait screenshots, 6.5" class (1242×2688). Screenshots 1→2 are a panorama on a neon-yellow gradient fading to white: three tilted dark-UI phones. Screenshot 2 has no caption.
+- **Proof on the hero:** screenshot 1 has the LADDER logo, a huge black extended ALL-CAPS headline "GET STRONGER, WITH A PLAN." and an Apple laurel "App Store App of the Year 2025 Finalist". Screenshot 2 adds two laurels: "2026 Women's Health – Best Overall Workout App" and "2026 CNET – Best Strength Training App". Screenshots 3–10 are plain white.
+- **Captions:** heavy extended black ALL-CAPS, centred at the top, 2 lines, 2–5 words.
+- **Device:** dark-mode UI with neon-yellow accents in current iPhone frames (Dynamic Island). Real coaches and athletes are prominent inside the UI.
 - **Headlines in order:**
   1. "GET STRONGER, WITH A PLAN."
-  2. (panorama continuation, no caption)
-  3. "A PLAN FOR EVERY WORKOUT"
-  4. "FIND THE PERFECT PLAN FOR YOU"
-  5. "GET COACHED THROUGH IT ALL" — a coach's face fills the screen.
-  6. "PREVIEW EVERY MOVEMENT"
-  7. "LEARN CORRECT FORM" — includes an **Apple Watch** with a workout timer overlapping the phone.
-  8. "TRACK YOUR PROGRESS"
-  9. "LISTEN TO YOUR OWN MUSIC" — Spotify / Apple Music.
-  10. "GET ANSWERS TO YOUR QUESTIONS" — team chat with a video message from "Coach Lauren".
+  2. (panorama continuation, no caption; two 2026 award laurels)
+  3. "A PLAN FOR EVERY WORKOUT" — "LIMITLESS" team home, "PEACH PALACE" workout.
+  4. "TRACK MACROS" — **new**: photo meal capture plus a Nutrition screen (520 calories left, 22 g protein left, Macro Journal).
+  5. "FIND THE PERFECT PLAN FOR YOU" — "Coach Kelly, LIMITLESS" plus a grid of programs (FORGED, TRANSFORM, CREWS CONTROL…).
+  6. "GET COACHED THROUGH IT ALL" — a coach's face fills the screen ("PYTHON PUMP").
+  7. "LEARN CORRECT FORM" — an athlete mid-squat with a 0:28 timer.
+  8. "TRACK YOUR PROGRESS" — Romanian Deadlift, 186 lbs estimated 1RM, ↑12%, with an **Apple Watch** (Ultra-style) workout screen overlapping the phone.
+  9. "LISTEN TO YOUR OWN MUSIC" — Spotify, Apple Music, YouTube Music, Amazon Music, Podcasts.
+  10. "GET ANSWERS TO YOUR QUESTIONS" — team chat with a pinned video message from "Coach Lauren".
+- **What changed versus the older set:** the awards were updated to an App Store App of the Year 2025 finalist laurel plus two 2026 awards. Nutrition ("TRACK MACROS") replaced "PREVIEW EVERY MOVEMENT". The Apple Watch moved to the progress frame.
 
 #### 9. AllTrails: Hike, Bike & Run (id 405075943; 4.89★, 1,043,416 ratings). Library: `/home/user/DAYXERO/reference/app-store-screenshots/health-fitness/alltrails/` — [Lookup](https://itunes.apple.com/lookup?id=405075943&country=us) · [App Store](https://apps.apple.com/us/app/id405075943)
 - **Format:** 10 portrait screenshots.
@@ -211,58 +222,62 @@ The strongest sets put a claim or proof point on screenshot 1, often as a panora
 - **Not shown:** ratings, press, awards.
 
 ### Inferences
-- The "headline is the screenshot" convention holds everywhere. Every set captions at the top except Noom 2 (bottom), and every caption is short; only Noom 1 and WW 7 exceed 9 words.
-- Where a panorama is used (Sleep Cycle, Hevy, Ladder, Noom), screenshot 2 is a no-caption hero continuation. In search results this produces one very wide hero image built from slots 1–2, which leaves slot 3 as the only "feature" frame visible.
+- The "headline is the screenshot" convention holds everywhere. Every set captions at the top, and nearly every caption is short. Only Noom 1 (11 words), Noom 8 (11) and WW 9 (12) exceed 10 words.
+- Where a panorama is used (Sleep Cycle, Hevy, Ladder), screenshot 2 is a no-caption hero continuation. Noom's panorama keeps a caption on 2. In search results this produces one very wide hero image built from slots 1–2, which leaves slot 3 as the only "feature" frame visible.
 
 ### Gaps
-- The Lookup API does not expose the App Store subtitle, promotional text, app preview videos, or Custom Product Pages / in-app event cards. I could not analyse whether any of these apps lead with a video in place of screenshot 1.
-- For Noom, WW, Hevy and Ladder the API returned the 5.5" set. A separate 6.9" set may exist and could be what iPhone 15–17 users actually see; I could not verify this.
+- Product-page check (2026-11-20): none of the 10 has an iPhone App Preview video, so all lead with screenshot 1. Subtitles are now recorded in the capture note above. I still did not analyse promotional text, Custom Product Pages or in-app event cards.
+- Resolved: the 5.5" Lookup sets for Noom, WW, Hevy and Ladder were not what current iPhones see. The product-page sets are analysed above.
 - I could not confidently identify 4 of Clue's 8 wearable logos.
 
 ## Q2. Cross-app patterns, distinctive moves, and strongest sets
 
 ### Takeaway
-The common pattern is short 2-line top captions on a single consistent brand colour, with a cropped phone frame or floating UI cards, one benefit per screen, and outcome or proof on screenshot 1. What sets the leaders apart is a panoramic 1→2 hero, a quantified or third-party proof point on screenshot 1, a human (coach or community) near the end, and trust or science as the closing argument. The strongest sets are Noom, Ladder, Lose It!, Clue and AllTrails.
+The common pattern is short 2-line top captions on a single consistent brand colour, with a cropped phone frame or floating UI cards, one benefit per screen, and outcome or proof on screenshot 1. What sets the leaders apart is a panoramic 1→2 hero, a quantified or third-party proof point on screenshot 1, a human (coach or community) near the end, and trust or science as the closing argument. The strongest sets are Ladder, Noom, Lose It!, Clue and AllTrails.
 
-### Cited Findings (each from the screenshots in the library, sourced via the Lookup records above)
-- **Set size:** average 8.7 screenshots (10, 6, 9, 10, 9, 7, 10, 10, 10, 6). Five apps use the full 10: Lose It!, Sleep Cycle, Hevy, Ladder, AllTrails. All are portrait — [Lookup records](https://itunes.apple.com/lookup?id=297368629&country=us)
-- **Panorama / continuity:** 5 of 10. True 1→2 panoramas with an uncaptioned screenshot 2: Sleep Cycle, Hevy, Ladder. Noom has a 1→2 panorama plus a whole-set line motif. AllTrails uses a swoosh from 1 into 2. Sleep Cycle also has a continuous sky background across all 10 — [Sleep Cycle](https://itunes.apple.com/lookup?id=320606217&country=us), [Ladder](https://itunes.apple.com/lookup?id=1502936453&country=us)
-- **Proof on screenshot 1:** 5 of 10.
+The product-page refresh adds one new cross-app pattern. The two legacy weight-loss programs, Noom and WW, now sell **GLP-1 medication access** in their screenshots (Noom 6–7, WW 1/3/4) and in Noom's subtitle.
+
+### Cited Findings (each from the product-page screenshots in the library; app pages linked in Q1)
+- **Set size:** average 8.9 screenshots (10, 6, 8, 10, 9, 10, 10, 10, 10, 6). Six apps use the full 10: Lose It!, Sleep Cycle, WW, Hevy, Ladder, AllTrails. All are portrait — [product pages, e.g. WW](https://apps.apple.com/us/app/id331308914)
+- **Panorama / continuity:** 5 of 10. True 1→2 panoramas with an uncaptioned screenshot 2: Sleep Cycle, Hevy, Ladder. Noom has a 1→2 panorama (captioned 2) plus a dotted-path motif on 1 and 8. AllTrails uses a swoosh from 1 into 2. Sleep Cycle also has a continuous sky background across all 10 — [Sleep Cycle](https://apps.apple.com/us/app/id320606217), [Ladder](https://apps.apple.com/us/app/id1502936453)
+- **Proof on screenshot 1:** 4 of 10 (down from 5 in the Lookup sets, because WW dropped its claim).
   - Lose It!: "#1 Weight Loss Tracker" + "As seen on" CNN / TODAY / People / GMA / Women's Health.
-  - WW: "#1 doctor-recommended", with a survey footnote.
-  - Ladder: two 2024 awards (Women's Health, CNET).
+  - Ladder: "App Store App of the Year 2025 Finalist" on 1, plus 2026 Women's Health and CNET awards on 2.
   - Hevy: "Apps We Love" laurel + 5 stars.
   - AllTrails: a scale number, "500,000+ trails".
 
-  Placed elsewhere: Clue's "Chosen by 100M" sits on screenshot 3, and Noom's "78% of Noomers lost weight in a six-month study" is the *last* frame. No app shows its star rating or rating count as text — [Lose It!](https://itunes.apple.com/lookup?id=297368629&country=us), [WW](https://itunes.apple.com/lookup?id=331308914&country=us), [Noom](https://itunes.apple.com/lookup?id=634598719&country=us)
+  WW's slot 1 is now a "new app" promise ("Weight-loss programs, support, and medications in one place") with no proof. The older "#1 doctor-recommended" claim is gone. Placed elsewhere: Clue's "Chosen by 100M" sits on screenshot 3. Noom's "8 out of 10 members say Noom is a life-changing program" (footnoted to 63 of 82 GLP-1 users at month 6) is the *last* frame. No app shows its star rating or rating count as text — [Lose It!](https://apps.apple.com/us/app/id297368629), [WW](https://apps.apple.com/us/app/id331308914), [Noom](https://apps.apple.com/us/app/id634598719)
 - **Visual treatment:**
-  - Device frames on most or all slides: Lose It!, BetterMe (2–6), Sleep Cycle, WW, Hevy, Ladder, AllTrails.
-  - Frameless floating cards: Noom, Clue, Yuka.
-  - Lifestyle photos with people: BetterMe 1, WW 1, Clue 5–6, AllTrails 10, Noom 9 (food).
-  - In-UI people: Ladder coaches, the Noom coach avatar, community avatars in Lose It! and Hevy.
-- **Colour:** every set holds one background treatment across the set. Only Hevy 10 (dark mode), AllTrails 1 (dark hero) and Ladder 1–2 (neon hero) break it, and all three are deliberate hero or closer frames.
-  - Light/neutral: BetterMe cream, AllTrails sage, Hevy grey/blue, Ladder white.
-  - Saturated brand colour: Lose It! navy, Noom salmon, Clue red, WW violet, Yuka green.
+  - Device frames on most or all slides: Lose It!, BetterMe (2–6), Noom (2–7), Sleep Cycle, WW, Hevy, Ladder, AllTrails.
+  - Frameless floating cards: Clue, Yuka.
+  - Lifestyle photos with people: BetterMe 1, Clue 5–6, AllTrails 10, Noom 8 (woman eating an orange). WW no longer uses one.
+  - In-UI people: Ladder coaches, WW's MD clinician (3), Noom's chief medical officer avatar (7), community avatars in Lose It! and Hevy.
+- **Colour:** every set holds one background treatment across the set. Only Hevy 10 (dark mode), AllTrails 1 (dark hero), Ladder 1–2 (neon hero) and Noom 8 (photo closer) break it, and all four are deliberate hero or closer frames.
+  - Light/neutral: BetterMe cream, AllTrails sage, Hevy grey/blue, Ladder white, Noom pale lavender-grey.
+  - Saturated brand colour: Lose It! navy, Clue red, WW royal blue, Yuka green.
   - Atmospheric: Sleep Cycle.
-- **Typography:** sans dominates. Serif is used by Noom (entire set), Sleep Cycle (entire set) and Clue 1 (italic accent) to signal "science / calm / premium". Heavy ALL-CAPS is used by Hevy and Ladder (gym tone) and by Yuka (keyword only).
+- **Typography:** sans dominates. Serif is used by Sleep Cycle (entire set), Noom (bookend frames 1 and 8 only; 2–7 are now sans) and Clue 1 (italic accent) to signal "science / calm / premium". Heavy ALL-CAPS is used by Hevy and Ladder (gym tone) and by Yuka (keyword only). WW uses a condensed bold sans.
 - **Features and surfaces:**
   - Apple Health: Lose It! 8, Clue 6.
-  - Apple Watch: Ladder 7 (hardware render), Lose It! 8 (icon).
+  - Apple Watch: Ladder 8 (hardware render), Lose It! 8 (icon).
   - Lock-screen notifications: Clue 5.
   - Home-screen widgets and Live Activities: none.
-  - "AI" in a headline: only Sleep Cycle ("AI Sleep Coach").
-  - Photo food recognition without the word "AI": Lose It! 3, WW 2, Noom 5.
-- **Premium, price and community:** no set shows price, a "Premium" label or a trial. Community/social appears in Lose It! 9, Hevy 5/7/8, Ladder 10 and Yuka 5. A human coach appears in Noom 8 and Ladder 5/10.
-- **Personalised outcome:** Noom 2 ("We predict you'll be 150 lbs by May 8… lose 9 lbs or 5% of your body weight") and Lose It! 4 ("↓21 lbs since…") are the only frames that show a quantified personal future or past result.
+  - "AI" in a headline: Sleep Cycle ("AI Sleep Coach") and WW ("NEW! AI Body Scanner…", slot 7).
+  - Photo food logging: Lose It! 3, WW 8 ("See it, snap it, log it"), Noom 4, Ladder 4 ("TRACK MACROS").
+  - **GLP-1 / weight-loss medication:** Noom 6 (Wegovy pen, "Check in with your doctor UNDER 3 MINUTES") and 7 (Muscle Defense™ "for weight loss medication"). WW 1 ("…and medications in one place"), 3 ("Access to weight loss medications through expert Clinicians (if you qualify)") and 4 ("NEW! GLP-1 Success Program"). No other group B app mentions medication.
+  - "NEW!" labels: WW 4–7 only.
+- **Premium, price and community:** no set shows price, a "Premium" label or a trial. Community/social appears in Lose It! 9, Hevy 5/7/8, Ladder 10 and Yuka 5. A human coach or clinician appears in Ladder 6/10 and WW 3 (MD). Noom no longer shows its coach chat.
+- **Personalised outcome:** Noom 2 ("We predict you'll be 150 lbs by May 8… lose 9 lbs or 5% of your body weight") and Lose It! 4 ("↓21 lbs since…") are still the only frames that show a quantified personal future or past result.
 
 ### Inferences
 - **Strongest sets, in my judgement:**
-  1. **Noom.** It sells the *mechanism* ("psychology") rather than features. Its predicted-outcome chart makes the benefit personal and dated, the coach frame humanises it, and the science stat closes it. The structure maps most directly to a behaviour-change quit app.
-  2. **Ladder.** It has the highest-contrast hero (neon + extended caps + two awards) and a panorama that reads as one billboard in search, with real coaching faces and Apple Watch.
+  1. **Ladder.** It has the highest-contrast hero (neon + extended caps), now with the strongest proof stack in the group (an App Store App of the Year 2025 finalist laurel on 1 plus two 2026 awards on 2). Its panorama reads as one billboard in search, with real coaching faces and Apple Watch.
+  2. **Noom.** It still sells the *mechanism* ("psychology") on 1–2, and its predicted-outcome chart makes the benefit personal and dated. The current set is less pure, though: the coach frame is gone, two GLP-1 frames take over 6–7, and the closing stat is now satisfaction among 82 GLP-1 users, not weight loss. Its first three frames (mechanism → prediction → daily plan) are still the best behaviour-change template for a quit app.
   3. **Lose It!.** It makes a dense credibility stack on screenshot 1 (#1 + 5 press logos) and then gives a very legible one-verb-per-screen feature run.
   4. **Clue.** It uses an emotional brand colour and puts trust chips ("Strict data privacy", "Science-backed", "Women-led", "Chosen by 100M") inside feature frames — relevant to a sensitive-health app.
   5. **AllTrails.** One giant number on 1 and a press-quote lifestyle closer on 10.
-- **Weakest:** BetterMe, which has generic captions and no proof, differentiation or outcome. Hevy is clear but has dated device frames.
+- **Weakest:** BetterMe, which has generic captions and no proof, differentiation or outcome. Hevy's frames are no longer dated on the product page, but its captions are generic ("TRACK MEASUREMENTS"). WW's current set is a feature-and-announcement list ("NEW!" ×4) that lost its slot-1 proof. Its medication pivot is strategically clear but carries no evidence.
+- **Medication pivot (inference):** Noom and WW, the two legacy diet programs in the group (874k and 2.37M ratings), now put GLP-1 access mid-set or on slot 1. Neither of their older 5.5" sets mentioned medication. I don't know when the switch happened. For DayXero it suggests that pharmacological help is a mainstream screenshot message in adjacent health categories. The quit category's treatment of NRT (see `quit_apps.md`) is the analogue.
 - **Implications for DayXero (inference):**
   - Lead with an outcome or mechanism claim plus proof on 1, ideally as a panorama 1→2.
   - Make the visible trio (1–3) carry claim, personal outcome (e.g. a days-nicotine-free counter, money saved, health recovery timeline — the analogue of Noom's prediction chart) and the core daily mechanic.
@@ -276,3 +291,4 @@ The common pattern is short 2-line top captions on a single consistent brand col
 ### Gaps
 - I did not measure conversion: these are qualitative judgements, and none of the apps' A/B or Product Page Optimization results are public.
 - The analysis covers only the default product page. Custom Product Pages tied to ads may tell a different story.
+- Product Page Optimization tests could mean another visitor sees a different default set. I fetched each page once (2026-11-20) and cannot rule this out.

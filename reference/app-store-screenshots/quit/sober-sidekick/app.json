@@ -20,5 +20,28 @@
   ],
   "storeUrl": "https://apps.apple.com/us/app/sober-sidekick-quit-addiction/id1448251580?uo=4",
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id1448251580",
+    "deviceClass": "6.5\" (1284x2778)",
+    "phoneVideoItems": 0,
+    "subtitle": "Reframe: Drink Less Alcohol",
+    "result": "changed: new creative set"
+  },
+  "productPageScreenshotUrls": [
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/c5/1a/1b/c51a1b9d-2f66-9b58-165f-47fafbdad492/01.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/75/29/b1/7529b1c2-a061-f65f-169b-7a2af806b914/02.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/27/6a/46/276a46df-8976-43d9-0547-be6a514bf7e1/05.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c2/b1/97/c2b19711-0bf4-2e0e-8209-8e7c59190807/08.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/14/04/29/1404291b-b2c5-b4c7-b200-bdbe3d8daa5a/10.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/3d/41/2c/3d412c9d-80b1-e60f-0569-bbcc3da975bc/09.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/cf/d9/4b/cfd94b6e-a859-ad42-8a36-fca2d9abc9f8/03.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b1/d3/96/b1d396eb-07fe-e9f6-77db-fd9aa5f39186/07.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/33/bc/fd/33bcfd4a-fb43-a6cb-2b72-870cb9846f73/06.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/66/33/81/6633810e-ad82-d032-fcaf-d63f9e270688/04.png/600x0w.jpg"
+  ],
+  "productPageDeviceClass": "6.5\" (1284x2778)",
+  "productPageFetched": "2026-11-20",
+  "note": "Root 01.jpg.. = iPhone set shown on apps.apple.com/us product page (largest uploaded display class). api-lookup-set/ = earlier images from iTunes Lookup screenshotUrls (smaller/older device class)."
 }

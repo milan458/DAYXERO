@@ -22,5 +22,28 @@
   ],
   "storeUrl": "https://apps.apple.com/us/app/quitsure-quit-smoking-vaping/id1523992725?uo=4",
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id1523992725",
+    "deviceClass": "6.5\" (1242x2688)",
+    "phoneVideoItems": 0,
+    "subtitle": "Clinically proven. 81% success",
+    "result": "changed: same creative, larger device class only"
+  },
+  "productPageScreenshotUrls": [
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/bf/da/87/bfda871d-9de1-6c49-b362-3fde8bff907c/1.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/47/2f/49/472f4984-035b-d54c-afd3-27f53907a957/Artboard_2.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ed/60/3a/ed603a82-f958-42a2-1497-a930711a25ee/3.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/a4/be/3e/a4be3e9d-fa20-2ded-ec78-7566026d382f/Artboard_6.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/21/db/a4/21dba486-e1ba-4e81-e275-d07fda521a37/Artboard_9.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/38/c6/a6/38c6a645-91fa-acf1-d33b-561812f768d4/Artboard_7.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/21/f2/25/21f225a3-0a15-cd1c-775e-0e04b8271e08/quit_msoking_effortlesy_-_6.5_inch_screen.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/85/59/34/85593453-9977-326b-7f5c-5b12787d05f3/aas-mascot-screenshot-v3-04.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/92/a7/e6/92a7e6d2-4935-d42a-bc13-da8f112992b2/aas-mascot-screenshot-12.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/9a/c2/0c/9ac20cab-da65-1e08-6206-1748553e28e7/Artboard_4.png/600x0w.jpg"
+  ],
+  "productPageDeviceClass": "6.5\" (1242x2688)",
+  "productPageFetched": "2026-11-20",
+  "note": "Root 01.jpg.. = iPhone set shown on apps.apple.com/us product page (largest uploaded display class). api-lookup-set/ = earlier images from iTunes Lookup screenshotUrls (smaller/older device class)."
 }

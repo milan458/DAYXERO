@@ -1,6 +1,28 @@
 # App Store screenshot benchmark: top 10 US "quit" apps (fetched 2026-11-20)
 
-Library root: `/home/user/DAYXERO/reference/app-store-screenshots/quit/`. Each `{slug}/` folder holds `01.jpg…NN.jpg` (600px wide, in store order), `_sheet.jpg` (contact sheet at 300px per screen) and `app.json` (id, name, seller, rating, ratingCount, version, original screenshotUrls, fetched date). Everything comes from `itunes.apple.com/lookup?id=…&country=us` on 2026-11-20, iPhone screenshots only. All headline quotes below were read off the images. The image files and the lookup JSON are the primary sources. For each app the cited source is its US App Store listing.
+**Capture method (refreshed 2026-11-20).** The images analysed are the iPhone set shown on each app's US product page today. I fetched `https://apps.apple.com/us/app/id{ID}` with plain curl, read the `product_media_phone_` shelf from the page's embedded JSON (the largest display class the app uploaded) and downloaded each frame at 600px wide. The Lookup API sets described below as "original" were often an older or smaller (5.5") upload. Per app:
+- **Byte-identical** (5): Smoke Free, Reframe, Exhale; QuitNow and Puff Count have new file URLs but visually identical creatives, so their root images were kept.
+- **New creative sets** (3): **Quit Vaping**, **Kwit**, **Sober Sidekick** (8 → 10 frames).
+- **Same creative, larger device class only** (3): QuitSure, EasyQuit, I Am Sober.
+
+For the 6 replaced sets, the older Lookup images are in `{slug}/api-lookup-set/`, and `app.json` gains `productPageScreenshotUrls`, `productPageDeviceClass`, `productPageFetched` and `productPageCheck`. **Smoke Free and QuitNow lead their product-page media with an App Preview video** before screenshot 1; poster frames are saved as `_video_poster.jpg`. Smoke Free's poster shows the dashboard "Time smoke free 5m 25d 20h" with health rings. QuitNow's poster is its "Track your quit journey at a glance" frame.
+
+Product-page subtitles (`lockup.subtitle` in the page JSON):
+- Smoke Free: "We can help you stop for good"
+- QuitNow: "Quit smoking for good"
+- Quit Vaping: "#1 App to Quit Vaping/E-Cigs"
+- Kwit: "A life without cigarettes!"
+- Puff Count: "Track Puffs and Quit Vaping"
+- QuitSure: "Clinically proven. 81% success"
+- EasyQuit: "Stop Smoking Now + Slow Mode"
+- I Am Sober: "Sobriety tracker for recovery"
+- Reframe: "Cut Back or Quit Alcohol Habit"
+- Sober Sidekick: "Reframe: Drink Less Alcohol" (a competitor's name, rendered 3 times on its own page)
+- Exhale: "Best App to Quit Vaping/E-Cigs"
+
+Change summary: `refresh_current_sets.md` in this folder.
+
+Library root: `/home/user/DAYXERO/reference/app-store-screenshots/quit/`. Each `{slug}/` folder holds `01.jpg…NN.jpg` (600px wide, in store order), `_sheet.jpg` (contact sheet at 300px per screen) and `app.json` (id, name, seller, rating, ratingCount, version, original screenshotUrls, fetched date). Rating counts and metadata come from `itunes.apple.com/lookup?id=…&country=us` on 2026-11-20. Screenshots are the iPhone product-page sets described in the capture note above. All headline quotes below were read off the images. The image files, the product-page JSON and the lookup JSON are the primary sources. For each app the cited source is its US App Store listing.
 
 ## Q1. Which apps are the top 10, and how confident is the ranking?
 
@@ -21,7 +43,7 @@ Ranking table, US storefront, lookup API on 2026-11-20 (rating count / average /
 | 7 | EasyQuit - Stop Smoking (Mario Herzberg) `easyquit/` | cigs | 1,155 | 4.66 | 10 | 2020 | [App Store](https://apps.apple.com/us/app/id1508110799) |
 | 8 | I Am Sober `i-am-sober/` | multi-addiction | 191,610 | 4.88 | 9 | 2013 | [App Store](https://apps.apple.com/us/app/id672904239) |
 | 9 | Reframe: Drink Less & Thrive (Glucobit) `reframe/` | alcohol | 45,738 | 4.73 | 10 | 2020 | [App Store](https://apps.apple.com/us/app/id1485756576) |
-| 10 | Sober SideKick: Quit Addiction `sober-sidekick/` | alcohol/AA-NA | 8,136 | 4.83 | 8 | 2019 | [App Store](https://apps.apple.com/us/app/id1448251580) |
+| 10 | Sober SideKick: Quit Addiction `sober-sidekick/` | alcohol/AA-NA | 8,136 | 4.83 | 10 (Lookup: 8) | 2019 | [App Store](https://apps.apple.com/us/app/id1448251580) |
 | bonus | Exhale - Quit Vaping Now `exhale-quit-vaping/` | vape | 313 (in about 8.5 months) | 4.63 | 5 | 2026-03-01 | [App Store](https://apps.apple.com/us/app/id6756926563) |
 
 - Candidates checked and left out, with US rating counts from the same lookup:
@@ -40,9 +62,10 @@ Ranking table, US storefront, lookup API on 2026-11-20 (rating count / average /
 - Download claims made in the listings themselves:
   - Smoke Free: "Eight million downloads worldwide" (screenshot 01).
   - QuitSure: "Over 3 MILLION downloads" (screenshot 02). This conflicts with "Trusted by 2 million+ smokers" quoted from the iOS listing by [search snippet sources](https://appgoblin.info/apps/1523992725).
-  - Kwit: "5+ million people" (description).
+  - Kwit: "5+ million people" (description), and "+5M users" laurel (product-page screenshot 01).
   - Puff Count: "over 800,000 users" (description).
-  - Quit Vaping: "Join over a million" (screenshot 04).
+  - Quit Vaping: "1M+ members quitting together" (product-page screenshot 05), plus "#1 APP To quit Vaping" and "4.9 Rating Global Ranking" laurels (screenshot 01). The older Lookup set said "Join over a million".
+  - Sober Sidekick: "2M Sobriety Goals Completed" (product-page screenshot 04).
   - Reframe: "Trusted by 2 million + users" (screenshot 10).
 - The Sensor Tower Q4 2025 US Health & Fitness top-5 lists contain no quit apps ([Sensor Tower](https://sensortower.com/blog/2025-q4-ios-top-5-health-and-fitness-units-us-600af518241bc16eb8dce802)). Public Appfigures profile pages show no numbers ([Appfigures](https://appfigures.com/reports/app-profile/319978592229/downloads)).
 
@@ -53,22 +76,25 @@ Ranking table, US storefront, lookup API on 2026-11-20 (rating count / average /
 ### Gaps
 - I could not get real download estimates. Sensor Tower, Appfigures and AppMagic are paywalled, and no article published current US download ranks.
 - I could not get App Store search-result order for "quit smoking" or "quit vaping": `/search` returns 403 and web search does not reproduce in-store ranking.
-- App subtitles are not in the lookup API, so they were not captured.
+- App subtitles are not in the lookup API. They have since been captured from the product pages (see the capture note at the top).
 
 ## Q2. Per-app screenshot analysis (verbatim headlines, design, sequencing, claims)
 
 ### Takeaway
-The category runs on a fixed formula: one headline (2–8 words) over a framed UI screen, with a live counter, money saved, health rings and badges in the first 2–5 slots. The apps differ mainly in **slot 1**:
-- Social-proof numbers: Smoke Free.
-- Authority badges: QuitNow, Kwit, Reframe.
-- A question to the reader: Quit Vaping, Puff Count, QuitSure.
-- A feature: EasyQuit, I Am Sober.
+The category runs on a fixed formula: one headline (2–8 words) over a framed UI screen, with a live counter, money saved, health rings and badges in the first 2–5 slots. The apps differ mainly in **slot 1** (product-page sets):
+- Social-proof numbers: Smoke Free, Quit Vaping ("#1 APP", "4.9 Rating", plus a "Doctor Approved" seal), Kwit ("+5M users" plus the WHO emblem).
+- Authority badges: QuitNow, Reframe.
+- A question to the reader: Puff Count, QuitSure.
+- A feature or counter: EasyQuit, I Am Sober, Sober Sidekick (an uncaptioned panorama counter card), Exhale.
+
+On the product page, Smoke Free and QuitNow show an App Preview video *before* slot 1.
 
 They also differ in how far they go on **evidence claims**. QuitSure and Reframe make the strongest numerical claims.
 
 ### Cited Findings
 
-#### 1. Smoke Free (`smoke-free/`, 10 shots, 600×1299, i.e. a 6.5"/6.7" set) — [listing](https://apps.apple.com/us/app/id577767592)
+#### 1. Smoke Free (`smoke-free/`, 10 shots, 600×1299, 6.5" class 1242×2688; product page unchanged) — [listing](https://apps.apple.com/us/app/id577767592)
+- **App Preview video first:** the product page plays a video before screenshot 1. Its poster (`_video_poster.jpg`) is the dashboard, "Time smoke free 5m 25d 20h", with health rings (Immunity and lung function 100%, Reduced risk of heart disease 48%, Decreased risk of lung cancer 4%).
 - **Headlines in order:**
   1. "Eight million downloads worldwide"
   2. "A stop smoking plan that works"
@@ -104,7 +130,8 @@ They also differ in how far they go on **evidence claims**. QuitSure and Reframe
 - **Tone:** warm, inclusive, supportive, with human experts. Relapse is not shown.
 - **Evidence:** screenshots claim only "a plan that works" and "real experts". The description claims "over 40 different, evidence-based techniques" and an AI Quit Coach "proven to further increase your chances of success" ([listing](https://apps.apple.com/us/app/id577767592)).
 
-#### 2. QuitNow (`quitnow/`, 7 shots, 600×1300) — [listing](https://apps.apple.com/us/app/id483994930)
+#### 2. QuitNow (`quitnow/`, 7 shots, 600×1300, 6.5" class; product page shows the same creatives) — [listing](https://apps.apple.com/us/app/id483994930)
+- **App Preview video first:** the product page plays a video before screenshot 1. Its poster (`_video_poster.jpg`) is the "Track your quit journey at a glance" frame. The first thing a visitor sees is therefore likely the tracking screen, not the WHO/App of the Day slide. This is an inference: I did not play the video.
 - **Headlines in order** (the green highlight-pill words are given in brackets):
   1. "The easy way to quit smoking"
   2. "Track your [quit journey] at a glance"
@@ -132,65 +159,63 @@ They also differ in how far they go on **evidence claims**. QuitSure and Reframe
 - **Tone:** calm, friendly, shame-free, factual. No relapse shown.
 - **Evidence:** WHO recommendation badge and "facts from the WHO". The description says its indicators "are the same ones published by the World Health Organization" ([listing](https://apps.apple.com/us/app/id483994930)). This is the only set besides EasyQuit to show a watch or widget surface.
 
-#### 3. Quit Vaping (`quit-vaping/`, 10 shots, 600×1067, an older 5.5" set) — [listing](https://apps.apple.com/us/app/id1479615245)
-- **Headlines and subheads in order:**
-  1. "Ready to Quit?"
-  2. (no caption; the tilted phone continues from slide 1 as a panorama)
-  3. "Buddy System" / "Quit with a friend and track eachother's progress"
-  4. "Community" / "Join over a million helping eachother become vape free" (caption at the bottom)
-  5. "Vape Tracker" / "Easily view all info about your current progress"
-  6. "Take the Pledge" / "Track your cravings, triggers and journal entries" (bottom)
-  7. "Leaderboard" / "Compete against your friends to stay vape free!"
-  8. "Calm" / "Stop cravings with a session of guided breathing & meditation" (bottom)
-  9. "Goals" / "Complete goals and earn badges!"
-  10. "Streak Tracker" / "Keep track of past vape free streaks" (bottom)
+#### 3. Quit Vaping (`quit-vaping/`, 10 shots, 600×1300, 6.9" class 1290×2796; **new creative set**) — [listing](https://apps.apple.com/us/app/id1479615245)
+- **Older set:** the Lookup API's 5.5" set ("Ready to Quit?" over a purple gradient with iPhone 8 bezels, "eachother" typos and a mismatched "Take the Pledge" caption) is kept in `quit-vaping/api-lookup-set/`.
+- **Headlines / subheads in order** (second headline line in a colour accent):
+  1. "Quit vaping. For real this time." — no subhead; laurels "#1 APP To quit Vaping" and "4.9 Rating Global Ranking", plus a teal "DOCTOR APPROVED" seal.
+  2. "Don't quit alone." / "Team up with a friend and track each other's progress."
+  3. "Cut down your way." / "Log every puff and watch your nicotine intake drop."
+  4. "Watch your body heal." / "See your lungs, heart and brain recover."
+  5. "Join the community." / "Get support from people quitting right alongside you."
+  6. "Every day counts." / "Keep your current and past vape-free streaks in view."
+  7. "Breathe through it." / "Guided breathing and meditation to ease cravings."
+  8. "Quit together. Win together." / "Climb the leaderboard with your friends."
+  9. "Beat your cravings." / "Track moods and triggers, and journal your way through."
+  10. "Hit goals. Earn badges." / "Celebrate every milestone on your way to vape-free."
 - **Design:**
-  - Purple-violet gradient. Captions alternate between top and bottom.
-  - Heavy white sans title with a lighter subhead.
-  - Old iPhone 8-style bezels.
-  - The app UI is dark mode with bright green cards and gets busy.
-  - Typos: "eachother".
-  - The caption and screen on slide 6 don't match: "Pledge" sits over a mood pie chart and craving journal.
-- **Slot 1:** a question ("Ready to Quit?") over a counter accurate to the second: "You've been vape free for 30 Days 2 Hours 6 Minutes and 41 Seconds". Also shown: money saved $85.97, completed goals 12/23, longest streak, and a "Remember why you quit" quote.
-- **Slots 1–3:** counter, then health rings (Lungs 70%, Heart 45%, Brain 50%, with a health achievement "It's been a heartfelt month!"), then a social buddy.
-- **Vape-specific metrics (slot 5):**
-  - "$75.36 money saved"
-  - "15 pods not vaped"
-  - "Puffs not taken: 27253"
-  - "Nicotine avoided: 5450mg"
-- **Relapse:** the slot-10 Streak Tracker shows a "Break your streak?" button and a "Past streaks" list. The model is reset-and-archive.
-- **Tone:** peer, gamified, competitive (leaderboard), with raw community voice. A shown post is titled "F*ck vaping".
-- **Evidence:** none in the screenshots. Social proof is "over a million" (slot 4).
+  - Each frame has its own soft pastel gradient (mint, lavender, sky, green, peach, purple).
+  - Very heavy black rounded sans headline in two short lines, with the second line in green, blue, red or purple. A small grey subhead sits under it.
+  - Current iPhone frames (Dynamic Island) over the dark-mode/green app UI.
+  - Floating chips: "75% less nicotine in just 7 days", "1M+ members quitting together", "Personal best 44 days vape free", "Goal unlocked! 1 day vape free".
+  - Small 3D/flat illustrations (money bag, meditating figure, people group, trophies).
+  - Captions are always at the top. Captions and screens match.
+- **Slot 1:** the brand promise plus three trust marks over the home screen: "You've been vape free for 35 Days 1 Hour 5 Minutes and 15 Seconds", money saved $119.88, completed goals 12/35, longest streak, "Remember why you quit: 'I quit to save money and improve my health'", and health rings 70/45/50%. The "Doctor Approved" seal names no doctor or body.
+- **Slot 3 (new, reduction + NRT):**
+  - Nicotine Tracker bar chart (16 mg → 4 mg over 7 days) and "You've consumed less nicotine then yesterday!" (sic).
+  - A "Devices & Replacements" section logging "Nicotine Lozenge 4mg, Nicotine consumed: 4mg".
+  - The header still reads "You've been vape free for 35D 1H 9M & 9S".
+  - So the set shows a **taper model where nicotine-replacement use does not break the vape-free counter**.
+- **Relapse:** slot 6 still shows the reset model: "Break your streak?" plus a "Past streaks" list (Recent / Oldest / Best) and a "Personal best" chip.
+- **Other features:** buddy profile with a "Why Jonathan quit" quote (2), health improvements with Lungs/Heart/Brain and money saved weekly/monthly/total (4), community posts such as "Reasons to Never Vape Again" (5), guided breathing and meditations (7), buddy leaderboard (8), mood donut and craving log with triggers such as "Drinking" (9), and a goals grid (10).
+- **Tone:** confident, upbeat, peer and gamified. The raw "F*ck vaping" post from the older set is gone.
+- **Evidence:** trust marks only: "#1 APP", "4.9 Rating – Global Ranking", "Doctor Approved" and "1M+ members". None is sourced. The subtitle repeats "#1 App to Quit Vaping/E-Cigs".
 
-#### 4. Kwit (`kwit/`, 10 shots, 600×1067) — [listing](https://apps.apple.com/us/app/id525441365)
+#### 4. Kwit (`kwit/`, 10 shots, 600×1299, 6.5" class 1242×2688; **new creative set**) — [listing](https://apps.apple.com/us/app/id525441365)
+- **Older set:** the Lookup API's 5.5" set (a sky-blue hills world, a "WHO" banner, an "App of the day" laurel, a green-boxed verb arc "Identify / Understand / Develop…" and a reviews closer) is kept in `kwit/api-lookup-set/`.
 - **Headlines in order:**
-  1. Speech bubble "Quit smoking with Kwit!" under a top banner "Application recommended by WHO". Slides 1–2 form one panorama.
-  2. "App of the day" laurel over a tilted phone.
-  3. "[Identify] your cravings"
-  4. "[Understand] how you feel"
-  5. "[Develop] the best strategies"
-  6. "[Check] your progress"
-  7. "[Share] your experience"
-  8. "[Feel] the benefits of quitting"
-  9. "[Enjoy] your new life"
-  10. No headline: two 5-star user reviews.
-- The verb in brackets sits in a green box.
+  1. "Quit smoking successfully!"
+  2. "5 minutes a day that can change everything"
+  3. "A real monitoring, not just a counter"
+  4. "Understand your triggers" (caption at the bottom)
+  5. "Customize your experience"
+  6. "Celebrate every victory" (bottom)
+  7. "See how far you have come"
+  8. "Engage with a supportive community" (bottom)
+  9. "Learn every day"
+  10. "Your success starts now!" (bottom)
 - **Design:**
-  - Pale sky-blue background with green hills and sparkles.
-  - Kwit's toast-like block mascot.
-  - Dark-grey rounded sans, centred, 3–4 words, with the verb highlighted in a green box.
-  - Modern iPhone frames, mostly upright.
-  - Pastel and playful, with the most coherent "world" in the set.
-- **Slot 1:** authority (WHO) plus brand promise plus mascot holding a no-smoking sign. Slot 2 adds the Apple "App of the day" laurel and the home screen ("How are you today?", daily mood check-in, "Kwitter for 10 days 01 h 25").
-- **Sequencing:** a CBT story arc in imperative verbs: identify → understand → develop → check → share → feel → enjoy.
-- **Craving flow (slots 3–5):**
-  - "I feel like smoking" strength slider.
-  - Emotion grid: Stressed, Lonely, Happy, Bored, Excited, Down, Angry, Anxious.
-  - "I choose an alternative" cards: let the craving go, get motivated, breathe, drink water.
-- **Slot 8:** a health timeline ("Health 2/22", e.g. "You have not inhaled 2 g of carbon monoxide").
-- **Slot 9:** stats "$4 508 saved", "17 556 liters of water saved" (an environmental angle unique to Kwit), "4745 cigarettes not smoked".
-- **Tone:** gentle, playful, emotion-first. Relapse is not shown.
-- **Evidence:** WHO badge and App of the Day. The description says "first WHO-validated smoking cessation app", "evidence-based cognitive behavioral therapy" and "5+ million people" ([listing](https://apps.apple.com/us/app/id525441365)).
+  - Soft pastel gradients that shift frame to frame (mint, lilac, pink, peach, cream).
+  - A wide white "path" ribbon winds through all 10 frames as a continuity motif.
+  - Dark-grey rounded sans, left-aligned, 2–3 lines, 3–8 words. Captions alternate top and bottom.
+  - Modern iPhone frames (Dynamic Island), some tilted or cropped.
+  - Pastel cat-like mood characters, and Kwit's green block mascot on 1 and 10.
+- **Slot 1:** promise plus proof. A "+5M users" laurel and the WHO emblem (no text) sit over a tilted "My progress" screen ("Kwitter for 10 days 01 hours", money 65, cigarettes 10, time 10 days, life 3 days). The mascot in glasses snaps a cigarette. The older set's "App of the day" laurel is gone.
+- **Slot 2, time-boxed daily routine:** "5 minutes a day that can change everything" over the home screen ("Hello, Marie", a My week streak, Today 2:18:29, task cards: My positive…, Mood tracking "How are you?", Read an article…, "What was important today?").
+- **Slot 3, slips logged without a reset:** "A real monitoring, not just a counter". The "I feel like smoking" action grid offers **"I overcame a craving" / "I smoked" / "I write a memory" / "I breathe" / "I get motivated" / "I set up my substitutes"**. A smoked cigarette is a normal log entry next to a resisted craving.
+- **Slots 4–5:** craving intensity slider, emotion grid (Stressed, Alone, Happy, Bored, Excited, Depressed, Angry, Anxious) and situation chips ("I am on the phone", "I am taking a break"). Then a personal strategy builder ("I take a walk").
+- **Slots 6–10:** trophies 10/36 ("Perfect Month", "A New Beginning", "The Statistician", "Inner Peace"…); stats (Kwitter for 10 d 01 h 25 min, money 65, cigarettes 130, time 10 days, life 3 days); a community thread ("SOS! Day 5 and I'm feeling overwhelmed… How do you handle cravings when it gets too tough?" with replies such as "Hang in there! Day 5 is one of the hardest."); "Our best tips" articles; and a mascot-only closer.
+- **Tone:** gentle, playful, emotion-first. A slip ("I smoked") is shown as data, not failure, although no caption says so.
+- **Evidence:** "+5M users" and the WHO emblem on slot 1. Money is shown without a currency symbol. The description says "first WHO-validated smoking cessation app", "evidence-based cognitive behavioral therapy" and "5+ million people" ([listing](https://apps.apple.com/us/app/id525441365)).
 
 #### 5. Puff Count (`puff-count/`, 5 shots, 600×1300) — [listing](https://apps.apple.com/us/app/id1488580640)
 - **Headlines in order:**
@@ -212,7 +237,8 @@ They also differ in how far they go on **evidence claims**. QuitSure and Reframe
 - **Tone:** neutral and data-driven, "at your own pace". No shame and no relapse framing; reduction makes slips implicit.
 - **Evidence:** none in the screenshots. The description says "over 800,000 users". It is listed under Lifestyle, not Health & Fitness ([listing](https://apps.apple.com/us/app/id1488580640)).
 
-#### 6. QuitSure (`quitsure/`, 10 shots, 600×1067) — [listing](https://apps.apple.com/us/app/id1523992725)
+#### 6. QuitSure (`quitsure/`, 10 shots, 600×1299, 6.5" class 1242×2688; same creative as the 5.5" Lookup set, now in `api-lookup-set/`) — [listing](https://apps.apple.com/us/app/id1523992725)
+- **Product-page notes:** the taller frame shows a third slot-3 toolkit item that the earlier notes did not list, "Immersive exercises – Mental exercises to transform how you think and feel about smoking". The product-page subtitle is "Clinically proven. 81% success", so the 81% claim is now also in the subtitle.
 - **Headlines in order:**
   1. "Addicted to smoking?" with subhead "Quit smoking at your own pace"
   2. "Rewire your brain with neuroscience" with laurel "Over 3 MILLION downloads"
@@ -248,7 +274,7 @@ They also differ in how far they go on **evidence claims**. QuitSure and Reframe
 - **Evidence:** "81% quit completely*" with UCSF, "Over 3 MILLION downloads", and the effortlessness claims. The description adds "96% of quit attempts fail" and "Grounded in principles of psychology, neuroscience" ([listing](https://apps.apple.com/us/app/id1523992725)).
 - **Conflicting numbers:** an in-app lesson cites "95% success" and "100,000+ clients" (local note `/home/user/DAYXERO/research_notes/quitsure_day1_teardown.md`). The 81%/95% and 3M/2M figures disagree across QuitSure's own surfaces.
 
-#### 7. EasyQuit (`easyquit/`, 10 shots, 600×1067) — [listing](https://apps.apple.com/us/app/id1508110799)
+#### 7. EasyQuit (`easyquit/`, 10 shots, 600×1299, 6.5" class 1242×2688; same creative as the 5.5" Lookup set, now in `api-lookup-set/`, re-framed in iPhone X-style notch frames) — [listing](https://apps.apple.com/us/app/id1508110799)
 - **Headlines in order:**
   1. "All Statistics On One Page"
   2. "Motivational Health Section"
@@ -278,7 +304,7 @@ They also differ in how far they go on **evidence claims**. QuitSure and Reframe
   - Tips and a diary.
 - **Tone:** neutral and utilitarian. No relapse, social proof or evidence.
 
-#### 8. I Am Sober (`i-am-sober/`, 9 shots, 600×1067) — [listing](https://apps.apple.com/us/app/id672904239)
+#### 8. I Am Sober (`i-am-sober/`, 9 shots, 600×1299, 6.5" class 1242×2688; same creative as the 5.5" Lookup set, now in `api-lookup-set/`) — [listing](https://apps.apple.com/us/app/id672904239)
 - **Headlines in order:**
   1. "Quit Any Addiction"
   2. "Track Your Sobriety"
@@ -335,26 +361,31 @@ They also differ in how far they go on **evidence claims**. QuitSure and Reframe
 - **Tone:** science-y, aspirational, non-judgemental ("manage", "drink less", not "quit").
 - **Evidence:** the heaviest proof stack in the benchmark. The description says "#1 alcohol reduction app" and "core 160-day, evidence-based, education program" ([listing](https://apps.apple.com/us/app/id1485756576)).
 
-#### 10. Sober Sidekick (`sober-sidekick/`, 8 shots, 600×1067) — [listing](https://apps.apple.com/us/app/id1448251580)
-- **Headlines and subheads in order:**
-  1. "Track Sobriety" / "One Day At A Time"
-  2. "Sober Social Community" / "You're Never Alone"
-  3. "Quit Drinking Today"
-  4. "24/7 AA & NA Meetings"
-  5. "Recovery Resources" / "Instant Support When You Need It"
-  6. "Take The First Step!" / "Get Sober & Stay Motivated"
-  7. "Feel The Love" / "Gratitude-Based Community"
-  8. "Judgement Free" / "We Are In This Together!"
+#### 10. Sober Sidekick (`sober-sidekick/`, 10 shots, 600×1298, 6.5" class 1284×2778; **new creative set**) — [listing](https://apps.apple.com/us/app/id1448251580)
+- **Older set:** the Lookup API's 8-frame 5.5" set ("Track Sobriety / One Day At A Time" … "Judgement Free / We Are In This Together!", alternating teal and periwinkle, iPhone X frames) is kept in `sober-sidekick/api-lookup-set/`.
+- **Headlines in order** (accent words in brackets, in bold orange or magenta):
+  1. (no caption) The left half of a 1→2 panorama phone.
+  2. "Your Path to Sobriety Starts [Here.]"
+  3. "Access Support Whenever [You Need It.]"
+  4. "Join a [Trusted Community] of Change."
+  5. "Take the First Step Toward a [Better Life.]"
+  6. "Commit to Your Sobriety Journey [Today.]"
+  7. "Celebrate [Every] Milestone."
+  8. "Everything You Need in [One Place.]"
+  9. "Stay Inspired, [Stay Strong.]"
+  10. "[You're Not Alone] Join Thousands on the Recovery Journey."
 - **Design:**
-  - Alternating teal and periwinkle with a wave.
-  - Chunky rounded white Title Case plus a lighter subhead.
-  - iPhone X frames, some tilted.
-  - Floating chat-chip stickers: "Struggling In Recovery?", "Send Support", "Talk To Someone Now", "We're in this together!".
-  - Real user photos in feed posts.
-- **Slot 1:** counter chips ("487 Days / 16 Months / 1 Years") over a community post. Recovery-program language is used throughout.
-- **Features:** 24/7 Zoom meetings ("Join 24/7 Zoom Meeting"), "Today's Top Users", unlockable motivations, and a "Talk To Someone Now" crisis support entry.
-- **Tone:** the most explicitly **shame-free**. A shown comment says to leave guilt and shame behind and focus on the long game. The final slide reads "Judgement Free".
-- **Evidence:** none.
+  - The same vertical teal → violet gradient on every frame, joined by thin dashed connector lines across frame edges.
+  - Light-weight white sans headlines, 3–4 lines, with one bold coloured phrase. Captions sit at the top, left-aligned on 2 and centred elsewhere.
+  - Current iPhone frames (Dynamic Island). Cards break out of the frame (Meetings, Reads).
+  - Real user photos (landscapes, a sunset pier, a hiker) in feed posts.
+- **Slots 1–2:** an oversized tilted phone with a floating share card: "My life is worth the work", 2 Years / 28 Mon… / 874 Days, #SoberSidekick. The screen below shows "USD 8740 Money Saved", members supported, and milestone bars ("2 Year – 221 days until next Year milestone", "29 Month"). Slot 2 adds the "Never Alone" app icon.
+- **Slot 4, a social-proof card with no UI:** ★★★★★, "2M Sobriety Goals Completed.", and the testimonial "Being in recovery has given me everything of value that I have in my life. – Jeff. K".
+- **Features:** 24/7 AA and NA meetings ("Join Meeting"), Reads ("Just For Today Meditation", "Why I started Sober Sidekick"), Listens (YouTube "The Day You Want To Quit"), a "Getting Started" journey card, "My Comeback Story" ("One Day At A Time – Progress not perfection") and "Today's most supportive members" ("Gave support 43X today").
+- **Slot 10:** encouragement bubbles: "Your best days are ahead of you!", "You don't have to see the whole staircase.", "I chose sober because I wanted a better life!"
+- **Craft issue:** slot 7's caption "Celebrate Every Milestone." sits over the Meetings/Reads/Listens screen, which repeats slot 3.
+- **Tone:** warm, recovery-program, shame-free in spirit ("Progress not perfection", "You can only judge yourself by the person you choose to be today"). The explicit "Judgement Free" headline of the older set is gone.
+- **Evidence:** "2M Sobriety Goals Completed" with 5 stars and one named testimonial, all unsourced. Its product-page subtitle is the competitor phrase "Reframe: Drink Less Alcohol".
 
 #### Bonus. Exhale (`exhale-quit-vaping/`, 5 shots, 600×1299) — [listing](https://apps.apple.com/us/app/id6756926563)
 - **Headlines in order:**
@@ -378,61 +409,81 @@ They also differ in how far they go on **evidence claims**. QuitSure and Reframe
 - **Tone:** explicitly guilt-free. The description says "Built for people who want real progress, not guilt" ([listing](https://apps.apple.com/us/app/id6756926563)).
 
 ### Inferences
-- Screenshot 1 strategies:
-  - **Proof number:** Smoke Free (8M downloads).
-  - **Authority badge:** QuitNow (WHO + App of the Day), Kwit (WHO + App of the Day), Reframe (press + award).
-  - **Question/hook:** Quit Vaping and Puff Count (both "Ready to Quit?"), QuitSure ("Addicted to smoking?").
-  - **Scope/feature:** I Am Sober, EasyQuit, Sober Sidekick, Exhale.
-  - Only QuitSure puts an outcome-rate claim in the first 3 slides ("81% quit completely"). No app uses "quit in X days" in the screenshots, even QuitSure with its 6-day program.
+- Screenshot 1 strategies (product-page sets):
+  - **Proof number / trust marks:** Smoke Free (8M downloads), Quit Vaping ("#1 APP", "4.9 Rating", "Doctor Approved"), Kwit ("+5M users" + WHO emblem).
+  - **Authority badge:** QuitNow (WHO + App of the Day), Reframe (press + award).
+  - **Question/hook:** Puff Count ("Ready to QUIT?"), QuitSure ("Addicted to smoking?"). Quit Vaping dropped "Ready to Quit?" for "Quit vaping. For real this time."
+  - **Scope/feature/counter:** I Am Sober, EasyQuit, Sober Sidekick (uncaptioned counter panorama), Exhale.
+  - **Video before slot 1:** Smoke Free and QuitNow.
+  - Only QuitSure puts an outcome-rate claim in the first 3 slides ("81% quit completely", now also its subtitle). Quit Vaping's slot-3 chip "75% less nicotine in just 7 days" is a personal UI result, not a population rate. No app uses "quit in X days" in the screenshots, even QuitSure with its 6-day program.
 - Showing a real counter in slot 1 or 2 is near-universal (9 of 11). The counter is the category's hero visual.
-- Relapse is almost invisible:
-  - Only Quit Vaping ("Break your streak?" with past streaks, a reset model) and Exhale ("I relapsed" button, "Not quite" check-in) show it.
+- Relapse and slips are still rare:
+  - Quit Vaping ("Break your streak?" with past streaks and a personal best, a reset model) and Exhale ("I relapsed" button, "Not quite" check-in) show relapse.
+  - **Kwit's new slot 3 lists "I smoked" as an ordinary log option** next to "I overcame a craving", under "A real monitoring, not just a counter". It does not show what happens to the counter.
+  - **Quit Vaping's slot 3 logs a nicotine lozenge while the "vape free" counter keeps running.** NRT use does not count as a lapse.
   - QuitSure lists "Relapse Prevention" as a coach specialty and shows ongoing smoking as normal.
-  - Nobody says "a slip doesn't reset your count".
+  - Nobody says "a slip doesn't reset your count" in a caption.
 
 ### Gaps
-- I did not check whether the US listings use Custom Product Pages or A/B tests (Product Page Optimization). The lookup returns only the default set.
-- I don't know whether the 600×1067 sets mean these apps upload only a 5.5" set, or whether the lookup returned a particular device class. The pixel ratios are as observed.
+- I did not check whether the US listings use Custom Product Pages or A/B tests (Product Page Optimization). I fetched each product page once.
+- Resolved: the 600×1067 sets came from the Lookup API returning an older 5.5" upload. For QuitSure, EasyQuit and I Am Sober the product page shows the same creatives at 6.5". For Quit Vaping, Kwit and Sober Sidekick it shows entirely new sets.
 - I could not find the "UCSF study" behind QuitSure's 81%, or the method behind Reframe's 91%/82% (self-reported). Neither was verified.
 
 ## Q3. Cross-app patterns: table stakes, overused moves, gaps DayXero could own, strongest sets
 
 ### Takeaway
-Table stakes are a live counter, money saved, health recovery, badges, community and a craving tool. The overused moves are tilted-phone panoramas, laurel badges, WHO logos, mascots and "Ready to Quit?". Nobody owns three things DayXero is built on: a **visible prep-then-Quit-Day structure**, **slips that don't reset**, and **cigarettes + vapes + pouches in one app**. The strongest sets are **Reframe** (proof stacking), **QuitNow** (clarity at thumbnail size), **Smoke Free** (warm benefit headlines) and **Exhale** (modern UI with relapse and panic shown in slot 1).
+Table stakes are a live counter, money saved, health recovery, badges, community and a craving tool. The overused moves are tilted-phone panoramas, laurel badges, WHO logos, mascots and unsourced "#1 / doctor approved" trust marks.
+
+Nobody fully owns three things DayXero is built on:
+- A **visible prep-then-Quit-Day structure**.
+- **Slips that don't reset**. Kwit now edges toward this with an "I smoked" log option.
+- **Cigarettes + vapes + pouches in one app**.
+
+The product-page refresh closed one gap: **Kwit now leads slot 2 with "5 minutes a day that can change everything"**, which takes the time-boxed daily routine angle.
+
+The strongest sets are:
+- **Reframe:** proof stacking.
+- **Quit Vaping:** its new set is crisp and modern, with two-tone headlines and trust marks on slot 1.
+- **QuitNow:** clarity at thumbnail size.
+- **Kwit:** daily routine, "not just a counter" and a slip log.
+- **Smoke Free:** warm benefit headlines.
+- **Exhale:** relapse and panic shown in slot 1.
 
 ### Cited Findings
 Each count comes from the per-app evidence in Q2 (images in the library; listings linked above).
 - **Table stakes, counted across 11 sets:**
   - Live time counter: 9 of 11 (all except EasyQuit and Reframe as a hero).
-  - Money saved: 10 of 11 (not Sober Sidekick).
-  - Health recovery rings or timeline: 6 (Smoke Free, QuitNow, Quit Vaping, Kwit, EasyQuit, Exhale).
-  - Badges, achievements or XP: 7 (Smoke Free "90", QuitNow "80", Quit Vaping, Puff Count, EasyQuit "+100", Exhale, Kwit's coins).
+  - Money saved: 11 of 11 (Sober Sidekick's new set shows "USD 8740 Money Saved").
+  - Health recovery rings or timeline: 5 shown in screenshots (Smoke Free, QuitNow, Quit Vaping, EasyQuit, Exhale). Kwit's new set shows a "Life 3 days" regained stat but no health timeline.
+  - Badges, achievements or XP: 7 (Smoke Free "90", QuitNow "80", Quit Vaping, Puff Count, EasyQuit "+100", Exhale, Kwit trophies 10/36).
   - Community or social: 8.
-  - Craving tool: 7 (Smoke Free, QuitNow, Quit Vaping "Calm", Kwit, EasyQuit, Reframe, Exhale's panic button).
+  - Craving tool: 7 (Smoke Free, QuitNow, Quit Vaping "Breathe through it", Kwit's "I feel like smoking" flow on slots 3–4, EasyQuit, Reframe, Exhale's panic button).
   - Human or AI coaching: 3 (Smoke Free advisors, chatbot and clinics; QuitSure 1-on-1; Reframe coach meetings).
-  - Structured lessons or program: 4 (QuitSure, Reframe, Exhale, Smoke Free "plan").
+  - Structured lessons or program: 5 (QuitSure, Reframe, Exhale, Kwit "Learn every day" + "5 minutes a day", Smoke Free "plan").
   - Widgets or Watch: 2 (EasyQuit widgets, QuitNow Watch).
-  - NRT: 1 tolerant (Smoke Free) and 1 opposed (QuitSure).
+  - NRT: 2 tolerant (Smoke Free's "Spent on NRT/E-cigs" line; Quit Vaping's "Devices & Replacements" lozenge log alongside a running vape-free counter) and 1 opposed (QuitSure).
+  - App Preview video ahead of the screenshots: 2 (Smoke Free, QuitNow).
 - **Big numbers on counters:**
   - Seconds-level precision is common (Quit Vaping, I Am Sober, Exhale).
-  - Vape apps add vape units: pods not vaped, puffs not taken, mg nicotine avoided (Quit Vaping); puffs against a limit (Puff Count).
+  - Vape apps add vape units: a daily mg nicotine-consumed chart and "Log every puff" (Quit Vaping; the older set's "pods not vaped / puffs not taken" is gone), and puffs against a limit (Puff Count).
 - **Overused moves:**
-  - A tilted phone spanning slides 1–2: Quit Vaping, Kwit, QuitSure, I Am Sober, Reframe.
-  - Laurel badges: QuitSure ×2, Kwit, Reframe ×2.
-  - WHO logo: QuitNow, Kwit.
+  - A tilted phone spanning slides 1–2: QuitSure, I Am Sober, Reframe, Sober Sidekick (new set). Quit Vaping and Kwit no longer use one; Kwit uses a winding path ribbon across all 10.
+  - Laurel badges: QuitSure ×2, Kwit ("+5M users"), Reframe ×2, Quit Vaping ×2 ("#1 APP", "4.9 Rating") plus a "Doctor Approved" seal.
+  - WHO logo: QuitNow, Kwit (emblem only).
   - Mascots: QuitSure fox, Kwit block character, Exhale lung. Smoke Free uses cartoon people.
-  - "Ready to Quit?" verbatim: Quit Vaping and Puff Count.
-  - Generic "Track your progress" or "Celebrate your achievements" headlines in most sets.
-  - Saturated blue or purple gradients: 7 of 11.
-- **Localisation misses on US listings:** £ (Smoke Free), € (EasyQuit, Exhale).
+  - "Ready to Quit?" verbatim: now only Puff Count.
+  - Generic "Track your progress" or "Celebrate your achievements" headlines in most sets ("Celebrate every victory" for Kwit, "Celebrate Every Milestone." for Sober Sidekick).
+  - Saturated blue or purple gradients: still about 7 of 11. Quit Vaping has moved to multi-colour pastels, and Sober Sidekick's teal→violet gradient is in the group.
+- **Localisation misses on US listings:** £ (Smoke Free), € (EasyQuit, Exhale). Kwit's new set omits the currency symbol.
 - **Evidence-claim spectrum:**
-  - No claims: Quit Vaping, Puff Count, EasyQuit, I Am Sober, Sober Sidekick, Exhale.
+  - No claims: Puff Count, EasyQuit, I Am Sober, Exhale.
+  - Unsourced trust marks: Quit Vaping ("#1 APP", "4.9 Rating – Global Ranking", "Doctor Approved", "1M+ members"), Sober Sidekick ("2M Sobriety Goals Completed", 5 stars, a testimonial).
   - Authority badges: QuitNow and Kwit (WHO), Smoke Free ("real experts").
   - University logos plus self-reported percentages: Reframe.
   - Outcome rate plus absolute promises: QuitSure ("81% quit completely*", "No withdrawal symptoms", "No weight gain").
   - None of the 11 sets mentions FDA, NHS, CDC or a named RCT in the screenshots.
 - **Tone:**
-  - Shame-free language is explicit in QuitSure ("No Guilt"), Sober Sidekick ("Judgement Free") and Exhale (check-in microcopy).
+  - Shame-free language is explicit in QuitSure ("No Guilt") and Exhale (check-in microcopy). Sober Sidekick's new set drops "Judgement Free" but keeps the spirit in UI copy ("Progress not perfection"). Kwit shows it by treating "I smoked" as a neutral log entry.
   - Playful or gamified: Kwit, Quit Vaping, EasyQuit, Puff Count.
   - Clinical or scientific: Reframe, QuitSure (claims), Smoke Free (clinics).
   - Tough-love or fear: absent apart from QuitSure's marionette metaphor and Quit Vaping's raw community post.
@@ -440,19 +491,21 @@ Each count comes from the per-app evidence in Q2 (images in the library; listing
 ### Inferences
 **Gaps DayXero could own:**
 1. **A visible prep-to-Quit-Day arc.** QuitSure has a 6-day prep program but never shows it as a timeline in screenshots; it shows "at your own pace" and a bar chart instead. Puff Count's "Day 12 of 54" plan card is the closest thing. A slot-1 or slot-2 visual such as "7 days of prep → Quit Day → days clear" would be unique in the category.
-2. **"Slips don't reset your counter."** Every counter shown is a streak. Quit Vaping makes reset explicit ("Break your streak?"), and Exhale has an "I relapsed" button. A screenshot that shows a slip logged while the days-clear count holds would be a first-of-kind, shame-free differentiator. It also delivers the "no guilt" promise in UI form rather than as a claim.
-3. **All three nicotine forms.** Cigarette apps ignore vapes and pouches in their visuals, vape apps ignore cigarettes, and no pouch app has scale (21 ratings at best). "Cigarettes, vapes, pouches" as one headline, with a product picker in UI, is open ground. It also captures the Zyn audience that the US top 10 does not serve.
-4. **Time-boxed daily session.** Only Exhale ("3 min read") and Reframe ("5 min read") show lesson length, and both bury it. Leading with "about 3 minutes a day" answers the effort objection that QuitSure answers with overclaims ("No self-control needed", "Quit Effortlessly").
-5. **Craving SOS as a hero.** Only Exhale shows a persistent panic button, and it names "Panic button" only in slot 5's list. Quit Vaping's "Calm" is slot 8. A dedicated "Craving SOS" slide in the first 3 would be distinctive.
-6. **Honest proof.** The category either has no proof or has inflated or unsourced numbers. If DayXero has no outcome data, specific mechanism proof (what the program does each day) plus real rating counts beats laurels, which are now wallpaper.
-7. **Craft and localisation.** Several leaders ship dated 5.5" bezels (Quit Vaping, I Am Sober, Sober Sidekick), low-contrast serif (EasyQuit) or wrong currency. A crisp, dark or premium, correctly localised US set would stand out at the thumbnail level.
+2. **"Slips don't reset your counter."** Most counters shown are streaks. Quit Vaping makes reset explicit ("Break your streak?"), and Exhale has an "I relapsed" button. The gap is narrower than it first looked: Kwit's slot 3 now offers "I smoked" as a neutral log option under "A real monitoring, not just a counter", and Quit Vaping's counter keeps running while a nicotine lozenge is logged. Neither *states* that a slip keeps your days. A screenshot that shows a slip logged while the days-clear count holds, captioned to say so, would still be first-of-kind. It delivers the "no guilt" promise in UI form rather than as a claim.
+3. **All three nicotine forms.** Cigarette apps ignore vapes and pouches in their visuals. Vape apps ignore cigarettes; Quit Vaping now logs "Devices & Replacements" (a lozenge) but still sells vaping only. No pouch app has scale (21 ratings at best). "Cigarettes, vapes, pouches" as one headline, with a product picker in UI, is open ground. It also captures the Zyn audience that the US top 10 does not serve.
+4. **Time-boxed daily session — no longer open.** Kwit's current product page leads slot 2 with "5 minutes a day that can change everything" over a daily task list. Exhale ("3 min read") and Reframe ("5 min read") show lesson length but bury it. DayXero can still use the angle, but must differentiate it, e.g. with a concrete daily mechanic and a visible prep → Quit Day timeline, rather than claim it as unique.
+5. **Craving SOS as a hero.** Only Exhale shows a persistent panic button, and it names "Panic button" only in slot 5's list. Kwit puts its "I feel like smoking" flow on slots 3–4, and Quit Vaping's "Breathe through it" is slot 7. A dedicated "Craving SOS" slide in the first 3 would still be distinctive.
+6. **Honest proof.** The category either has no proof or has inflated or unsourced numbers. The refresh made this worse: Quit Vaping now carries "#1 APP", "4.9 Rating – Global Ranking" and an unattributed "Doctor Approved" seal, and Sober Sidekick claims "2M Sobriety Goals Completed". If DayXero has no outcome data, specific mechanism proof (what the program does each day) plus real rating counts beats laurels, which are now wallpaper.
+7. **Craft and localisation.** On the product pages the dated 5.5" bezels are mostly gone: Quit Vaping, Kwit and Sober Sidekick now use current Dynamic Island frames. The craft gap is narrower. It remains for EasyQuit (low-contrast serif, notch frames, €), Smoke Free (£) and Exhale (€). A crisp, correctly localised US set is now table stakes rather than a differentiator.
 
 **Strongest sets and why:**
 - **Reframe:** the most disciplined proof sequence (press, then universities, then data, then UI, then a "2M users" close), one consistent visual system, and an accent word in each headline. Its weakness is that 4 of 10 slides contain no product.
 - **QuitNow:** every headline is readable at thumbnail size, the green highlight pill guides the eye to the benefit, slot 1 combines "easy" with WHO and Apple badges, and it closes on Apple Watch. Its weakness is a generic blue look.
 - **Smoke Free:** clear benefit headlines with concrete numbers ("90 quitting achievements", "clinics held 4x a day", "8 million"), warm diverse illustration and real breadth of support. Its weaknesses are £ on the US page and busy layouts.
-- **Exhale:** the newest and most modern. It shows the relapse button, a panic button and guilt-free check-in copy, which is the closest in spirit to DayXero. Its headlines are generic and it has only 5 slides.
-- **Weakest:** EasyQuit (low-contrast serif, a feature catalogue, Pro labels) and Quit Vaping (dated frames, a caption that doesn't match its screen, typos), although Quit Vaping's 11.7k ratings show that screenshots aren't everything.
+- **Exhale:** modern. It shows the relapse button, a panic button and guilt-free check-in copy, which is the closest in spirit to DayXero. Its headlines are generic and it has only 5 slides.
+- **Quit Vaping (new set):** the biggest upgrade in the refresh. It has punchy two-line two-tone headlines ("Cut down your way.", "Watch your body heal."), one benefit and one floating proof chip per frame, current frames, and trust marks on slot 1. Its weaknesses are that the trust marks are unsourced ("Doctor Approved" names no doctor), there is a "then" typo in the UI, and it still uses a reset-streak model.
+- **Kwit (new set):** the closest competitor positioning to DayXero. It pairs "5 minutes a day" with "A real monitoring, not just a counter", an "I smoked" log option, triggers and a personal strategy, all in the first 5 frames. Its weaknesses are low-contrast thin grey captions on pastel and a mascot-only closer.
+- **Weakest:** EasyQuit (low-contrast serif, a feature catalogue, Pro labels). Sober Sidekick's new set is warmer and adds proof, but its captions are generic ("Everything You Need in One Place.") and slot 7's caption repeats slot 3's screen. Quit Vaping is no longer among the weakest.
 
 ### Gaps
 - There is no conversion data (Product Page Optimization results) to show which slot-1 strategy actually converts in this category. The judgements above are qualitative.

@@ -22,5 +22,28 @@
   ],
   "storeUrl": "https://apps.apple.com/us/app/easyquit-stop-smoking/id1508110799?uo=4",
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id1508110799",
+    "deviceClass": "6.5\" (1242x2688)",
+    "phoneVideoItems": 0,
+    "subtitle": "Stop Smoking Now + Slow Mode",
+    "result": "changed: same creative, larger device class only"
+  },
+  "productPageScreenshotUrls": [
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/cb/71/dd/cb71dd1c-7f9f-726c-009b-00179b1a00b8/c9f986a5-029c-4dcf-9b22-f338c438a6a5_slice1.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/5a/9e/f3/5a9ef3ef-1e9f-b5d0-8d23-bcfb09838a05/a3b78806-cfe6-4284-9fa2-c309eef3b873_slice2.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/a8/b6/f1/a8b6f126-1db5-1021-c950-e0d63e2941ff/82cf7f68-75e3-4206-9a29-1418840b5a1e_slice3.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/98/ef/7c/98ef7c2f-f155-033c-1a0a-cda90c411142/e374cdc7-6490-4a71-b7ef-4019ee6eadbf_slice4.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/69/05/95/69059536-2262-0fff-0506-cfb7935f7c73/7fac01e2-3208-445e-adb0-f55d93aa3aaa_slice5.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/9b/42/6a/9b426a27-6112-17b8-fce4-fde4745fc9a6/5866a02b-17fb-4f5f-8fac-575075502a15_slice6.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/31/da/6f/31da6fb6-ed60-e2e7-c5c4-bd780728db25/d16fcf8f-ed1a-41b5-93ac-fea0170b93a7_slice7.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/c2/e6/3a/c2e63ad9-90ab-f602-efba-fb184aaedbdf/3caccc3e-a1a2-4bd9-b6a8-2c95a6d7ffa3_slice8.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/2a/1b/71/2a1b71d8-b29a-4337-67b6-631dcd36b4c5/0df67198-b42c-4269-99e5-defbfa526261_slice9.png/600x0w.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/bc/c1/60/bcc160ff-af42-1852-32b6-093d4a9c6092/343461b5-00ce-46d5-af5b-64ae8cb2a702_slice10.png/600x0w.jpg"
+  ],
+  "productPageDeviceClass": "6.5\" (1242x2688)",
+  "productPageFetched": "2026-11-20",
+  "note": "Root 01.jpg.. = iPhone set shown on apps.apple.com/us product page (largest uploaded display class). api-lookup-set/ = earlier images from iTunes Lookup screenshotUrls (smaller/older device class)."
 }

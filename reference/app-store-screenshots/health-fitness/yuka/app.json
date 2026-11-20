@@ -16,5 +16,21 @@
     "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/dc/50/df/dc50df14-0353-b895-ce06-a82d59c5e3f5/06.jpg/320x480bb.jpg"
   ],
   "fetched": "2026-11-20",
-  "country": "us"
+  "country": "us",
+  "productPageCheck": {
+    "date": "2026-11-20",
+    "url": "https://apps.apple.com/us/app/id1092799236",
+    "deviceClass": "6.5\" (1242x2688)",
+    "phoneVideoItems": 0,
+    "subtitle": "Check What's in Your Products",
+    "result": "unchanged (identical files)",
+    "productPageScreenshotUrls": [
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/e9/25/1b/e9251b4b-da5a-c4bd-e896-35d0045ef240/01.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/73/d7/40/73d740c2-0b08-3500-7638-c242f575d068/02.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/8f/9f/63/8f9f63c6-1ed6-14df-01a3-ec9aaa7b4064/03.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/68/87/e4/6887e44c-6335-a8ce-1b25-bd2be1c5b46c/04.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/7b/d5/b3/7bd5b38e-427f-9914-46dd-d0b978f1e9b9/05.jpg/600x0w.jpg",
+      "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/08/5a/d6/085ad6e3-8259-d20c-7d2f-71719a9c4d00/06.jpg/600x0w.jpg"
+    ]
+  }
 }
