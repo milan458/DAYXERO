@@ -8,12 +8,13 @@
 <link rel="stylesheet" href="../kit/kit.css">
 <script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
 <style>
-  .hero { position: absolute; left: 0; right: 0; top: 0; height: 300px; overflow: hidden; }
+  .hero { position: absolute; left: 0; right: 0; top: 0; height: 268px; overflow: hidden; }
   .hero .scene, .hero .scene svg { position: absolute; inset: 0; display: block; }
-  .hero .edge { position: absolute; left: 0; bottom: -1px; }
+  .hero .edge { position: absolute; left: 0; bottom: -3px; }
+  .hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--g); } /* hides a subpixel seam at the scaled hero edge */
   .crew { position: absolute; left: 0; right: 0; bottom: 8px; display: flex; justify-content: center; align-items: flex-end; gap: 4px; }
   .confetti { position: absolute; inset: 0; pointer-events: none; }
-  .body { position: absolute; left: 0; right: 0; top: 304px; padding: 0 var(--gutter); display: grid; gap: 12px; text-align: center; justify-items: center; }
+  .body { position: absolute; left: 0; right: 0; top: 270px; padding: 0 var(--gutter); display: grid; gap: 10px; text-align: center; justify-items: center; }
   .tiles { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; text-align: left; }
   .tiles .stat { padding: 12px 12px 13px; display: grid; gap: 4px; align-content: start; }
   .tiles .num { font-size: 28px; line-height: 1; }
@@ -28,7 +29,7 @@
 <div class="screen" data-ground="sun" data-status="on-art">
   <div class="hero">
     <div class="scene" id="scene"></div>
-    <svg class="confetti" id="confetti" width="390" height="300" viewBox="0 0 390 300" aria-hidden="true"></svg>
+    <svg class="confetti" id="confetti" width="390" height="268" viewBox="0 0 390 268" aria-hidden="true"></svg>
     <svg class="edge" width="390" height="40" viewBox="0 0 390 40" aria-hidden="true"><path d="M0 22 C110 -2 280 -2 390 22 L390 40 L0 40 Z" fill="var(--g)"/></svg>
     <div class="crew"><div id="jelli"></div><div id="xero"></div><div id="glim"></div></div>
   </div>
@@ -54,7 +55,7 @@
 </div>
 <script>
   const $ = s => document.querySelector(s);
-  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 300, clarity: 100 });
+  $('#scene').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 268, clarity: 100 });
   $('#jelli').innerHTML = DX.char('jelli', { mood: 'cheer', size: 88, stage: 4 });
   $('#xero').innerHTML = DX.char('xero', { mood: 'cheer', size: 140, stage: 4 });
   $('#glim').innerHTML = DX.char('glim', { mood: 'cheer', size: 88, stage: 4 });

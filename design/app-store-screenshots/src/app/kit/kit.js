@@ -1,3 +1,4 @@
+/* Screenshots copy of cook/site/kit/kit.js (20 Nov 2026). Patched only: ?time= sets the status-bar time. */
 /* DayXero redesign kit: helpers every screen uses. Requires chars.js first. */
 (function () {
   const q = new URLSearchParams(location.search);

@@ -13,7 +13,9 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; background: #000; }
   .lock { position: relative; width: 390px; height: 844px; overflow: hidden; color: #fff; font-family: "DM Sans", system-ui, sans-serif; }
-  .wall, .wall svg { position: absolute; inset: 0; display: block; }
+  .wall { position: absolute; inset: 0; background: linear-gradient(180deg, #2A1840 0%, #5A2A55 18%, #B4504E 33%, #FF7E5A 44.3%); }
+  .wall .hz { position: absolute; left: 0; right: 0; bottom: 0; height: 470px; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 90px); mask-image: linear-gradient(180deg, transparent 0, #000 90px); }
+  .wall .hz svg { display: block; }
   .shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(40,10,30,.34) 0%, rgba(40,10,30,.08) 40%, rgba(20,8,30,.0) 60%, rgba(20,8,40,.28) 100%); }
   .sb { position: absolute; top: 0; left: 0; right: 0; height: 50px; display: flex; justify-content: flex-end; align-items: center; gap: 6px; padding: 6px 30px 0; }
   .sb svg { display: block; }
@@ -72,7 +74,8 @@
   <div class="home"></div>
 </div>
 <script>
-  document.getElementById('wall').innerHTML = DX.char('horizon', { scene: 'dawn', w: 390, h: 844, clarity: 100, fit: 'xMidYMax slice' });
+  /* the wallpaper: a deep pre-dawn sky above DayXero's own dawn horizon */
+  document.getElementById('wall').innerHTML = '<div class="hz">' + DX.char('horizon', { scene: 'dawn', w: 390, h: 470, clarity: 100, fit: 'xMidYMax slice' }) + '</div>';
   document.getElementById('jelli').innerHTML = DX.char('jelli', { mood: 'breathe', size: 34, stage: 1 });
 </script>
 </body></html>
