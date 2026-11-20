@@ -1,0 +1,24 @@
+{
+  "id": 297368629,
+  "name": "Lose It! \u2013 Calorie Counter",
+  "seller": "FitNow, Inc.",
+  "rating": 4.76722,
+  "ratingCount": 785128,
+  "primaryGenre": "Health & Fitness",
+  "version": "18.6.300",
+  "subtitle_note": "subtitle not in lookup API",
+  "screenshotUrls": [
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/70/47/74/70477415-c965-2647-7e58-484edca738d1/SC-1.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/bf/22/1e/bf221e45-3e6f-1e14-f2b5-1884ba4345d9/SC-2.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/77/19/fb/7719fb17-24f8-371a-b038-144288c9ae18/SC-3.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ea/a8/63/eaa86309-146c-efb5-01de-05d073653625/SC-4.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/58/e3/83/58e383b5-9f88-26c6-56b7-e79d1c7dac65/SC-5.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/bf/8e/1a/bf8e1af7-f06a-eb8d-1dd9-6db2843549a9/SC-6.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/26/c9/5a/26c95ac8-e6ec-9881-fade-91a10ec28efd/SC-7.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/6a/d6/7b/6ad67b0e-1ac5-e16e-0f49-f345c14cd1ea/SC-8.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/80/20/77/802077e6-f034-4dcf-9582-9fb6cde0b172/SC-9.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/7f/cc/5c/7fcc5cbe-f84d-d678-7654-4913da488dee/SC-10.jpg/320x480bb.jpg"
+  ],
+  "fetched": "2026-11-20",
+  "country": "us"
+}

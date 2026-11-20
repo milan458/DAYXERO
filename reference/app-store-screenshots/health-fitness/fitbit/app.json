@@ -1,0 +1,21 @@
+{
+  "id": 462638897,
+  "name": "Google Health (Fitbit)",
+  "seller": "Google LLC",
+  "rating": 4.465,
+  "ratingCount": 713115,
+  "version": "5.12.2",
+  "currentVersionReleaseDate": "2026-11-12T23:43:21Z",
+  "primaryGenre": "Health & Fitness",
+  "price": 0.0,
+  "trackViewUrl": "https://apps.apple.com/us/app/google-health-fitbit/id462638897?uo=4",
+  "screenshotUrls": [
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/50/35/ca/5035caa1-f75f-31c5-cab6-5b1be619bc61/APP_IPHONE_55-0.png/392x696bb.png",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a0/50/7d/a0507d2c-1922-6408-c970-2cbe7ff3fe54/APP_IPHONE_55-1.png/392x696bb.png",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/80/1c/e6/801ce6c8-af3d-939d-5d7e-d427653f7726/APP_IPHONE_55-2.png/392x696bb.png",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/dc/98/33/dc98335c-693c-f2aa-3243-016ea939831a/APP_IPHONE_55-3.png/392x696bb.png",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/f6/9a/12/f69a12c6-a28f-d4f5-c808-a302411d3f9b/APP_IPHONE_55-4.png/392x696bb.png"
+  ],
+  "fetched": "2026-11-20",
+  "country": "us"
+}

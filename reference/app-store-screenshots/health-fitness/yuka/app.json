@@ -1,0 +1,20 @@
+{
+  "id": 1092799236,
+  "name": "Yuka - Food & Cosmetic Scanner",
+  "seller": "Yuca",
+  "rating": 4.81702,
+  "ratingCount": 102533,
+  "primaryGenre": "Health & Fitness",
+  "version": "5.9",
+  "subtitle_note": "subtitle not in lookup API",
+  "screenshotUrls": [
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/96/0b/ac/960bac4a-5fbd-a0d8-1aff-6ce281f4e788/01.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/07/58/25/075825c1-a993-3598-8a6c-456b790cf17c/02.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/d3/ee/c6/d3eec662-7f9b-bbd1-f5b3-d06ec797a0a3/03.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/05/e5/89/05e58985-4549-9d70-c70f-38f58ee89a69/04.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/64/73/d7/6473d7ff-5f71-9aac-3b0c-059da44ea9d6/05.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/dc/50/df/dc50df14-0353-b895-ce06-a82d59c5e3f5/06.jpg/320x480bb.jpg"
+  ],
+  "fetched": "2026-11-20",
+  "country": "us"
+}

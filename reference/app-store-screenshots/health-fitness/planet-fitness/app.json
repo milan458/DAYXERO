@@ -1,0 +1,24 @@
+{
+  "id": 399857015,
+  "name": "Planet Fitness",
+  "seller": "Planet Fitness Holdings, LLC",
+  "rating": 4.87169,
+  "ratingCount": 816119,
+  "version": "10.0.6",
+  "currentVersionReleaseDate": "2026-11-16T16:54:29Z",
+  "primaryGenre": "Health & Fitness",
+  "price": 0.0,
+  "trackViewUrl": "https://apps.apple.com/us/app/planet-fitness/id399857015?uo=4",
+  "screenshotUrls": [
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/93/f5/58/93f558de-bb01-502a-1106-59ecdf427e05/1-Cover-iOS-5.5-ENG.jpg/392x696bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/61/50/ab/6150ab77-281c-1206-1306-5286a482bc13/3-ActivityTracker-iOS-5.5-ENG.jpg/392x696bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/20/1b/c7/201bc7f1-984e-1c59-245a-596bb4b7b3f0/4-FitnessProfile-iOS-5.5-ENG.jpg/392x696bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/04/e3/5e/04e35e7f-7a4c-f955-bf1b-5b3a2e876d82/5-Workout-iOS-5.5-ENG.jpg/392x696bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/2e/2b/3d/2e2b3d1d-88a3-08cb-7499-4553e60bc7f2/6-CrowdMeter-iOS-5.5-ENG.jpg/392x696bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/de/7b/e6/de7be680-3505-a928-e60a-ce28575e36bf/7-Perks-iOS-5.5-ENG.jpg/392x696bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/6a/3f/5c/6a3f5ccb-89f6-0377-aa57-90b72f1c19dc/8-RAF-iOS-5.5-ENG.jpg/392x696bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/d7/a9/71/d7a97141-8833-89aa-beb5-ec2d92fb82a8/9-BC-iOS-5.5-ENG.jpg/392x696bb.jpg"
+  ],
+  "fetched": "2026-11-20",
+  "country": "us"
+}

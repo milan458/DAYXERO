@@ -1,0 +1,21 @@
+{
+  "id": 331308914,
+  "name": "WeightWatchers Program",
+  "seller": "WW International, Inc.",
+  "rating": 4.83825,
+  "ratingCount": 2367043,
+  "primaryGenre": "Health & Fitness",
+  "version": "11.33.0",
+  "subtitle_note": "subtitle not in lookup API",
+  "screenshotUrls": [
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/03/ad/49/03ad497e-52c4-a8dd-f550-992b79378170/Slide_1_U002c_Intro.png/392x696bb.png",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/7d/fd/37/7dfd37f1-bb0c-1aef-f52b-c6815c3673d0/Slide_7_U002c_Pic.png/392x696bb.png",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/e1/d2/dc/e1d2dc5b-7665-555b-7676-9e621696bb15/1242_x_2210.png/392x696bb.png",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/87/59/af/8759af19-0d09-1676-5871-82310b96912e/Slide_5_U002c_ZPFs.png/392x696bb.png",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/be/9f/50/be9f50ba-0793-0a96-a03c-c132efd28285/Slide_4_U002c_Barcode_Scanner.png/392x696bb.png",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/cd/ae/85/cdae85bd-0f9c-e87c-fef1-815ecb4ee9b4/Slide_6_U002c_WTE.png/392x696bb.png",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ad/e5/ab/ade5abec-87db-9c3f-0d3b-0ac44c58b565/Slide_2_U002c_My_Day.png/392x696bb.png"
+  ],
+  "fetched": "2026-11-20",
+  "country": "us"
+}

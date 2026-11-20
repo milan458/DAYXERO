@@ -1,0 +1,24 @@
+{
+  "id": 405075943,
+  "name": "AllTrails: Hike, Bike & Run",
+  "seller": "AllTrails, Inc.",
+  "rating": 4.88924,
+  "ratingCount": 1043416,
+  "primaryGenre": "Health & Fitness",
+  "version": "26.11.30",
+  "subtitle_note": "subtitle not in lookup API",
+  "screenshotUrls": [
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ea/3a/76/ea3a760e-66f1-bd14-380c-5fc8eb291632/AT-2024-Organic-EN-US-s1__U00283_U0029.png/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c1/25/16/c12516aa-6136-333c-410d-25dc8efde4b2/AT-2024-Organic-EN-US-s2.png/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/91/20/96/91209649-93af-0b90-12e5-f627fefab10b/AT-2025rebrand-Organic-iOS-1290-x-2796-EN-US-s3.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/7c/9f/40/7c9f4074-2c9a-7f9e-efbd-ac2bca6b27d8/AT-2025rebrand-Organic-iOS-1290-x-2796-EN-US-s4.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/8a/8d/08/8a8d083b-1fad-c0a4-33eb-a2fab2879a67/AT-2025rebrand-Organic-iOS-1290-x-2796-EN-US-s5.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/b7/63/38/b7633886-4aac-d56e-8763-b1a0be1926d1/AT-2025rebrand-Organic-iOS-1290-x-2796-EN-US-s6.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/06/cc/92/06cc925a-c36c-51c2-a60f-6f644bd48773/AT-2025rebrand-Organic-iOS-1290-x-2796-EN-US-s7.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/27/cb/14/27cb1437-3311-d1dd-cc1a-251819a0b66f/AT-2025rebrand-Organic-iOS-1290-x-2796-EN-US-s8.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/01/25/06/01250655-7f27-2e23-1ae2-d7ca2032a96c/AT-2025rebrand-Organic-iOS-1290-x-2796-EN-US-s9.jpg/320x480bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/3c/f0/f7/3cf0f7df-f03d-c6b6-c825-bc2f71335237/AT-2025rebrand-Organic-iOS-1290-x-2796-EN-US-s10.jpg/320x480bb.jpg"
+  ],
+  "fetched": "2026-11-20",
+  "country": "us"
+}

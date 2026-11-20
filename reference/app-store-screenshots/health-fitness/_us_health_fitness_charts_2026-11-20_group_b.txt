@@ -1,0 +1,202 @@
+# Apple US TOP FREE Health & Fitness (genre 6013), feed updated 2026-11-19T23:07:57-07:00, source itunes.apple.com/us/rss
+1	AHEALTH: Get Healthy Get Paid	1638253339
+2	Flo Cycle & Period Tracker	1038369065
+3	Planet Fitness	399857015
+4	Oura	1043837948
+5	Sweatcoin Walking Step Counter	971023427
+6	Strava: Run, Bike, Walk	426826309
+7	LADDER Strength Training Plans	1502936453
+8	New EōS Fitness	6759914925
+9	WeWard - Walking Rewards App	1454213029
+10	RISE: Sleep Tracker	1453884781
+11	Crunch Fitness	398210959
+12	Yuka - Food & Cosmetic Scanner	1092799236
+13	MenuFit - Healthy Eating Out	6746144481
+14	Scrambly: Earn Money Walking	6738506984
+15	Cal AI - Calorie Tracker	6480417616
+16	MyFitnessPal: Calorie Counter	341232718
+17	Garmin Connect™	583446403
+18	Tolan: Your Friendly Guide	6477549878
+19	Exposr - Food Product Scanner	6752903766
+20	Finch: Self-Care Pet	1528595748
+21	Aetna Health	1261033071
+22	Hume Health	1477782599
+23	Cronometer: Calorie Counter	1145935738
+24	Kaiser Permanente	493390354
+25	CardiCare - Heart Rate&Health	6751336870
+26	ClassPass: Fitness, Spa, Salon	912947244
+27	Headway Therapy & Psychiatry	6783091001
+28	myCigna	569266174
+29	Wayk: Alarm Clock to Wake Up	6758021281
+30	Hevy - Workout Tracker Gym Log	1458862350
+31	Mindbody: Fitness & Wellness	689501356
+32	AllTrails: Hike, Bike & Run	405075943
+33	Medbridge GO for Patients	1089747982
+34	Fitbod: Gym & Fitness Planner	1041517543
+35	ROXFIT	6476465403
+36	StepsApp Pedometer	1037595083
+37	Hatch Sleep	1158048301
+38	Sweatmates: Partner Fitness	6756000479
+39	Clue Period & Cycle Tracker	657189652
+40	Period Tracker Period Calendar	896501514
+41	VeryFit	1516248105
+42	Motivation - Daily quotes	876080126
+43	ARBloodPressure:Health record	6478134595
+44	Life Time Digital	1192326768
+45	Google Health (Fitbit)	462638897
+46	Calorie Counter - MyNetDiary	287529757
+47	MyHumana	779622024
+48	Heart Beat: Heart Rate Monitor	6744920106
+49	I am - Daily Affirmations	874656917
+50	OMRON connect US/CAN/EMEA	1166317885
+51	RENPHO Health	1543340610
+52	Stardust Period Tracker	1495829322
+53	SleepSense: Sleep Tracker	6791916451
+54	Nourish: Eating Well Made Easy	6448732070
+55	Limber Health Home Exercise	6471596320
+56	WHOOP	933944389
+57	CareFirst My Account	6670176763
+58	Lyfta: Gym & Workout Tracker	6443740936
+59	WISEcode™	6479329206
+60	LA Fitness Mobile	376098999
+61	StepUp Pedometer Step Counter	979101825
+62	Runna: Running Plans & Coach	1594204443
+63	BetterMe Well-Being Coach	1264546236
+64	Calm	571800810
+65	Blood Pressure App-BP Tracker	6474598021
+66	InBody	884923678
+67	Rythm Health	6749600204
+68	Heartica: Heart Rate Monitor	6742904990
+69	MacroFactor: Macro Tracker	1553503471
+70	Home Workout - No Equipments	1313192037
+71	Fullscript	6446033161
+72	BetterHelp - Therapy	995252384
+73	AI Calorie Tracker:FoodPilot	6738115267
+74	Liftoff - Ranked Gym Workouts	6448081563
+75	Nike Run Club: Running Coach	387771637
+76	GloryFit	1237479843
+77	Stompers: Walking Step Counter	6477849675
+78	MyClub+	6790865566
+79	StressWatch: AI Stress Monitor	6444737095
+80	24GO by 24 Hour Fitness	1291447822
+81	Welltory: Stress & Heart Rate	1074367771
+82	Da Fit	1316004998
+83	AF App	1598355340
+84	Lose It! – Calorie Counter	297368629
+85	BCBSTX	573016251
+86	Lively - Period Tracker, Cycle	6447674634
+87	Insight Timer: Meditate, Sleep	337472899
+88	Grow Therapy	6744416231
+89	HealthPro: Blood Sugar	6760378459
+90	iFIT Personal Trainer	6756594504
+91	VSP Vision Care	938497148
+92	Endel: Focus & Sleep Sounds	1346247457
+93	GymMaster Member	1297093746
+94	Premom-Ovulation Tracker, PCOS	1279295922
+95	BetterSleep: Relax and Sleep	314498713
+96	Omada	805711008
+97	Pedometer++	712286167
+98	SuppCo: Supplement Scanner	6504838951
+99	iHealth MyVitals	1532014748
+100	Lumenate: Explore & Relax	1538397461
+# Apple US TOP GROSSING Health & Fitness (genre 6013), feed updated 2026-11-19T23:08:07-07:00, source itunes.apple.com/us/rss
+1	MyFitnessPal: Calorie Counter	341232718
+2	LADDER Strength Training Plans	1502936453
+3	Flo Cycle & Period Tracker	1038369065
+4	Strava: Run, Bike, Walk	426826309
+5	Calm	571800810
+6	Hatch Sleep	1158048301
+7	Peloton: Fitness & Workouts	792750948
+8	Google Health (Fitbit)	462638897
+9	AllTrails: Hike, Bike & Run	405075943
+10	Hume Health	1477782599
+11	Cal AI - Calorie Tracker	6480417616
+12	MacroFactor: Macro Tracker	1553503471
+13	Headspace: Sleep & Meditation	493145008
+14	Finch: Self-Care Pet	1528595748
+15	Insight Timer: Meditate, Sleep	337472899
+16	Cronometer: Calorie Counter	1145935738
+17	Runna: Running Plans & Coach	1594204443
+18	Fitbod: Gym & Fitness Planner	1041517543
+19	Calorie Counter - MyNetDiary	287529757
+20	Lose It! – Calorie Counter	297368629
+21	Heart Beat: Heart Rate Monitor	6744920106
+22	Motivation - Daily quotes	876080126
+23	Sweat: Fitness App For Women	1049234587
+24	WeightWatchers Program	331308914
+25	Yuka - Food & Cosmetic Scanner	1092799236
+26	BetterMe Well-Being Coach	1264546236
+27	I am - Daily Affirmations	874656917
+28	BetterSleep: Relax and Sleep	314498713
+29	InPulse - Heart Rate Monitor	1489944782
+30	Gymverse: Gym Workout Planner	1048454034
+31	Natural Cycles: Fertility App	765535549
+32	MenuFit - Healthy Eating Out	6746144481
+33	Zwift: Indoor Cycling Fitness	1134655040
+34	Hevy - Workout Tracker Gym Log	1458862350
+35	Clue Period & Cycle Tracker	657189652
+36	Lively - Period Tracker, Cycle	6447674634
+37	Tolan: Your Friendly Guide	6477549878
+38	Sleep Cycle - Tracker & Sounds	320606217
+39	Premom-Ovulation Tracker, PCOS	1279295922
+40	Welltory: Stress & Heart Rate	1074367771
+41	Heartica: Heart Rate Monitor	6742904990
+42	Alive by Whitney Simmons	1488020055
+43	iFIT Workouts	1274601042
+44	STNDRD Workout & Fitness Plans	1573298047
+45	The Movement Club App	6443683822
+46	Calorie Counter by Numify	6474290049
+47	Noom Weight Loss, Food Tracker	634598719
+48	Liftoff - Ranked Gym Workouts	6448081563
+49	ana kate	6787263277
+50	Blood Pressure App-BP Tracker	6474598021
+51	MeAgain: GLP-1 Tracker App	6744178534
+52	BODi Fitness: Home Workouts	1031660123
+53	ShutEye®: Sleep Tracker, Sound	1490078804
+54	Withings	542701020
+55	Waking Up: Meditation & Wisdom	1307736395
+56	White Noise Deep Sleep Sounds	1083248251
+57	Bend: Stretching & Flexibility	1513988468
+58	RISE: Sleep Tracker	1453884781
+59	Gravl: AI Personal Trainer	6450921637
+60	WeWard - Walking Rewards App	1454213029
+61	Happiest Baby, makers of SNOO	1562132169
+62	Endel: Focus & Sleep Sounds	1346247457
+63	Calo: AI Food Calorie Counter	6447434453
+64	Lumenate: Explore & Relax	1538397461
+65	Stardust Period Tracker	1495829322
+66	Pulsetto Wellness	1636176641
+67	Stella - Manifest Anything	6757347283
+68	Lyfta: Gym & Workout Tracker	6443740936
+69	Strong Workout Tracker Gym Log	464254577
+70	Foodvisor - AI Calorie Counter	1064020872
+71	Wellmy - Heart Rate Monitor	6463719381
+72	Bevel: AI Health Coach	6456176249
+73	Muscle Booster Workout Tracker	1446447749
+74	StepsApp Pedometer	1037595083
+75	FORM: Strength, Pilates, Gym	1578636146
+76	Shotsy GLP-1 Tracker	6499510249
+77	StressWatch: AI Stress Monitor	6444737095
+78	LazyFit: Workout For Beginners	1669413773
+79	MWH: Pilates Sculpt Strength	1488181674
+80	1st Phorm	1445819600
+81	Stompers: Walking Step Counter	6477849675
+82	Peptalk: Daily Motivation	976885594
+83	SleepSense: Sleep Tracker	6791916451
+84	SleepWatch - Top Sleep Tracker	1138066420
+85	Evlo Fitness	1557238647
+86	Breethe: Sleep & Meditation	920161006
+87	Heart Rate Monitor - HeartIn	6736740146
+88	The Wonder Weeks - Baby leaps	529815782
+89	Happier Meditation	992210239
+90	Ride with GPS: Bike Navigation	893687399
+91	MacrosFirst - Macro Tracker	1253012487
+92	Pray.com: Bible & Daily Prayer	1161035371
+93	Day One: Daily Journal & Diary	1044867788
+94	Sweatcoin Walking Step Counter	971023427
+95	Studio Era	6454721011
+96	Check Heart Rate Now	6467655857
+97	Well Up-Level Up Your Wellness	6615069676
+98	JustFit: Lazy Workout & Fit	1574460221
+99	AI Calorie Tracker:FoodPilot	6738115267
+100	CGX	1624488454
