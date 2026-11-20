@@ -264,19 +264,26 @@ struct TodayView: View {
                 .accessibilityLabel(dayCardOpen ? Text("Back to today") : Text("Open today's card"))
             }
             .padding(.leading, 2)
+            // The week, always in view: every prep day and Day Xero, with what's done. A day opens its card.
+            TodayWeekStrip(items: path.days.indices.map { i -> TodayWeekStrip.Item in
+                               let isDayXero = i >= path.stones.count
+                               let isToday = path.days[i].date == today
+                               return TodayWeekStrip.Item(id: i,
+                                            label: isToday ? String(localized: "Today")
+                                                : isDayXero ? String(localized: "Xero")
+                                                : path.days[i].date.formatted(.dateTime.weekday(.abbreviated)),
+                                            state: isDayXero ? .ahead : path.stones[i].state, isToday: isToday, isDayXero: isDayXero,
+                                            accessibility: isDayXero ? path.dayXeroLabel : path.stones[i].label)
+                           },
+                           selected: dayCardOpen ? index : nil) { picked in
+                withAnimation(motion.animation(DX.Move.settle)) {
+                    pathDay = picked
+                    dayCardOpen = true
+                }
+            }
             if dayCardOpen {
                 dayCard(day, path: path, index: index).id("lower")
             } else {
-                // The line under the greeting used to carry this; it sits here on the day the date moves.
-                if let note = QuitDaySlide.note(now: day.now, clock: day.clock) {
-                    Text(verbatim: note)
-                        .dxFace(.body, 14, weight: 500)
-                        .foregroundStyle(TodayInk.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.horizontal, 14).padding(.vertical, 12)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(TodayInk.well, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                }
                 focusCard(day).id("lower").dxArrive(4)
                 if day.night && day.focus != .recovery {
                     logRows(day).todayCard().dxArrive(6)

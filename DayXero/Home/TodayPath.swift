@@ -261,6 +261,68 @@ private struct MoonShape: Shape {
     }
 }
 
+// MARK: Week strip
+
+/// The prep week in one row, always at the top of the sheet (20 Nov 2026): each day's name ("FRI", "TODAY", and
+/// "XERO" for Day Xero) over a mark for where it stands: a green pill once its session is done, a soft one for today,
+/// an outline for the days ahead and a dashed ring for Day Xero. Tapping a day opens its card.
+struct TodayWeekStrip: View {
+    struct Item: Identifiable {
+        let id: Int
+        let label: String
+        let state: TodayPathStone.State
+        let isToday: Bool
+        let isDayXero: Bool
+        let accessibility: String
+    }
+
+    let items: [Item]
+    /// The day whose card is open.
+    let selected: Int?
+    let onTap: (Int) -> Void
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 0) {
+            ForEach(items) { item in
+                let picked = selected == item.id
+                Button { onTap(item.id) } label: {
+                    VStack(spacing: 7) {
+                        Text(verbatim: item.label.uppercased())
+                            .dxFace(.body, 11, weight: 700, tracking: 0.6)
+                            .foregroundStyle(item.isToday ? TodayInk.coralText : picked ? TodayInk.ink : TodayInk.muted)
+                            .lineLimit(1).minimumScaleFactor(0.7)
+                        mark(item)
+                            .frame(height: 12)
+                        Capsule().fill(picked ? TodayInk.ink : Color.clear).frame(width: 18, height: 2)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 44)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text(verbatim: item.accessibility))
+                .accessibilityAddTraits(picked ? .isSelected : [])
+            }
+        }
+        .padding(.horizontal, 2)
+    }
+
+    @ViewBuilder
+    private func mark(_ item: Item) -> some View {
+        if item.isDayXero {
+            Circle().strokeBorder(TodayInk.coral, style: StrokeStyle(lineWidth: 2, dash: [2.5, 2.5])).frame(width: 12, height: 12)
+        } else {
+            switch item.state {
+            case .done:
+                Capsule().fill(DX.Fill.done).frame(width: item.isToday ? 22 : 16, height: 7)
+            case .today:
+                Capsule().fill(DX.Fill.done.opacity(0.45)).frame(width: 22, height: 7)
+            case .ahead:
+                Capsule().strokeBorder(TodayInk.muted, lineWidth: 1.5).frame(width: 14, height: 8)
+            }
+        }
+    }
+}
+
 // MARK: Day card
 
 /// One day of the prep week as a card: the date, the day's name, how much of it is done, and each thing on it. Today's
