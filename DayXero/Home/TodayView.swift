@@ -299,8 +299,8 @@ struct TodayView: View {
         .padding(.top, -28)
     }
 
-    /// One day of the path as its card: the pledge, the session, the day's log and the check-in, each with what was
-    /// done, what to do now, or that it opens on the day.
+    /// One day of the path as its card: the program's session first, then the pledge, the day's log and the
+    /// check-in, each with what was done, what to do now, or that it opens on the day.
     private func dayCard(_ day: TodayDay, path: TodayPathModel, index: Int) -> TodayDayCard {
         let shown = path.days[index]
         let today = day.clock.day(containing: day.now)
@@ -325,28 +325,33 @@ struct TodayView: View {
             rows.append(.init(id: "pledge", mark: .locked, title: String(localized: "Morning pledge"), detail: opens))
         }
 
-        let sessionTitle = shown.title.isEmpty ? shown.label : "\(shown.label) · \(shown.title)"
+        // The program's session for the day leads the card, as the Program tab shows it; the day's other steps follow.
         let id = shown.sessionId
+        let cards = shown.cards > 0 ? String(AttributedString(localized: "^[\(shown.cards) card](inflect: true)").characters) : nil
+        let meta = ([shown.label] + (cards.map { [$0] } ?? []) + [String(localized: "\(shown.minutes) min")]).joined(separator: " · ")
+        var program = TodayDayCard.Session(id: id, meta: meta, title: shown.title.isEmpty ? shown.label : shown.title,
+                                           subtitle: shown.subtitle, mark: .locked, status: opens)
         switch shown.state {
         case let .completed(time):
-            rows.append(.init(id: "session", mark: .done, title: sessionTitle, detail: done(at: time),
-                              action: String(localized: "Replay"), run: { session = SessionOpen(id: id, isReplay: true) }))
+            program.mark = .done
+            program.status = done(at: time)
+            program.action = String(localized: "Replay")
+            program.run = { session = SessionOpen(id: id, isReplay: true) }
         case .available, .inProgress:
             let inProgress = shown.state == .inProgress
             let needsUpgrade = ProgramV2Access.needsUpgrade(id, isPro: entitlement.isPro)
             let title = shown.title
-            rows.append(.init(id: "session", mark: .open, title: sessionTitle,
-                              detail: inProgress ? String(localized: "\(shown.minutes) min · Xero saved your place")
-                                  : String(localized: "\(shown.minutes) min"),
-                              action: needsUpgrade ? String(localized: "Unlock") : inProgress ? String(localized: "Continue") : String(localized: "Start"),
-                              primary: true,
-                              run: { if needsUpgrade { unlock(id, title) } else { openSession(id) } }))
+            program.mark = .open
+            program.status = inProgress ? String(localized: "Xero saved your place.") : nil
+            program.action = needsUpgrade ? String(localized: "Unlock") : inProgress ? String(localized: "Continue") : String(localized: "Start")
+            program.primary = true
+            program.run = { if needsUpgrade { unlock(id, title) } else { openSession(id) } }
         case .scheduled(.tomorrow):
-            rows.append(.init(id: "session", mark: .locked, title: sessionTitle, detail: String(localized: "Opens tomorrow")))
+            program.status = String(localized: "Opens tomorrow")
         case .scheduled(.trialEnds):
-            rows.append(.init(id: "session", mark: .locked, title: sessionTitle, detail: String(localized: "Opens after your free trial")))
+            program.status = String(localized: "Opens after your free trial")
         case .scheduled, .locked:
-            rows.append(.init(id: "session", mark: .locked, title: sessionTitle, detail: opens))
+            break
         }
 
         // The day's use is logged during prep only; from Day Xero on a use is a slip, with its own flow.
@@ -382,7 +387,8 @@ struct TodayView: View {
 
         let date = shown.date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
         let kicker = (isToday ? "\(String(localized: "Today")) · \(date)" : date).uppercased()
-        return TodayDayCard(kicker: kicker, isToday: isToday, name: shown.label, rows: rows)
+        return TodayDayCard(kicker: kicker, isToday: isToday, session: program,
+                            rowsTitle: isToday ? String(localized: "Also today") : String(localized: "Also that day"), rows: rows)
     }
 
     /// The focus card, the prep countdown, the day's log and the rest of the day.
@@ -1181,6 +1187,9 @@ struct TodayPathModel {
         /// "Prep 3", "Day Xero".
         let label: String
         let title: String
+        let subtitle: String
+        /// Cards in its deck, 0 when it has none.
+        let cards: Int
         let minutes: Int
         /// The start of its day.
         let date: Date
@@ -1227,6 +1236,8 @@ struct TodayPathModel {
                 cursor = after(date)
             }
             days.append(Day(sessionId: session.id, label: session.label, title: session.title.resolve(store.variant) ?? "",
+                            subtitle: session.subtitle.resolve(store.variant) ?? "",
+                            cards: session.deck?.count ?? session.cards?.count ?? 0,
                             minutes: store.minutes(of: session), date: date, state: state))
         }
         let text = { (date: Date) in date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)) }
