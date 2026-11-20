@@ -69,7 +69,7 @@ window.FRAMES = [
     title: 'What\'s changing in your body',
     sub: 'Timings quoted from the American Cancer Society.',
     screen: 'health.html', time: '9:40',
-    card: { width: 324, z: 0.82, top: 512, html: `
+    card: { width: 324, z: 0.82, cover: ['.card.item.now'], center: true, html: `
       <div class="fact">
         <span class="k"><i></i>Happening now · A few days</span>
         <b>Carbon monoxide in your blood drops to normal</b>
@@ -166,6 +166,10 @@ window.FRAMES = [
     const y0 = Math.min(...rs.map(r => r.top)), y1 = Math.max(...rs.map(r => r.bottom)), pad = f.card.pad || 0;
     const card = document.getElementById('card'), top = p.top + p.k * (14 + y0) - pad, h = p.k * (y1 - y0) + 2 * pad;
     const zin = card.querySelector('.zin');
+    if (f.card.center) { // centred on the covered element, at the card's own height (frame 7)
+      Object.assign(card.style, { top: (top + h / 2 - card.offsetHeight / 2) + 'px', visibility: 'visible' });
+      return;
+    }
     Object.assign(card.style, { top: top + 'px', visibility: 'visible' });
     Object.assign(zin.style, { minHeight: (h / f.card.z) + 'px', display: 'flex', flexDirection: 'column' });
   }

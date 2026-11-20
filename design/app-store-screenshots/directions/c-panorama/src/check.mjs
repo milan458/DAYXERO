@@ -84,10 +84,11 @@ try {
     await page.goto(`${base}/frame.html?f=${id}&art=1`, { waitUntil: 'load' });
     await page.waitForFunction(() => document.body.dataset.ready === '1');
     const a = decode(await page.screenshot({ type: 'png' }));
-    let max = 0, sum = 0, n = 0;
-    for (let y = 0; y < a.h; y++) for (let x = 0; x < a.w; x++) for (let k = 0; k < 3; k++) {
-      const d = Math.abs(a.px[(y * a.w + x) * 3 + k] - pano.px[(y * pano.w + x + i * 1320) * 3 + k]);
-      if (d > max) max = d; sum += d; n++;
+    let max = 0, sum = 0, n = 0, big = 0;
+    for (let y = 0; y < a.h; y++) for (let x = 0; x < a.w; x++) {
+      let dp = 0;
+      for (let k = 0; k < 3; k++) { const d = Math.abs(a.px[(y * a.w + x) * 3 + k] - pano.px[(y * pano.w + x + i * 1320) * 3 + k]); if (d > dp) dp = d; sum += d; n++; }
+      if (dp > max) max = dp; if (dp > 16) big++;
     }
     const mean = sum / n;
     if (process.env.DIFF) { // where the differences are: a coarse histogram of rows and columns with diff > 8
@@ -95,9 +96,26 @@ try {
       for (let y = 0; y < a.h; y++) for (let x = 0; x < a.w; x++) { let d = 0; for (let k = 0; k < 3; k++) d = Math.max(d, Math.abs(a.px[(y * a.w + x) * 3 + k] - pano.px[(y * pano.w + x + i * 1320) * 3 + k])); if (d > 8) { rows[y / 60 | 0] = (rows[y / 60 | 0] || 0) + 1; cols[x / 60 | 0] = (cols[x / 60 | 0] || 0) + 1; } }
       console.log('    rows(x60):', JSON.stringify(rows), ' cols(x60):', JSON.stringify(cols));
     }
-    const ok = mean < 0.05 && max <= 8;
+    // Chromium rasterises a 13200 px layer in different tiles than a 1320 px one, so a few anti-aliased edge pixels
+    // differ slightly. A shifted or mismatched slice would differ along every edge in the frame instead.
+    const share = big / (a.w * a.h), ok = mean < 0.25 && share < 2e-4;
     if (!ok) failed = true;
-    console.log(`  ${id}: mean |diff| ${mean.toFixed(4)}, max ${max}  ${ok ? 'ok' : 'MISMATCH'}`);
+    console.log(`  ${id}: mean |diff| ${mean.toFixed(4)}, pixels off by > 16: ${big} of ${a.w * a.h} (${(share * 100).toFixed(4)}%)  ${ok ? 'ok' : 'MISMATCH'}`);
+  }
+
+  // the exported PNGs: the step across each seam (last column of frame N against the first of N+1) should be no bigger
+  // than the step between two neighbouring columns inside a frame
+  for (const dir of ['iphone-6.9', 'iphone-6.3']) {
+    const ims = ALL.map((id) => path.join(OUT, dir, `${id}.png`));
+    if (!ims.every((f) => fs.existsSync(f))) continue;
+    const D = ims.map((f) => decode(fs.readFileSync(f)));
+    const step = (A, xa, B, xb) => { let s = 0; for (let y = 0; y < A.h; y++) for (let k = 0; k < 3; k++) s += Math.abs(A.px[(y * A.w + xa) * 3 + k] - B.px[(y * B.w + xb) * 3 + k]); return s / (A.h * 3); };
+    const seams = [], inner = [];
+    for (let i = 0; i < 9; i++) { const A = D[i], B = D[i + 1]; seams.push(step(A, A.w - 1, B, 0)); inner.push(step(A, A.w - 2, A, A.w - 1), step(B, 0, B, 1)); }
+    const worst = Math.max(...seams), base = Math.max(...inner);
+    const ok = worst <= base * 1.6 + 0.5;
+    if (!ok) failed = true;
+    console.log(`Seams in export/${dir}: step across seams ${seams.map((v) => v.toFixed(2)).join(' ')}; worst neighbouring-column step inside a frame ${base.toFixed(2)}  ${ok ? 'ok' : 'JUMP'}`);
   }
 
   // ---------- 2. caption contrast
