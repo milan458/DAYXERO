@@ -1,0 +1,123 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>010 Onboarding Quit Day</title>
+<meta name="motion" content="Progress eases 7/11 to 8/11; title, the prep-week card (seven tiles rise 45ms apart, today's Fri 30 in its coral disc, their prep dots pop left to right), the Quit Day row (a cream card with an apricot Nov 6 date page and a Change label with a right chevron: the tappable date picker), Xero on his hill (it fades into the ground above the dock) and the hold button arrive in order. Holding fills the button left to right over 1500ms with a soft ticking haptic; on complete the button shows its done state, Quit Day set (success haptic), the yellow flag Xero holds runs up its pole (34px, 700ms settle) while he bumps (520ms), and the row's caption swaps Quit Day, recommended for Quit Day set with a green tick (300ms crossfade). 1200ms later the done button crossfades (350ms) into Continue. Tapping the Quit Day row opens the date wheel.">
+<link rel="stylesheet" href="../kit/kit.css">
+<script src="../kit/chars.js"></script><script src="../kit/kit.js"></script>
+<style>
+  /* Onboarding header: back button and progress only (no avatar); the bar ends at the gutter so the sun knob never collides. */
+  .nav { padding-right: 26px; }
+  .wk { margin: 22px var(--gutter) 0; padding: 14px 12px 12px; }
+  .wk-h { display: flex; justify-content: space-between; align-items: baseline; padding: 0 4px 10px; }
+  /* Prep tiles sit lighter than the card in both modes (card-2), so the week always reads. */
+  .days { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 6px; }
+  .day { border-radius: 14px; background: var(--card-2); display: grid; justify-items: center; align-content: center; gap: 4px; height: 82px; }
+  .day .t-cap { color: var(--muted); font-size: 13px; font-weight: 600; }
+  .day .num { font-size: 22px; line-height: 1; }
+  .day .pd { width: 8px; height: 8px; border-radius: 99px; background: #FF9A5C; margin-top: 2px; }
+  /* Today (Fri 30): the date sits in a coral disc, iOS-calendar style, and the label reads Today. */
+  .day.today .num { width: 30px; height: 30px; border-radius: 99px; background: var(--coral); color: #fff; display: grid; place-items: center; font-size: 18px; letter-spacing: -.4px; margin: -4px 0 -4px; }
+  .day.today .t-cap { color: var(--fg); font-weight: 700; }
+  /* Quit Day: the tappable date picker row (ink tile, chevron), under the week. */
+  /* Quit Day: a cream card with a hairline and an apricot date page (not an ink pill like the button). */
+  .qd { margin-top: 8px; width: 100%; text-align: left; border-radius: 16px; background: #FFF8EE; color: var(--fg); box-shadow: inset 0 0 0 1px var(--line); display: flex; align-items: center; gap: 14px; padding: 10px 14px 10px 10px; min-height: 70px; }
+  [data-theme="dark"] .qd { background: var(--card-2); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+  .qd .cal { width: 48px; height: 52px; flex: none; border-radius: 12px; overflow: hidden; display: grid; grid-template-rows: 16px 1fr; background: #FFC38A; color: #1E1A3A; box-shadow: 0 2px 0 rgba(110,50,20,.16); }
+  .qd .cal .mo { background: #FF7155; color: #fff; font: 700 11px/16px var(--body); text-align: center; letter-spacing: .2px; }
+  .qd .cal .dd { font: 800 24px/1 var(--display); letter-spacing: -.6px; display: grid; place-items: center; }
+  .qd .grow { flex: 1; min-width: 0; }
+  .qd .t-head { font-size: 20px; }
+  .qd .t-cap { color: var(--muted); margin-top: 2px; }
+  .qd .t-head { white-space: nowrap; }
+  /* The status sits in the caption: Recommended, then Set once the hold lands (one confirmation). */
+  .qd .st { position: relative; display: inline-grid; vertical-align: top; }
+  .qd .st span { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; transition: opacity .3s var(--ease); }
+  .qd .st .set { opacity: 0; font-weight: 700; color: var(--fg); }
+  .qd .st .set .okc { width: 16px; height: 16px; border-radius: 99px; background: var(--done); color: #fff; display: inline-grid; place-items: center; margin-left: 2px; }
+  .qd .st .set .okc svg { width: 11px; height: 11px; }
+  .qd.got .st .rec { opacity: 0; }
+  .qd.got .st .set { opacity: 1; }
+  /* Round 8: the picker says what tapping does: "Change" and a right chevron. */
+  .qd .chg { display: inline-flex; align-items: center; gap: 2px; flex: none; font: 600 14px/1 var(--body); color: var(--muted); }
+  .qd .chev { color: var(--muted); width: 18px; height: 18px; }
+  .qd .chev svg { width: 18px; height: 18px; }
+  /* Xero on his own small hill, holding a yellow flag that runs up the pole when Quit Day is set. */
+  /* Xero's hill ends above the dock: it fades into the ground before the button, so Continue sits clear of it. */
+  /* Round 8: Xero sits 14px closer to the week card, and his dome fades out well before the dock (no hard base above the CTA). */
+  .hero { position: absolute; left: 0; right: 0; top: 452px; height: 230px; }
+  .hero .hill { position: absolute; left: 0; top: 118px; }
+  .hero .xw { position: absolute; left: 127px; top: 30px; width: 128px; height: 128px; }
+  .hero .pen { transform: translateY(34px); transition: transform 700ms var(--settle); }
+  .hero.set .pen { transform: none; }
+  .dock .t-cap { text-align: center; color: var(--muted); }
+  /* After the hold: the done state shows, then the button hands over to Continue. */
+  .btns { position: relative; height: 58px; }
+  .btns .btn { position: absolute; inset: 0; transition: opacity .35s var(--ease), transform .35s var(--ease); }
+  .btns #go { opacity: 0; pointer-events: none; transform: translateY(6px); }
+  .btns.next #hold { opacity: 0; pointer-events: none; }
+  .btns.next #go { opacity: 1; pointer-events: auto; transform: none; }
+</style>
+</head><body>
+<div class="screen" data-ground="apricot">
+  <div class="nav">
+    <button class="icon-btn" aria-label="Back" data-icon="back"></button>
+    <div class="grow"><div class="progress sun"><i id="bar" style="--p:72.7%"></i></div></div>
+  </div>
+
+  <div class="q">
+    <h1 class="t-large" data-a>Pick your Quit Day, Sam</h1>
+    <p class="t-body muted" data-a style="--i:1">I recommend a full week of prep first. Keep using as normal until then.</p>
+  </div>
+
+  <div class="card wk" data-a style="--i:2">
+    <div class="wk-h"><p class="t-foot"><b>Your prep week</b></p><span class="t-foot muted">7 short sessions</span></div>
+    <div class="days" id="days"></div>
+    <button class="qd" id="qd" data-a style="--i:6" aria-label="Quit Day, change date">
+      <span class="cal" aria-hidden="true"><span class="mo">Nov</span><span class="dd">6</span></span>
+      <div class="grow"><p class="t-head">Fri, Nov 6</p><p class="t-cap"><span class="st"><span class="rec">Quit Day, recommended</span><span class="set" id="setTag">Quit Day set</span></span></p></div>
+      <span class="chg">Change<span class="chev" data-icon="chev"></span></span>
+    </button>
+  </div>
+
+  <div class="hero" id="hero" aria-hidden="true">
+    <svg class="hill" id="hill" width="390" height="104" viewBox="0 0 390 104"></svg>
+    <div class="xw" data-settle style="--d:450ms"><div id="bw"><div id="xero"></div></div></div>
+  </div>
+
+  <div class="dock">
+    <div class="btns" id="btns" data-a style="--i:8">
+      <button class="btn" id="hold" data-hold="1500" data-done="Quit Day set" data-autohold="1600">Hold to set your Quit Day</button>
+      <button class="btn" id="go">Continue</button>
+    </div>
+    <p class="t-cap" data-a style="--i:9">Quit Day comes on this date, even if prep runs short. You can change it later.</p>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('[data-icon]').forEach(e => e.innerHTML = DX.icon(e.dataset.icon));
+  const $ = id => document.getElementById(id), bar = $('bar');
+  $('setTag').insertAdjacentHTML('beforeend', `<span class="okc">${DX.icon('check', { size: 11, w: 3.4 })}</span>`);
+  const days = [['Fri', 30], ['Sat', 31], ['Sun', 1], ['Mon', 2], ['Tue', 3], ['Wed', 4], ['Thu', 5]];
+  $('days').innerHTML = days.map(([d, n], i) => `<div class="day ${i === 0 ? 'today' : ''}" data-a style="--i:${i * .5 + 2.5}"><span class="t-cap">${i === 0 ? 'Today' : d}</span><span class="num">${n}</span><span class="pd" data-pop style="--i:0;--d:${700 + i * 90}ms"></span></div>`).join('');
+  /* A small paper hill so Xero stands on something. */
+  const dark = DX.theme === 'dark';
+  $('hill').innerHTML = `<defs><linearGradient id="hf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dark ? '#212A41' : '#FFAE7A'}"/><stop offset=".22" stop-color="${dark ? '#212A41' : '#FFAE7A'}"/><stop offset=".5" style="stop-color: color-mix(in srgb, ${dark ? '#212A41' : '#FFAE7A'} 62%, var(--g))"/><stop offset=".78" style="stop-color: color-mix(in srgb, ${dark ? '#212A41' : '#FFAE7A'} 20%, var(--g))"/><stop offset="1" style="stop-color: var(--g)"/></linearGradient>
+    <linearGradient id="he" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dark ? 'rgba(190,205,255,.22)' : 'rgba(255,255,255,.6)'}"/><stop offset=".7" stop-color="${dark ? 'rgba(190,205,255,0)' : 'rgba(255,255,255,0)'}"/></linearGradient></defs>
+    <path d="M10 104 C50 52 130 26 195 26 C260 26 340 52 380 104 Z" fill="url(#hf)"/>
+    <path d="M10 104 C50 52 130 26 195 26 C260 26 340 52 380 104" fill="none" stroke="url(#he)" stroke-width="2"/>`;
+  /* Xero, hello, holding a small yellow flag in his right hand (pole behind the hand; the pennant rides up on set). */
+  const flag = `<path d="M188 154 L188 30" stroke="#8A5A3C" stroke-width="4" stroke-linecap="round"/><circle cx="188" cy="28" r="4" fill="#F5B83D"/>
+    <path class="pen" d="M190 33 L216 42 L190 52 Z" fill="#FFD966" stroke="#F5B83D" stroke-width="2" stroke-linejoin="round"/>`;
+  const arm = '<path d="M164 122 C176 118 183 110 186 100" fill="none" stroke="#FF7155" stroke-width="12" stroke-linecap="round"></path>';
+  $('xero').innerHTML = DX.char('xero', { mood: 'hello', size: 128 })
+    .replace('style="display: block"', 'style="display: block; overflow: visible"')
+    .replace(/<path d="M164 124 C174 132 178 142 176 152"[^>]*><\/path>/, flag + arm);
+  const reset = () => { bar.style.transition = 'none'; bar.style.setProperty('--p', '63.6%'); void bar.offsetWidth; bar.style.transition = '';
+    $('qd').classList.remove('got'); $('hero').classList.remove('set'); $('bw').classList.remove('bump'); $('btns').classList.remove('next'); };
+  DX.after(0, reset);
+  DX.after(250, () => bar.style.setProperty('--p', '72.7%'));
+  const held = () => { $('qd').classList.add('got'); $('hero').classList.add('set'); const x = $('bw'); x.classList.remove('bump'); void x.offsetWidth; x.style.setProperty('--d', '120ms'); x.classList.add('bump'); };
+  document.addEventListener('held', held);
+  /* 1200ms after the hold lands, the button hands over to Continue. */
+  DX.after(1600 + 1500 + 1200, () => $('btns').classList.add('next'));
+  DX.onStill(() => $('btns').classList.add('next'));
+</script>
+</body></html>
