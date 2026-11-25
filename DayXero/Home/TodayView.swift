@@ -116,6 +116,7 @@ struct TodayView: View {
             NotificationCenter.default.post(name: .dxSessionClosed, object: nil)
         }) { item in
             SessionFlowView(sessionId: item.id, profile: profile, isReplay: item.isReplay)
+                .captureShielded()
         }
         .dxCover(item: $celebrating) { milestone in
             MilestoneMoment(milestone: milestone, stats: MilestoneStats(profile: profile, logs: logs)) {
