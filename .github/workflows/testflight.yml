@@ -17,9 +17,9 @@ on:
         type: boolean
         default: false
       listings:
-        description: "Store listings from store/listing instead of a build: show what would change, or apply it (text only)"
+        description: "Instead of a build: store listing text from store/listing (show or apply), or the 20 Nov iPhone screenshots (shots-show or shots-apply)"
         type: choice
-        options: ["off", "show", "apply"]
+        options: ["off", "show", "apply", "shots-show", "shots-apply"]
         default: "off"
 
 permissions:
@@ -304,9 +304,19 @@ jobs:
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          MODE: ${{ inputs.listings }}
         run: |
           python3 -m pip install --quiet pyjwt cryptography
-          python3 scripts/ci/asc_listings.py ${{ inputs.listings }}
+          if [[ "$MODE" == shots-* ]]; then
+            # The 20 Nov set (direction E, "Meet the crew") lives on its design branch, 1320 x 2868.
+            SRC=design/app-store-screenshots/directions/e-crew-story/export/iphone-6.9
+            git fetch --depth=1 origin claude/adoring-ptolemy-1jtu1h
+            mkdir -p "$RUNNER_TEMP/shots"
+            for f in $(git ls-tree --name-only FETCH_HEAD "$SRC/"); do git show "FETCH_HEAD:$f" > "$RUNNER_TEMP/shots/$(basename "$f")"; done
+            python3 scripts/ci/asc_screenshots.py "${MODE#shots-}" "$RUNNER_TEMP/shots"
+          else
+            python3 scripts/ci/asc_listings.py "$MODE"
+          fi
       - name: Remove key
         if: always()
         run: rm -f "$RUNNER_TEMP"/AuthKey_*.p8
