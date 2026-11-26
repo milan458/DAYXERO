@@ -1,7 +1,8 @@
 """Puts the store listings in store/listing/<locale>/ into App Store Connect, text only.
 
   show   prints what App Store Connect has now and what each locale would get, and changes nothing.
-  apply  writes name and subtitle (app info) and description, keywords and promotional text (the version
+  apply  writes name, subtitle and privacy link (app info) and description, keywords, promotional text and
+         support link (the version
          being prepared), creating the locales that don't exist yet. New locales copy the privacy policy,
          support and marketing URLs from the primary locale. Screenshots and submitting are left alone.
 
@@ -14,8 +15,9 @@ from asc_signing import app_id, call
 
 ROOT = os.path.join(os.path.dirname(__file__), "..", "..", "store", "listing")
 EDITABLE = {"PREPARE_FOR_SUBMISSION", "DEVELOPER_REJECTED", "REJECTED", "METADATA_REJECTED", "INVALID_BINARY"}
-INFO_FIELDS = {"name": "name.txt", "subtitle": "subtitle.txt"}
-VERSION_FIELDS = {"description": "description.txt", "keywords": "keywords.txt", "promotionalText": "promotional_text.txt"}
+INFO_FIELDS = {"name": "name.txt", "subtitle": "subtitle.txt", "privacyPolicyUrl": "privacy_url.txt"}
+VERSION_FIELDS = {"description": "description.txt", "keywords": "keywords.txt", "promotionalText": "promotional_text.txt",
+                  "supportUrl": "support_url.txt"}
 COPIED_INFO = ["privacyPolicyUrl"]
 COPIED_VERSION = ["supportUrl", "marketingUrl"]
 
@@ -27,7 +29,9 @@ def planned():
         if not os.path.isdir(folder):
             continue
         read = lambda f: open(os.path.join(folder, f), encoding="utf-8").read().strip()
-        out[locale] = ({k: read(f) for k, f in INFO_FIELDS.items()}, {k: read(f) for k, f in VERSION_FIELDS.items()})
+        has = lambda f: os.path.exists(os.path.join(folder, f))
+        out[locale] = ({k: read(f) for k, f in INFO_FIELDS.items() if has(f)},
+                       {k: read(f) for k, f in VERSION_FIELDS.items() if has(f)})
     return out
 
 
@@ -70,6 +74,7 @@ def main(mode):
         a, b = info_locs.get(locale, {}).get("attributes", {}), ver_locs.get(locale, {}).get("attributes", {})
         print(f"NOW {locale}: name={a.get('name')!r} subtitle={a.get('subtitle')!r} keywords={short(b.get('keywords'))!r}")
         print(f"    description={short(b.get('description'))!r} promo={short(b.get('promotionalText'))!r}")
+        print(f"    privacy={a.get('privacyPolicyUrl')!r} support={b.get('supportUrl')!r}")
     failed = []
     for locale, (info, ver) in planned().items():
         action_i = "update" if locale in info_locs else "create"
@@ -82,7 +87,7 @@ def main(mode):
                 call("PATCH", f"appInfoLocalizations/{info_locs[locale]['id']}", {"data": {
                     "type": "appInfoLocalizations", "id": info_locs[locale]["id"], "attributes": info}})
             else:
-                attrs = dict(info, locale=locale, **{k: base_info[k] for k in COPIED_INFO if base_info.get(k)})
+                attrs = dict(info, locale=locale, **{k: base_info[k] for k in COPIED_INFO if base_info.get(k) and k not in info})
                 call("POST", "appInfoLocalizations", {"data": {"type": "appInfoLocalizations", "attributes": attrs,
                      "relationships": {"appInfo": {"data": {"type": "appInfos", "id": info_id}}}}})
                 # Adding a language to the app info also adds it to the version, so look again before creating it there.
@@ -92,7 +97,7 @@ def main(mode):
                 call("PATCH", f"appStoreVersionLocalizations/{ver_locs[locale]['id']}", {"data": {
                     "type": "appStoreVersionLocalizations", "id": ver_locs[locale]["id"], "attributes": ver}})
             else:
-                attrs = dict(ver, locale=locale, **{k: base_ver[k] for k in COPIED_VERSION if base_ver.get(k)})
+                attrs = dict(ver, locale=locale, **{k: base_ver[k] for k in COPIED_VERSION if base_ver.get(k) and k not in ver})
                 call("POST", "appStoreVersionLocalizations", {"data": {"type": "appStoreVersionLocalizations",
                      "attributes": attrs, "relationships": {"appStoreVersion": {"data": {
                          "type": "appStoreVersions", "id": version["id"]}}}}})
