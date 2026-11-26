@@ -649,12 +649,17 @@ struct MilestoneRays: View {
 
     private func layer(count: Int, start: Double, r0: Double, r1: Double, width: Double, color: Color) -> some View {
         Canvas { ctx, size in
-            let c = CGPoint(x: size.width / 2, y: size.height / 2)
+            // All Double, one step at a time: mixed CGFloat and Double here took Xcode 26 (the iOS 18 CI leg) too long
+            // to type-check.
+            let cx = Double(size.width) / 2
+            let cy = Double(size.height) / 2
             for i in 0..<count {
-                let t = (start + Double(i) * 24) * .pi / 180
+                let t: Double = (start + Double(i) * 24) * Double.pi / 180
+                let across: Double = sin(t)
+                let up: Double = cos(t)
                 var p = Path()
-                p.move(to: CGPoint(x: c.x + r0 * sin(t), y: c.y - r0 * cos(t)))
-                p.addLine(to: CGPoint(x: c.x + r1 * sin(t), y: c.y - r1 * cos(t)))
+                p.move(to: CGPoint(x: cx + r0 * across, y: cy - r0 * up))
+                p.addLine(to: CGPoint(x: cx + r1 * across, y: cy - r1 * up))
                 ctx.stroke(p, with: .color(color), style: StrokeStyle(lineWidth: width, lineCap: .round))
             }
         }
