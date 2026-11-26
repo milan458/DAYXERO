@@ -682,7 +682,10 @@ private struct LessonLevelBars: View {
             let t = timeline.date.timeIntervalSinceReferenceDate
             HStack(alignment: .bottom, spacing: 2) {
                 ForEach(0..<3, id: \.self) { i in
-                    let k: CGFloat = playing && !motion.reduce ? CGFloat(0.675 + 0.325 * cos((t / 1.8 + Double(i) * 0.2) * 2 * .pi)) : 1
+                    // Typed step by step: Xcode 26 (the iOS 18 CI leg) can't type-check this body in time otherwise.
+                    let phase: Double = (t / 1.8 + Double(i) * 0.2) * 2 * Double.pi
+                    let wave: Double = 0.675 + 0.325 * cos(phase)
+                    let k: CGFloat = playing && !motion.reduce ? CGFloat(wave) : 1
                     Capsule().fill(color).frame(width: 3, height: Self.heights[i] * k)
                 }
             }

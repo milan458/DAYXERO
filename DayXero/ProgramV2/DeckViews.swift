@@ -1651,19 +1651,24 @@ struct DeckRecapView: View {
 /// centre (500 ms, 25 ms apart, from 300 ms), then turn very slowly (26 s a turn).
 struct SlowRays: View {
     let color: Color
+    private static let rays: [Int] = (0..<16).filter { !(4...9).contains($0) }
     @State private var grown = false
     private let motion = MotionPolicy()
 
     var body: some View {
         TimelineView(.animation(paused: motion.reduce)) { timeline in
-            let turn = motion.reduce ? 0 : timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 26) / 26 * 360
+            // Typed step by step: Xcode 26 (the iOS 18 CI leg) can't type-check this body in time otherwise.
+            let seconds: Double = timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 26)
+            let turn: Double = motion.reduce ? 0 : seconds / 26 * 360
             ZStack {
-                ForEach(Array((0..<16).filter { !(4...9).contains($0) }), id: \.self) { i in
-                    let a = (Double(i) * 22.5 - 90) * .pi / 180
-                    let r1: CGFloat = i % 2 == 1 ? 118 : 134
+                ForEach(Self.rays, id: \.self) { i in
+                    let a: Double = (Double(i) * 22.5 - 90) * Double.pi / 180
+                    let r1: Double = i % 2 == 1 ? 118 : 134
+                    let across: Double = cos(a)
+                    let down: Double = sin(a)
                     Path { p in
-                        p.move(to: CGPoint(x: 160 + 100 * cos(a), y: 160 + 100 * sin(a)))
-                        p.addLine(to: CGPoint(x: 160 + r1 * cos(a), y: 160 + r1 * sin(a)))
+                        p.move(to: CGPoint(x: 160 + 100 * across, y: 160 + 100 * down))
+                        p.addLine(to: CGPoint(x: 160 + r1 * across, y: 160 + r1 * down))
                     }
                     .stroke(color, style: StrokeStyle(lineWidth: 10, lineCap: .round))
                     .scaleEffect(grown || motion.reduce ? 1 : 0.6, anchor: .center)
