@@ -16,17 +16,21 @@ on:
         description: "Only list the builds App Store Connect has"
         type: boolean
         default: false
+      listings:
+        description: "Store listings from store/listing instead of a build: show what would change, or apply it (text only)"
+        type: choice
+        options: ["off", "show", "apply"]
+        default: "off"
 
 permissions:
   contents: read
 
-concurrency:
-  group: testflight
-  cancel-in-progress: false
-
 jobs:
   upload:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    if: (github.event_name == 'workflow_dispatch' && (inputs.listings == 'off' || inputs.listings == '')) || github.event.workflow_run.conclusion == 'success'
+    concurrency:
+      group: testflight
+      cancel-in-progress: false
     runs-on: xcode-27
     timeout-minutes: 60
     steps:
@@ -276,3 +280,33 @@ jobs:
       - name: Remove key
         if: always()
         run: rm -rf "$RUNNER_TEMP"/AuthKey_*.p8 "$RUNNER_TEMP"/dist.p12 "$RUNNER_TEMP"/dist-cache ~/.appstoreconnect Config/Secrets.xcconfig
+
+  # Text only: names, subtitles, descriptions, keywords and promotional text, one locale per store/listing folder.
+  listings:
+    if: github.event_name == 'workflow_dispatch' && inputs.listings != 'off' && inputs.listings != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write key
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+        run: |
+          python3 - <<'PY2'
+          import os, re, textwrap
+          body = re.sub(r"-----(BEGIN|END) PRIVATE KEY-----", "", os.environ["ASC_KEY_P8"])
+          body = re.sub(r"[^A-Za-z0-9+/=]", "", body)
+          pem = "-----BEGIN PRIVATE KEY-----\n" + "\n".join(textwrap.wrap(body, 64)) + "\n-----END PRIVATE KEY-----\n"
+          open(os.path.join(os.environ["RUNNER_TEMP"], f"AuthKey_{os.environ['ASC_KEY_ID'].strip()}.p8"), "w").write(pem)
+          PY2
+      - name: Listings (${{ inputs.listings }})
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          python3 -m pip install --quiet pyjwt cryptography
+          python3 scripts/ci/asc_listings.py ${{ inputs.listings }}
+      - name: Remove key
+        if: always()
+        run: rm -f "$RUNNER_TEMP"/AuthKey_*.p8
