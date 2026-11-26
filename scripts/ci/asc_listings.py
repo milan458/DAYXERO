@@ -85,6 +85,9 @@ def main(mode):
                 attrs = dict(info, locale=locale, **{k: base_info[k] for k in COPIED_INFO if base_info.get(k)})
                 call("POST", "appInfoLocalizations", {"data": {"type": "appInfoLocalizations", "attributes": attrs,
                      "relationships": {"appInfo": {"data": {"type": "appInfos", "id": info_id}}}}})
+                # Adding a language to the app info also adds it to the version, so look again before creating it there.
+                ver_locs = {l["attributes"]["locale"]: l for l in call(
+                    "GET", f"appStoreVersions/{version['id']}/appStoreVersionLocalizations?limit=50")["data"]}
             if locale in ver_locs:
                 call("PATCH", f"appStoreVersionLocalizations/{ver_locs[locale]['id']}", {"data": {
                     "type": "appStoreVersionLocalizations", "id": ver_locs[locale]["id"], "attributes": ver}})
