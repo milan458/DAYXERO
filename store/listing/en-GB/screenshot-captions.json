@@ -1,0 +1,13 @@
+{
+  "_about": "Caption text for the 20 Nov screenshot set (design/app-store-screenshots/directions/e-crew-story), frame by frame. The app screens inside the phones stay in English. Keep 'DayXero', 'Day Xero', 'DayXero Pro', 'SOS', 'Xero', 'Jelli' and 'Glim' as they are.",
+  "01": {"headline": "Quit smoking & vaping. No cold turkey.", "subhead": "Get your mind ready in 7 days, then quit on Day Xero.", "fineprint": "Requires a DayXero Pro subscription.", "bubbles": ["I'm Jelli. Cravings? I've got you.", "Glim here. I check in at night.", "Hi, I'm Xero. We'll take it one day at a time."]},
+  "02": {"pill": "The DayXero plan", "headline": "Prep for 7 days. Then quit on Day Xero.", "subhead": "Keep using as normal while you learn how your habit works.", "bubbles": ["One stone a day. I'll walk it with you."]},
+  "03": {"pill": "Meet Xero · your days", "headline": "One small step, every day.", "subhead": "Xero shows you what's next and cheers every step you take.", "bubbles": ["Just today's step. That's all."]},
+  "04": {"pill": "Your daily hand of cards", "headline": "Learn your habit, one card at a time.", "subhead": "Listen, reveal, myth or fact, try. Short cards on how the habit really works.", "bubbles": ["One card at a time. No rush."]},
+  "05": {"pill": "Meet Jelli · your waves", "headline": "Craving hits? Jelli breathes with you.", "subhead": "Tap SOS anytime. Ride the wave out together, one breath at a time.", "bubbles": ["Breathe with me. It'll pass."]},
+  "06": {"pill": "Jelli · after a slip", "headline": "Slipped? Nothing resets.", "subhead": "Tell Jelli what happened. Your days stay, and you plan for next time.", "bubbles": ["No guilt. Let's plan for next time."]},
+  "07": {"pill": "Meet Glim · your evenings", "headline": "Wind down with Glim every night.", "subhead": "A one-minute check-in with Glim, then a slow breath before bed.", "bubbles": ["How was today? Tell me, then rest."]},
+  "08": {"pill": "Calm tools · any time", "headline": "A calm tool for every wave.", "subhead": "Box breathing, grounding and noticing the urge, one tap away in Calm."},
+  "09": {"pill": "Badges and milestones", "headline": "Celebrate progress, not perfection.", "subhead": "Badges as your days add up. Every wave you ride out counts."},
+  "10": {"headline": "Your Day Xero is waiting.", "subhead": "7 days to get ready. A crew that's got your back the whole way.", "chips": ["No cold turkey", "Cigarettes, vapes and pouches", "Private on your phone"], "cta": "Start your 7-day plan", "fineprint": "Requires a DayXero Pro subscription."}
+}

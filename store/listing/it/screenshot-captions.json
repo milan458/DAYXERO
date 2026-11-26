@@ -1,0 +1,13 @@
+{
+  "_about": "Caption text for the 20 Nov screenshot set (design/app-store-screenshots/directions/e-crew-story), frame by frame. The app screens inside the phones stay in English. Keep 'DayXero', 'Day Xero', 'DayXero Pro', 'SOS', 'Xero', 'Jelli' and 'Glim' as they are.",
+  "01": {"headline": "Smetti di fumare e svapare, senza strappi.", "subhead": "Prepara la mente in 7 giorni, poi smetti nel tuo Day Xero.", "fineprint": "Richiede un abbonamento DayXero Pro.", "bubbles": ["Sono Jelli. Arriva la voglia? Ci sono io.", "Sono Glim. Passo a trovarti la sera.", "Ciao, sono Xero. Andiamo un giorno alla volta."]},
+  "02": {"pill": "Il piano DayXero", "headline": "Preparati 7 giorni. Poi smetti nel tuo Day Xero.", "subhead": "Continua come sempre mentre scopri come funziona la tua abitudine.", "bubbles": ["Una pietra al giorno. La percorro con te."]},
+  "03": {"pill": "Ecco Xero · i tuoi giorni", "headline": "Un piccolo passo, ogni giorno.", "subhead": "Xero ti mostra cosa viene dopo e festeggia ogni passo che fai.", "bubbles": ["Solo il passo di oggi. Niente di più."]},
+  "04": {"pill": "Le tue carte del giorno", "headline": "Scopri la tua abitudine, una carta alla volta.", "subhead": "Ascolta, scopri, mito o verità, prova. Brevi carte su come funziona davvero l'abitudine.", "bubbles": ["Una carta alla volta. Senza fretta."]},
+  "05": {"pill": "Ecco Jelli · le tue onde", "headline": "Arriva la voglia? Jelli respira con te.", "subhead": "Tocca SOS quando vuoi. Lasciate passare l'onda insieme, un respiro alla volta.", "bubbles": ["Respira con me. Passerà."]},
+  "06": {"pill": "Jelli · dopo uno scivolone", "headline": "Scivolone? Nulla si azzera.", "subhead": "Racconta a Jelli cosa è successo. I tuoi giorni restano e prepari la prossima volta.", "bubbles": ["Niente sensi di colpa. Pensiamo alla prossima volta."]},
+  "07": {"pill": "Ecco Glim · le tue sere", "headline": "Rilassati con Glim ogni sera.", "subhead": "Un check-in di un minuto con Glim, poi un respiro lento prima di dormire.", "bubbles": ["Com'è andata oggi? Raccontami, poi riposa."]},
+  "08": {"pill": "Strumenti di calma · sempre", "headline": "Uno strumento zen per ogni onda.", "subhead": "Respirazione quadrata, grounding e osservare l'impulso, a un tocco in Calm."},
+  "09": {"pill": "Badge e traguardi", "headline": "Festeggia i progressi, non la perfezione.", "subhead": "Badge man mano che i giorni si sommano. Ogni onda superata conta."},
+  "10": {"headline": "Il tuo Day Xero ti aspetta.", "subhead": "7 giorni per prepararti. Una squadra al tuo fianco per tutto il percorso.", "chips": ["Senza smettere di colpo", "Sigarette, svapo e bustine", "Privato sul tuo telefono"], "cta": "Inizia il piano di 7 giorni", "fineprint": "Richiede un abbonamento DayXero Pro."}
+}

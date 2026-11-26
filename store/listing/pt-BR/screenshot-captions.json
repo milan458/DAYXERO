@@ -1,0 +1,13 @@
+{
+  "_about": "Caption text for the 20 Nov screenshot set (design/app-store-screenshots/directions/e-crew-story), frame by frame. The app screens inside the phones stay in English. Keep 'DayXero', 'Day Xero', 'DayXero Pro', 'SOS', 'Xero', 'Jelli' and 'Glim' as they are.",
+  "01": {"headline": "Largue o cigarro e o vape. Sem ser na marra.", "subhead": "Prepare a mente em 7 dias e pare no seu Day Xero.", "fineprint": "Requer uma assinatura DayXero Pro.", "bubbles": ["Oi, aqui é Jelli. Bateu fissura? Tô com você.", "Aqui é Glim. Eu passo aqui toda noite.", "Oi, eu sou Xero. Vamos um dia de cada vez."]},
+  "02": {"pill": "O plano DayXero", "headline": "Prepare-se por 7 dias. Depois, pare no Day Xero.", "subhead": "Continue usando normalmente enquanto entende como o seu hábito funciona.", "bubbles": ["Uma pedra por dia. Eu vou junto com você."]},
+  "03": {"pill": "Conheça Xero · seus dias", "headline": "Um passinho por dia.", "subhead": "Xero mostra o que vem a seguir e comemora cada passo que você dá.", "bubbles": ["Só o passo de hoje. Mais nada."]},
+  "04": {"pill": "Sua mão de cartas do dia", "headline": "Entenda seu hábito, uma carta por vez.", "subhead": "Ouça, revele, mito ou verdade, experimente. Cartas curtas sobre como o hábito funciona de verdade.", "bubbles": ["Uma carta por vez. Sem pressa."]},
+  "05": {"pill": "Conheça Jelli · suas ondas", "headline": "Bateu a fissura? Jelli respira com você.", "subhead": "Toque em SOS quando quiser. Deixe a onda passar com Jelli, uma respiração de cada vez.", "bubbles": ["Respira comigo. Vai passar."]},
+  "06": {"pill": "Jelli · depois de um deslize", "headline": "Escorregou? Nada é zerado.", "subhead": "Conte para Jelli o que aconteceu. Seus dias ficam, e você planeja a próxima vez.", "bubbles": ["Sem culpa. Vamos planejar a próxima vez."]},
+  "07": {"pill": "Conheça Glim · suas noites", "headline": "Desacelere com Glim toda noite.", "subhead": "Um papo de um minuto com Glim e uma respiração lenta antes de dormir.", "bubbles": ["Como foi hoje? Me conta e descansa."]},
+  "08": {"pill": "Ferramentas de calma · a qualquer hora", "headline": "Calma para cada onda.", "subhead": "Respiração quadrada, aterramento e observar a vontade, a um toque na seção Calm."},
+  "09": {"pill": "Medalhas e conquistas", "headline": "Comemore o progresso, não a perfeição.", "subhead": "Medalhas conforme seus dias se somam. Cada onda que você atravessa conta."},
+  "10": {"headline": "Seu Day Xero está te esperando.", "subhead": "7 dias para se preparar. Uma turma do seu lado o caminho todo.", "chips": ["Sem ser na marra", "Cigarro, vape e sachê", "Privado no seu celular"], "cta": "Comece seu plano de 7 dias", "fineprint": "Requer uma assinatura DayXero Pro."}
+}

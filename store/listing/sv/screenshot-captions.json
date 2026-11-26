@@ -1,0 +1,13 @@
+{
+  "_about": "Caption text for the 20 Nov screenshot set (design/app-store-screenshots/directions/e-crew-story), frame by frame. The app screens inside the phones stay in English. Keep 'DayXero', 'Day Xero', 'DayXero Pro', 'SOS', 'Xero', 'Jelli' and 'Glim' as they are.",
+  "01": {"headline": "Sluta röka och vejpa. Utan att tvärsluta.", "subhead": "Förbered dig i 7 dagar och sluta sedan på din Day Xero.", "fineprint": "Kräver en DayXero Pro-prenumeration.", "bubbles": ["Jag är Jelli. Sug? Jag finns här för dig.", "Glim här. Jag hör av mig på kvällen.", "Hej, jag är Xero. Vi tar en dag i taget."]},
+  "02": {"pill": "DayXero-planen", "headline": "Förbered dig i 7 dagar. Sluta på Day Xero.", "subhead": "Fortsätt som vanligt medan du lär dig hur din vana fungerar.", "bubbles": ["En sten om dagen. Jag går med dig."]},
+  "03": {"pill": "Möt Xero · dina dagar", "headline": "Ett litet steg varje dag.", "subhead": "Xero visar vad som kommer härnäst och hejar på varje steg du tar.", "bubbles": ["Bara dagens steg. Det är allt."]},
+  "04": {"pill": "Dagens hand med kort", "headline": "Lär känna din vana, ett kort i taget.", "subhead": "Lyssna, avslöja, myt eller fakta, testa. Korta kort om hur vanan egentligen fungerar.", "bubbles": ["Ett kort i taget. Ingen brådska."]},
+  "05": {"pill": "Möt Jelli · dina vågor", "headline": "Kommer suget? Jelli andas med dig.", "subhead": "Tryck på SOS när som helst. Rid ut vågen tillsammans, ett andetag i taget.", "bubbles": ["Andas med mig. Det går över."]},
+  "06": {"pill": "Jelli · efter ett snedsteg", "headline": "Snedsteg? Inget nollställs.", "subhead": "Berätta för Jelli vad som hände. Dina dagar finns kvar och du planerar för nästa gång.", "bubbles": ["Ingen skuld. Vi planerar för nästa gång."]},
+  "07": {"pill": "Möt Glim · dina kvällar", "headline": "Varva ner med Glim varje kväll.", "subhead": "En avstämning på en minut med Glim, sedan ett lugnt andetag innan du somnar.", "bubbles": ["Hur var dagen? Berätta, och vila sen."]},
+  "08": {"pill": "Lugna verktyg · när som helst", "headline": "Ett lugnt verktyg för varje våg.", "subhead": "Fyrkantsandning, grounding och att lägga märke till suget, ett tryck bort i Calm."},
+  "09": {"pill": "Märken och milstolpar", "headline": "Fira framsteg, inte perfektion.", "subhead": "Märken i takt med att dagarna blir fler. Varje våg du rider ut räknas."},
+  "10": {"headline": "Din Day Xero väntar.", "subhead": "7 dagar att förbereda dig. Ett gäng som stöttar dig hela vägen.", "chips": ["Inget tvärstopp", "Cigaretter, vape och snus", "Privat i din telefon"], "cta": "Starta din 7-dagarsplan", "fineprint": "Kräver en DayXero Pro-prenumeration."}
+}
