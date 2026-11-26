@@ -828,7 +828,9 @@ struct TensionTrack: View {
                 .frame(height: 30)
                 .contentShape(Rectangle())
                 .gesture(DragGesture(minimumDistance: 0).onChanged { g in
-                    value = min(max(((g.location.x - 15) / max(w - 30, 1) * 10).rounded(), 0), 10)
+                    // Typed step by step: Xcode 26 (the iOS 18 CI leg) finds `*` ambiguous in the one-line form.
+                    let along: Double = Double(g.location.x - 15) / Double(max(w - 30, 1))
+                    value = min(max((along * 10).rounded(), 0), 10)
                 })
             }
             .frame(height: 30)
