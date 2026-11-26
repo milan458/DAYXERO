@@ -276,7 +276,11 @@ final class JourneyUITests: XCTestCase {
             last = frame
             RunLoop.current.run(until: .now.addingTimeInterval(0.3))
         }
-        XCTAssert(settled, "\"\(name)\" never settled on screen", file: file, line: line)
+        if !settled {
+            // What the small-iPhone leg needs to show: where the button was, whether it moved or stayed disabled.
+            snap(app, "unsettled-\(name)-line\(line)")
+        }
+        XCTAssert(settled, "\"\(name)\" never settled on screen (line \(line): frame \(element.frame), last \(last), enabled \(element.isEnabled), screen \(screen))", file: file, line: line)
         element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
     }
 
