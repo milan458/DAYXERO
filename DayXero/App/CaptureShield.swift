@@ -30,6 +30,49 @@ enum CaptureShield {
     }()
 }
 
+extension Notification.Name {
+    /// Posted when the screen starts or stops being recorded, mirrored or shown over AirPlay.
+    static let dxCaptureChanged = Notification.Name("dxCaptureChanged")
+}
+
+/// Whether the screen is being recorded, mirrored or shown over AirPlay right now.
+///
+/// The shield keeps the picture of a program session out of a recording, but iOS has no way to keep the app's
+/// sound out of one, so the lesson audio waits while a recording runs (`LessonNarrator`). Screenshots carry no
+/// sound and don't count.
+@MainActor @Observable
+final class CaptureWatch {
+    static let shared = CaptureWatch()
+    private(set) var capturing = false
+    @ObservationIgnored private var observers: [NSObjectProtocol] = []
+
+    private init() {
+        // Recording from Control Centre fires the screen's notification even while the phone is locked with a
+        // lesson playing; coming back to the app reads the state again in case a change was missed.
+        let names = [UIScreen.capturedDidChangeNotification, UIScene.didActivateNotification,
+                     UIScene.willEnterForegroundNotification]
+        observers = names.map { name in
+            NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { _ in
+                MainActor.assumeIsolated { CaptureWatch.shared.refresh() }
+            }
+        }
+        capturing = Self.read()
+    }
+
+    func refresh() {
+        let now = Self.read()
+        guard now != capturing else { return }
+        capturing = now
+        NotificationCenter.default.post(name: .dxCaptureChanged, object: nil)
+    }
+
+    private static func read() -> Bool {
+        UIApplication.shared.connectedScenes.contains { scene in
+            (scene as? UIWindowScene)?.traitCollection.sceneCaptureState == .active
+        }
+    }
+}
+
 /// Reads the whole environment where the shield sits and hands it on: a hosting controller starts a new
 /// hierarchy, which would otherwise lose the model context, the entitlement and the rest.
 private struct CaptureShieldHost<Content: View>: View {
@@ -70,6 +113,11 @@ final class CaptureShieldController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
+        // A recording started or stopped while the session is on screen reaches the scene's traits first.
+        CaptureWatch.shared.refresh()
+        registerForTraitChanges([UITraitSceneCaptureState.self]) { (_: CaptureShieldController, _: UITraitCollection) in
+            CaptureWatch.shared.refresh()
+        }
 
         // What a screenshot or a recording shows: it sits behind the content, which the system leaves out.
         let note = UIHostingController(rootView: CaptureShieldNote())

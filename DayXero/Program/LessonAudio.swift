@@ -42,6 +42,10 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
     @ObservationIgnored private var interruption: NSObjectProtocol?
     /// True while a call or another app has taken the sound from a lesson that was playing.
     @ObservationIgnored private var interrupted = false
+    /// True while the lesson waits because the screen is being recorded or shared (`CaptureWatch`): the shield keeps
+    /// the session's picture out of a recording, and this keeps its voice out too. It plays on when that stops.
+    private(set) var heldForCapture = false
+    @ObservationIgnored private var captureObserver: NSObjectProtocol?
 
     init(transcript: String, url: URL?, seconds: Int) {
         sentences = Self.split(transcript)
@@ -168,6 +172,11 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
     }
 
     func play() {
+        watchCapture()
+        if CaptureShield.isOn, CaptureWatch.shared.capturing {
+            heldForCapture = true
+            return
+        }
         if finished { finished = false; index = 0; player?.seek(to: .zero) }
         activate()
         playing = true
@@ -181,6 +190,7 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
     }
 
     func pause() {
+        heldForCapture = false
         playing = false
         player?.pause()
         stopSpeech()
@@ -228,8 +238,30 @@ final class LessonNarrator: NSObject, AVSpeechSynthesizerDelegate {
         publish()
     }
 
+    /// A recording or screen share started (true) or stopped (false). A lesson that was playing waits, and goes on
+    /// from where it was when the recording stops; one paused by hand stays paused.
+    func captureChanged(_ capturing: Bool) {
+        if capturing {
+            guard playing else { return }
+            pause()
+            heldForCapture = true
+        } else if heldForCapture {
+            heldForCapture = false
+            play()
+        }
+    }
+
+    private func watchCapture() {
+        guard CaptureShield.isOn, captureObserver == nil else { return }
+        captureObserver = NotificationCenter.default.addObserver(forName: .dxCaptureChanged, object: nil, queue: .main) { [weak self] _ in
+            MainActor.assumeIsolated { self?.captureChanged(CaptureWatch.shared.capturing) }
+        }
+    }
+
     func stop() {
         pause()
+        if let captureObserver { NotificationCenter.default.removeObserver(captureObserver) }
+        captureObserver = nil
         if let observer { player?.removeTimeObserver(observer) }
         observer = nil
         player = nil
@@ -447,6 +479,12 @@ struct LessonAudioStep: View {
                         .dxArrive(1)
                         scrubber.padding(.top, 14).dxArrive(2)
                         controls.padding(.top, 10).dxArrive(3)
+                        if narrator.heldForCapture {
+                            Text("Paused while your screen is recorded or shared. It plays on when that stops.")
+                                .dxType(.footnote).foregroundStyle(ground.muted)
+                                .multilineTextAlignment(.center)
+                                .padding(.top, 8).padding(.horizontal, 24)
+                        }
                         pills.padding(.top, 16).dxArrive(4)
                         live.padding(.top, 22).dxArrive(5)
                         if reading {
