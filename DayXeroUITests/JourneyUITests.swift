@@ -54,7 +54,11 @@ final class JourneyUITests: XCTestCase {
         tapSettled(app, "Continue")
         tap(button(app, "Irritability"))
         tapSettled(app, "Continue")
-        tap(button(app, "Not for me"))
+        // On a small iPhone "Not for me" sits under the pinned Continue button, so a tap there hit Continue instead.
+        let notForMe = button(app, "Not for me")
+        XCTAssert(notForMe.waitForExistence(timeout: 5))
+        scrollIntoView(app, notForMe)
+        tap(notForMe)
         tapSettled(app, "Continue")
         // Your day: the morning pledge and the night check-in.
         snap(app, "03c-your-day")
