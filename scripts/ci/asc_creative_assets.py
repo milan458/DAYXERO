@@ -80,8 +80,19 @@ def localizations(version):
     return must("GET", f"appStoreVersions/{version['id']}/appStoreVersionLocalizations?limit=50")["data"]
 
 
+def icons(aid):
+    """The icon Apple took from each recent build (what TestFlight and App Store Connect show)."""
+    res = must("GET", f"builds?filter[app]={aid}&sort=-uploadedDate&limit=8&fields[builds]=version,processingState,uploadedDate,iconAssetToken")
+    for b in res["data"]:
+        a = b["attributes"]
+        t = a.get("iconAssetToken") or {}
+        url = (t.get("templateUrl") or "").replace("{w}", "512").replace("{h}", "512").replace("{f}", "png")
+        print(f"Build {a['version']} {a['processingState']} {a['uploadedDate']} icon: {url or 'none'}")
+
+
 def show(_folder=None):
     aid = app_id()
+    icons(aid)
     library(aid)
     code, ref = req("GET", "appAssetLibraryRefData")
     print(f"Reference data ({code}):\n{short(ref, 6000)}")
