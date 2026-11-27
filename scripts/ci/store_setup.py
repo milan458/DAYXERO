@@ -7,6 +7,8 @@ Safe to run again: anything that already exists is left as it is.
     app sells (16 Nov 2026), plus dayxero.monthly and the non-consumable dayxero.lifetime, which are no longer on
     the paywall but stay for anyone who bought them. English names, prices in every territory, review screenshots.
   "check" only reads App Store Connect and RevenueCat and prints what App Review will see.
+  "group" adds the subscription group's version to the draft review submission, which a first subscription needs
+  and the website can't do; it never submits.
   RevenueCat (RC_SECRET_KEY, RC_PROJECT_ID; skipped when not set):
     the four products, the "pro" entitlement, and the current "default" offering with
     $rc_annual, $rc_three_month, $rc_monthly and $rc_lifetime packages. Prints the app's public SDK key.
@@ -482,10 +484,83 @@ def check():
     print("\n".join(out))
 
 
+def add_group_to_draft():
+    """Adds the subscription group's version to the draft review submission (first subscription needs it).
+
+    Only touches a submission that is still a draft (READY_FOR_REVIEW, not yet submitted). Never submits.
+    """
+    app = app_id()
+    groups = [g for g in all_pages(f"/v1/apps/{app}/subscriptionGroups?limit=50") if g["attributes"]["referenceName"] == GROUP]
+    if len(groups) != 1:
+        print(f"::error::Expected one group named {GROUP!r}, found {len(groups)}")
+        raise SystemExit(1)
+    gid = groups[0]["id"]
+    versions = all_pages(f"/v1/subscriptionGroups/{gid}/versions")
+    for v in versions:
+        print(f"GROUP VERSION {v['id']}: v{v['attributes'].get('version')} {v['attributes'].get('state')}")
+    drafts = [r for r in all_pages(f"/v1/reviewSubmissions?filter[app]={app}&limit=50")
+              if r["attributes"].get("state") == "READY_FOR_REVIEW" and r["attributes"].get("platform") in (None, "IOS")]
+    for r in all_pages(f"/v1/reviewSubmissions?filter[app]={app}&limit=50"):
+        print(f"SUBMISSION {r['id']}: {r['attributes'].get('state')} {r['attributes'].get('platform')}")
+    if len(drafts) != 1:
+        print(f"::error::Expected one draft submission, found {len(drafts)}; changed nothing")
+        raise SystemExit(1)
+    sub_id = drafts[0]["id"]
+
+    def items():
+        got = all_pages(f"/v1/reviewSubmissions/{sub_id}/items?limit=50")
+        for it in got:
+            kinds = [f"{k}={v['data']['id']}" for k, v in it.get("relationships", {}).items()
+                     if isinstance(v, dict) and isinstance(v.get("data"), dict)]
+            try:
+                import base64
+                decoded = base64.b64decode(it["id"] + "=" * (-len(it["id"]) % 4)).decode()
+            except Exception:
+                decoded = "?"
+            print(f"  ITEM {it['id']} [{decoded}]: {it['attributes'].get('state')} {', '.join(kinds) or '(no linked target shown)'}")
+        return got
+
+    print(f"DRAFT {sub_id} items before:")
+    before = items()
+    open_states = ("PREPARE_FOR_SUBMISSION", "DEVELOPER_REJECTED", "READY_FOR_REVIEW")
+    usable = [v for v in versions if v["attributes"].get("state") in open_states]
+    if usable:
+        vid = usable[0]["id"]
+        print(f"Using existing group version {vid}")
+    else:
+        _, data = asc("POST", "/v1/subscriptionGroupVersions",
+                      {"data": {"type": "subscriptionGroupVersions", "relationships": {"subscriptionGroup": rel("subscriptionGroups", gid)}}})
+        vid = data["data"]["id"]
+        print(f"Created group version {vid} ({data['data']['attributes'].get('state')})")
+    def target(it):
+        try:
+            import base64
+            return base64.b64decode(it["id"] + "=" * (-len(it["id"]) % 4)).decode()
+        except Exception:
+            return ""
+    already = any(((it.get("relationships", {}).get("subscriptionGroupVersion") or {}).get("data") or {}).get("id") == vid
+                  or target(it).endswith(f"|{vid}") for it in before)
+    if already:
+        print("Group version is already in the draft")
+    else:
+        asc("POST", "/v1/reviewSubmissionItems",
+            {"data": {"type": "reviewSubmissionItems", "relationships": {
+                "reviewSubmission": rel("reviewSubmissions", sub_id),
+                "subscriptionGroupVersion": rel("subscriptionGroupVersions", vid)}}})
+        print("Added the group version to the draft")
+    print(f"DRAFT {sub_id} items after:")
+    items()
+    _, r = asc("GET", f"/v1/reviewSubmissions/{sub_id}")
+    print(f"DRAFT state now {r['data']['attributes'].get('state')} (not submitted by this step)")
+
+
 if __name__ == "__main__":
     step = sys.argv[1] if len(sys.argv) > 1 else "all"
     if step == "check":
         check()
+        raise SystemExit(0)
+    if step == "group":
+        add_group_to_draft()
         raise SystemExit(0)
     if step in ("all", "appstore"):
         app = app_id()
