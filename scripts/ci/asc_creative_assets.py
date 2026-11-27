@@ -184,5 +184,21 @@ def apply(folder):
     print(f"::notice title=Creative assets placed::{summary}")
 
 
+ATTACH = "202611270951"   # Nov 27 iPhone-only build; attached on Milan's yes (Nov 28 IST). Attaching submits nothing.
+
+
+def attach(_folder=None):
+    aid = app_id()
+    _, version = targets(aid)
+    builds = must("GET", f"builds?filter[app]={aid}&filter[version]={ATTACH}&fields[builds]=version,processingState,expired,iconAssetToken")["data"]
+    if not builds or builds[0]["attributes"]["processingState"] != "VALID" or builds[0]["attributes"].get("expired"):
+        print(f"::error title=Build {ATTACH} not usable::{[b['attributes'] for b in builds]}")
+        raise SystemExit(1)
+    code, before = req("GET", f"appStoreVersions/{version['id']}/build")
+    print("Before:", ((before.get("data") or {}).get("attributes") or {}).get("version"))
+    must("PATCH", f"appStoreVersions/{version['id']}/relationships/build", {"data": {"type": "builds", "id": builds[0]["id"]}})
+    icons(aid)
+
+
 if __name__ == "__main__":
-    {"show": show, "apply": apply}[sys.argv[1]](sys.argv[2] if len(sys.argv) > 2 else None)
+    {"show": show, "apply": apply, "attach": attach}[sys.argv[1]](sys.argv[2] if len(sys.argv) > 2 else None)

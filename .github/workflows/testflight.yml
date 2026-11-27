@@ -19,7 +19,7 @@ on:
       listings:
         description: "Instead of a build: store listing text from store/listing (show or apply), or the 20 Nov iPhone screenshots (shots-show or shots-apply), or the header and search results art (creative-show or creative-apply)"
         type: choice
-        options: ["off", "show", "apply", "shots-show", "shots-apply", "creative-show", "creative-apply"]
+        options: ["off", "show", "apply", "shots-show", "shots-apply", "creative-show", "creative-apply", "creative-attach"]
         default: "off"
 
 permissions:
