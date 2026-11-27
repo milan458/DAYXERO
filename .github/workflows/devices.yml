@@ -12,6 +12,10 @@ on:
         description: "Instead of the journey: real screens on a 13-inch iPad and iPhone Duo for the App Store set"
         type: boolean
         default: false
+      store_legs:
+        description: "With store: only these legs, comma-separated (e.g. duo-inner-dark). Empty runs all six."
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -218,9 +222,23 @@ jobs:
             appearance: dark
             tests: calm
     steps:
+      - name: Is this leg asked for
+        id: leg
+        env:
+          LEGS: ${{ inputs.store_legs }}
+        run: |
+          if [ -z "$LEGS" ] || [[ ",${LEGS// /}," == *",${{ matrix.name }},"* ]]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice title=${{ matrix.name }}::Not asked for this run"
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.leg.outputs.run == 'true'
 
       - name: Select Xcode 27.1
+        if: steps.leg.outputs.run == 'true'
         run: |
           XCODE=/Applications/Xcode_27.1.app
           if [ ! -d "$XCODE" ]; then
@@ -231,6 +249,7 @@ jobs:
           xcodebuild -version
 
       - name: Install tools
+        if: steps.leg.outputs.run == 'true'
         run: |
           brew install xcodegen
           if [ "${{ matrix.device }}" = "duo" ]; then
@@ -239,9 +258,11 @@ jobs:
           fi
 
       - name: Generate project
+        if: steps.leg.outputs.run == 'true'
         run: xcodegen generate
 
       - name: Pick a simulator
+        if: steps.leg.outputs.run == 'true'
         id: sim
         env:
           DEVICE: ${{ matrix.device }}
@@ -272,6 +293,7 @@ jobs:
           echo "udid=${UDID%%|*}" >> "$GITHUB_OUTPUT"
 
       - name: Boot, appearance and posture
+        if: steps.leg.outputs.run == 'true'
         run: |
           UDID=${{ steps.sim.outputs.udid }}
           xcrun simctl boot "$UDID" 2>/dev/null || true
@@ -288,6 +310,7 @@ jobs:
           fi
 
       - name: Run the journey tests the screenshots use
+        if: steps.leg.outputs.run == 'true'
         # The journey was written for iPhone; a failure here still keeps the screens taken before it.
         continue-on-error: true
         env:
@@ -314,9 +337,9 @@ jobs:
           fi
           T=DayXeroUITests/JourneyUITests
           if [ "${{ matrix.tests }}" = "calm" ]; then
-            ONLY="-only-testing:$T/testEveryCalmToolOpens"
+            ONLY="-only-testing:$T/testEveryCalmToolOpens -only-testing:$T/testStoreWindDown"
           else
-            ONLY="-only-testing:$T/testQuitDay -only-testing:$T/testFirstWeekSlip -only-testing:$T/testMaintenance -only-testing:$T/testWaterRowLogsEveryTap -only-testing:$T/testEveryCalmToolOpens"
+            ONLY="-only-testing:$T/testQuitDay -only-testing:$T/testFirstWeekSlip -only-testing:$T/testMaintenance -only-testing:$T/testWaterRowLogsEveryTap -only-testing:$T/testEveryCalmToolOpens -only-testing:$T/testStoreWindDown"
           fi
           xcodebuild test \
             -project DayXero.xcodeproj \
@@ -329,9 +352,26 @@ jobs:
             -quiet 2>&1 | tee journey.log
 
       - name: Report failures and sizes
-        if: always()
+        if: always() && steps.leg.outputs.run == 'true'
         run: |
           grep -E "error:|Test Case .* failed" journey.log | head -20 | sed 's/^/::warning::/' || true
+          if [ -d Journey.xcresult ]; then
+            xcrun xcresulttool get test-results tests --path Journey.xcresult --compact > tests.json 2>&1 || true
+            python3 - <<'PY2'
+          import json
+          try:
+              data = json.load(open("tests.json"))
+          except Exception:
+              raise SystemExit
+          def walk(node, path=""):
+              if node.get("nodeType") == "Failure Message":
+                  print(f"::warning title={path}::{node.get('name', '')[:900]}")
+              for child in node.get("children", []):
+                  walk(child, node.get("name", "") if node.get("nodeType") == "Test Case" else path)
+          for n in data.get("testNodes", []):
+              walk(n)
+          PY2
+          fi
           for f in shots/*.png; do
             [ -f "$f" ] || continue
             echo "$(sips -g pixelWidth -g pixelHeight "$f" | awk '/pixel/ {printf "%s ", $2}') $(basename "$f")"
@@ -339,7 +379,7 @@ jobs:
           echo "::notice title=${{ matrix.name }}::$(ls shots 2>/dev/null | wc -l | tr -d ' ') screenshots"
 
       - name: Push screenshots
-        if: always()
+        if: always() && steps.leg.outputs.run == 'true'
         run: |
           [ -n "$(ls shots 2>/dev/null)" ] || exit 0
           cd shots

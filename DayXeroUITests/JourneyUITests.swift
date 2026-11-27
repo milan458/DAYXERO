@@ -215,6 +215,17 @@ final class JourneyUITests: XCTestCase {
         }
     }
 
+    /// The store's Wind down screen, opened straight from launch. On iPhone Duo's inner display the phone lies on its
+    /// side, so the calm list's swipe can't bring Wind down into view; this takes the same shot without the list.
+    func testStoreWindDown() {
+        let app = launch(["-dx.homeScenario", "day3", "-dx.store", "pro", "-dx.openCalm", "longerOutBreath"])
+        let stop = app.buttons["Close"].firstMatch
+        XCTAssert(stop.waitForExistence(timeout: 10), "Wind down didn't open")
+        RunLoop.current.run(until: .now.addingTimeInterval(2))
+        XCTAssertEqual(app.state, .runningForeground, "The app went down opening Wind down")
+        snap(app, "50-calm-winddown")
+    }
+
     // MARK: Steps
 
     private func rideOutCraving(_ app: XCUIApplication) {
