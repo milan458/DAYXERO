@@ -42,6 +42,8 @@ struct ProgramPathMap: View {
     let onTap: (Stop) -> Void
     @State private var filled = false
     @State private var reached = false
+    /// In a column of a wide screen (1.1): the hills stop under the road rather than run on down the page.
+    @Environment(\.dxWide) private var wide
     private let motion = MotionPolicy()
 
     /// The road's column, the gap between stamps (today's gets more room), and the goal's drop onto the horizon.
@@ -78,7 +80,8 @@ struct ProgramPathMap: View {
                         .accessibilityHidden(true)
                 }
                 ProgramHill(layer: .back, top: goalY - 14)
-                    .frame(width: width + 2 * DX.Layout.gutter, height: height + 700)
+                    .frame(width: width + 2 * DX.Layout.gutter, height: height + (wide ? 150 : 700))
+                    .mask { HillFade(wide: wide) }
                     .offset(x: -DX.Layout.gutter)
                     .modifier(HillRise(delay: 1.5))
                     .accessibilityHidden(true)
@@ -130,7 +133,8 @@ struct ProgramPathMap: View {
                     .accessibilityHidden(true)
                 }
                 ProgramHill(layer: .front, top: goalY - 14)
-                    .frame(width: width + 2 * DX.Layout.gutter, height: height + 700)
+                    .frame(width: width + 2 * DX.Layout.gutter, height: height + (wide ? 150 : 700))
+                    .mask { HillFade(wide: wide) }
                     .offset(x: -DX.Layout.gutter)
                     .modifier(HillRise(delay: 1.6))
                     .allowsHitTesting(false)
@@ -408,6 +412,22 @@ private struct HorizonGlow: View {
 }
 
 /// One of the two sage hills the road runs into (kit 022 `.hill.b` and `.hill.f`), drawn from `top`.
+/// On iPhone the hills run on past the bottom of the screen. In a wide screen's column (1.1) they'd stand as a sage
+/// block beside the other column, so there they stop under the locked row and fade into the page.
+private struct HillFade: View {
+    let wide: Bool
+    var body: some View {
+        if wide {
+            VStack(spacing: 0) {
+                Color.black
+                LinearGradient(colors: [.black, .clear], startPoint: .top, endPoint: .bottom).frame(height: 70)
+            }
+        } else {
+            Color.black
+        }
+    }
+}
+
 struct ProgramHill: View {
     enum Layer { case back, front }
     let layer: Layer

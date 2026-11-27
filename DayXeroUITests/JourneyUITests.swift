@@ -244,7 +244,7 @@ final class JourneyUITests: XCTestCase {
     }
 
     private func visitTabs(_ app: XCUIApplication, prefix: String) {
-        for tab in ["Program", "Progress", "Today"] {
+        for tab in ["Program", "Progress", "Calm", "Today"] {
             tap(app.buttons[tab].firstMatch)
             // Let the tab cross-fade finish; the Program road plays in for about 2.6 s (today's stamp at 1.25 s,
             // the locked stops and hills from 1.3 s, the tease row at 2.1 s), so wait that out before the shot.
@@ -259,6 +259,13 @@ final class JourneyUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["-dx.uiTest", "YES"] + arguments
         app.launch()
+        // Landscape iPad leg: turn the device again once the app is up, so the app rotates with it (set only
+        // before launch, the shot came out landscape with the app still drawn portrait).
+        if ProcessInfo.processInfo.environment["DX_ORIENTATION"] == "landscape" {
+            XCUIDevice.shared.orientation = .portrait
+            XCUIDevice.shared.orientation = .landscapeLeft
+            RunLoop.current.run(until: .now.addingTimeInterval(1.5))
+        }
         return app
     }
 

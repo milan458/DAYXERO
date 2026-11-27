@@ -357,10 +357,19 @@ struct ProgressTab: View {
         let peaks = insights.peaks(series)
         return patternPanel {
             VStack(alignment: .leading, spacing: DX.Space.s) {
-                HStack(alignment: .top) {
-                    Text(series == .cravings ? LocalizedStringKey("When cravings hit") : LocalizedStringKey("When you used")).dxType(.headline).foregroundStyle(Read4.ink)
-                    Spacer()
-                    SeriesToggle(selection: $series)
+                // The toggle goes under the title where the card is narrow (a column on the open iPhone Duo).
+                let title = Text(series == .cravings ? LocalizedStringKey("When cravings hit") : LocalizedStringKey("When you used"))
+                    .dxType(.headline).foregroundStyle(Read4.ink)
+                ViewThatFits(in: .horizontal) {
+                    HStack(alignment: .top) {
+                        title.fixedSize()
+                        Spacer(minLength: 8)
+                        SeriesToggle(selection: $series)
+                    }
+                    VStack(alignment: .leading, spacing: DX.Space.s) {
+                        title
+                        SeriesToggle(selection: $series)
+                    }
                 }
                 if let summary = summary(peaks) {
                     Text(summary).v4Text(.subtitle)
@@ -659,6 +668,8 @@ private struct SeriesToggle: View {
             Text(title)
                 .dxFont(14, weight: 600, style: .footnote)
                 .foregroundStyle(on ? Read4.onInk : Read4.muted)
+                .lineLimit(1)
+                .fixedSize()
                 .padding(.horizontal, 14)
                 .frame(minHeight: DX.Layout.touchTarget - 6)
                 .background(on ? Read4.ink : .clear, in: Capsule())

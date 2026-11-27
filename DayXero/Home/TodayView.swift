@@ -689,7 +689,8 @@ struct TodayView: View {
             .dxFont(15, weight: 600, style: .subheadline)
             .foregroundStyle(TodayInk.ink)
             .contentTransition(.numericText())
-            .lineLimit(1).minimumScaleFactor(0.75)
+            // Two lines where a row is narrow (a column on the open iPhone Duo) rather than cut off.
+            .lineLimit(2).minimumScaleFactor(0.75)
     }
 
     private func batchLabel(_ product: Product, count: Int) -> String {
