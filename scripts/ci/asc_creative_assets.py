@@ -108,7 +108,7 @@ def upload(lib, path):
     attrs = {}
     for _ in range(60):   # about 5 minutes
         attrs = must("GET", f"appAssetLibraryImages/{data['id']}")["data"]["attributes"]
-        if attrs.get("state") not in {"AWAITING_UPLOAD", "UPLOAD_COMPLETE", "PROCESSING", None}:
+        if attrs.get("state") not in {"AWAITING_UPLOAD", "UPLOAD_COMPLETE", "PROCESSING", None}:  # ready reads PREPARE_FOR_SUBMISSION
             break
         time.sleep(5)
     shown = {k: v for k, v in attrs.items() if k != "uploadOperations"}
@@ -119,36 +119,13 @@ def upload(lib, path):
     return data["id"], attrs
 
 
-def place(loc_id, kind, image_id, groups):
-    base = {"type": "appAssetLibraryPlacements", "attributes": {"placementType": kind},
-            "relationships": {"appStoreVersionLocalization": {"data": {"type": "appStoreVersionLocalizations", "id": loc_id}},
-                              "image": {"data": {"type": "appAssetLibraryImages", "id": image_id}}}}
-    code, data = req("POST", "appAssetLibraryPlacements", {"data": base})
-    if code < 300:
-        return [data["data"]["id"]]
-    first = errors(data)
-    if "group" not in first.lower() or not groups:
-        print(f"::error title=Placement refused ({code})::{first}")
-        raise SystemExit(1)
-    made = []
-    for g in groups:   # Apple asked for a placement group: place once in each group the image fits
-        body = json.loads(json.dumps(base))
-        body["attributes"]["placementGroup"] = g
-        code, data = req("POST", "appAssetLibraryPlacements", {"data": body})
-        if code >= 300:
-            print(f"::error title=Placement in {g} refused ({code})::{errors(data)} (first try: {first})")
-            raise SystemExit(1)
-        made.append(data["data"]["id"])
-    return made
-
-
-def groups_of(attrs):
-    found = []
-    for m in attrs.get("specMappings") or []:
-        g = m.get("placementGroup") if isinstance(m, dict) else None
-        if g and g not in found:
-            found.append(g)
-    return found
+def place(loc_id, kind, image_id):
+    # The reference data allows one of each in the DEFAULT_PROFILE group per localization.
+    data = must("POST", "appAssetLibraryPlacements", {"data": {
+        "type": "appAssetLibraryPlacements", "attributes": {"placementType": kind, "placementGroup": "DEFAULT_PROFILE"},
+        "relationships": {"appStoreVersionLocalization": {"data": {"type": "appStoreVersionLocalizations", "id": loc_id}},
+                          "image": {"data": {"type": "appAssetLibraryImages", "id": image_id}}}}})
+    return data["data"]["id"]
 
 
 def apply(folder):
@@ -161,7 +138,7 @@ def apply(folder):
     if missing:
         print(f"::error title=No search image for {missing}::Add them to LANG and render their images first.")
         raise SystemExit(1)
-    header, header_attrs = upload(lib, os.path.join(folder, "header.png"))
+    header, _ = upload(lib, os.path.join(folder, "header.png"))
     search = {}
     for lang in sorted({LANG[l["attributes"]["locale"]] for l in locs}):
         search[lang] = upload(lib, os.path.join(folder, f"search-{lang}.png"))
@@ -172,9 +149,9 @@ def apply(folder):
             if p.get("placementType") in {HEADER, SEARCH}:
                 must("DELETE", f"appAssetLibraryPlacements/{p['id']}")
                 print(f"{locale}: removed earlier {p.get('placementType')} placement {p['id']}")
-        sid, sattrs = search[LANG[locale]]
-        place(loc["id"], HEADER, header, groups_of(header_attrs))
-        place(loc["id"], SEARCH, sid, groups_of(sattrs))
+        sid, _ = search[LANG[locale]]
+        place(loc["id"], HEADER, header)
+        place(loc["id"], SEARCH, sid)
         now = placements(loc["id"])
         summary.append((locale, [(p.get("placementType"), p.get("file"), p.get("state")) for p in now]))
         print(f"{locale}: {now}")
