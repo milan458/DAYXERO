@@ -305,6 +305,7 @@ jobs:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           MODE: ${{ inputs.listings }}
+          DUMP_ICONS: "1"
         run: |
           python3 -m pip install --quiet pyjwt cryptography
           if [[ "$MODE" == creative-* ]]; then

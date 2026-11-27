@@ -82,12 +82,21 @@ def localizations(version):
 
 def icons(aid):
     """The icon Apple took from each recent build (what TestFlight and App Store Connect show)."""
-    res = must("GET", f"builds?filter[app]={aid}&sort=-uploadedDate&limit=8&fields[builds]=version,processingState,uploadedDate,iconAssetToken")
+    res = must("GET", f"builds?filter[app]={aid}&sort=-uploadedDate&limit=4&fields[builds]=version,processingState,uploadedDate,iconAssetToken")
     for b in res["data"]:
         a = b["attributes"]
         t = a.get("iconAssetToken") or {}
         url = (t.get("templateUrl") or "").replace("{w}", "512").replace("{h}", "512").replace("{f}", "png")
         print(f"Build {a['version']} {a['processingState']} {a['uploadedDate']} icon: {url or 'none'}")
+        if url and os.environ.get("DUMP_ICONS"):
+            import base64
+            small = url.replace("512x512bb", "256x256bb")
+            with urllib.request.urlopen(small) as r:
+                print(f"ICON {a['version']} " + base64.b64encode(r.read()).decode())
+    _, version = targets(aid)
+    code, data = req("GET", f"appStoreVersions/{version['id']}/build")
+    b = (data.get("data") or {}) if code < 300 else {}
+    print("Build attached to", version["attributes"]["versionString"], ":", (b.get("attributes") or {}).get("version", "none"))
 
 
 def show(_folder=None):
