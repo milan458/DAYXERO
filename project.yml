@@ -20,9 +20,9 @@ settings:
     # Automatic locally; CI's TestFlight job signs manually (see Config/Base.xcconfig).
     CODE_SIGN_STYLE: $(DX_SIGN_STYLE)
     CODE_SIGN_IDENTITY: $(DX_SIGN_IDENTITY)
-    MARKETING_VERSION: "1.0.0"
+    MARKETING_VERSION: "1.1.0"
     CURRENT_PROJECT_VERSION: "1"
-    TARGETED_DEVICE_FAMILY: "1"     # iPhone only in 1.0; iPad and wide layouts come in 1.1 (27 Nov 2026)
+    TARGETED_DEVICE_FAMILY: "1,2"   # iPhone and iPad again in 1.1, with wide layouts (27 Nov 2026); 1.0 was iPhone only
     LOCALIZATION_PREFERS_STRING_CATALOGS: YES
     SWIFT_EMIT_LOC_STRINGS: YES
 
@@ -78,6 +78,10 @@ targets:
         UILaunchScreen:
           UIColorName: LaunchPaper
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        # iPad (1.1): every orientation, Split View and Slide Over. Wide windows get two columns (WideSplit); a
+        # narrow one gets the iPhone layout.
+        UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown,
+                                                UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
         NSSupportsLiveActivities: true
         # A lesson's audio keeps playing with the phone locked or the app in the background.
         UIBackgroundModes: [audio]
@@ -94,7 +98,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: in.dayxero.app
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         PROVISIONING_PROFILE_SPECIFIER: $(DX_PROFILE_APP)
-        TARGETED_DEVICE_FAMILY: "1"   # iPhone only; XcodeGen defaults app targets to iPhone and iPad
+        TARGETED_DEVICE_FAMILY: "1,2"   # iPhone and iPad
         CODE_SIGN_IDENTITY: $(DX_SIGN_IDENTITY)
         CODE_SIGN_STYLE: $(DX_SIGN_STYLE)
       configs:
@@ -131,7 +135,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: in.dayxero.app.widgets
         PROVISIONING_PROFILE_SPECIFIER: $(DX_PROFILE_WIDGETS)
-        TARGETED_DEVICE_FAMILY: "1"   # iPhone only; XcodeGen defaults app targets to iPhone and iPad
+        TARGETED_DEVICE_FAMILY: "1,2"   # iPhone and iPad
         CODE_SIGN_IDENTITY: $(DX_SIGN_IDENTITY)
         CODE_SIGN_STYLE: $(DX_SIGN_STYLE)
 

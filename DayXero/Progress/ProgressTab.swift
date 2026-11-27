@@ -35,9 +35,16 @@ struct ProgressTab: View {
             } secondary: {
                 column { details(insights, now: now) }
             } flat: {
-                column {
-                    gained(snap, insights: insights)
-                    details(insights, now: now)
+                // iPad and iPhone Duo open flat (1.1): the same two columns, side by side.
+                WideSplit {
+                    column { gained(snap, insights: insights) }
+                } trailing: {
+                    column { details(insights, now: now) }
+                } narrow: {
+                    column {
+                        gained(snap, insights: insights)
+                        details(insights, now: now)
+                    }
                 }
             }
         }

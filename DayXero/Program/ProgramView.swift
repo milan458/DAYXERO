@@ -21,6 +21,8 @@ struct ProgramView: View {
     @State private var afterSheet: StopSheet?
     /// The phase picked from the row at the top; nil follows the session that's up next (19 Nov 2026).
     @State private var pickedPhase: String?
+    /// On a wide screen, the stop the trailing column shows; nil is today's (1.1).
+    @State private var panelStop: String?
     /// Glim's weekly check-in after graduation (S27.18); the same setting as Settings › Notifications.
     @AppStorage(DailyReminderSettings.weeklyKey) private var weekly = DailyReminderSettings.offUntilChosen
 
@@ -35,56 +37,17 @@ struct ProgramView: View {
             let store = ProgramStore(context: context, profile: profile)
             let states = Dictionary(store.states(now: timeline.date).map { ($0.id, $0.state) }, uniquingKeysWith: { a, _ in a })
             let current = store.current(now: timeline.date)?.id
-            ScrollView {
-                VStack(alignment: .leading, spacing: 12) {
-                    if let content = store.content {
-                        let currentPhase = selectedPhase(content, current: current, picked: nil)
-                        let phase = selectedPhase(content, current: current, picked: pickedPhase)
-                        phasePicker(content, states: states, selected: phase.id, current: currentPhase.id)
-                        header(phase, states: states, now: timeline.date)
-                        if let graduated = profile.progress?.graduatedAt { completeHeader(graduated) }
-                        let nextPhase = content.phases.firstIndex { $0.id == phase.id }
-                            .flatMap { $0 + 1 < content.phases.count ? content.phases[$0 + 1] : nil }
-                        ProgramPathMap(stops: stops(phase, content: content, states: states, current: current, store: store, now: timeline.date),
-                                       ground: ground,
-                                       goal: nextPhase.map { next in
-                                           .init(title: next.title, isDayXero: next.id == "dayxero",
-                                                 subtitle: next.id == "dayxero"
-                                                    ? profile.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()) : nil)
-                                       }) { stop in
-                            guard let session = content.session(stop.id) else { return }
-                            sheet = StopSheet(session: session, title: stop.title, state: states[stop.id] ?? .locked,
-                                              needsUpgrade: stop.needsUpgrade)
-                        }
-                        // A different phase is a different road: its fill and stamps play in again.
-                        .id(phase.id)
-                        if phase.id == currentPhase.id, let line = teaseLine(phase, content: content, states: states, current: current, variant: store.variant) {
-                            // v5 (022): the locked row on the hill, a lock tile and one line.
-                            HStack(spacing: 12) {
-                                DXIcon(.lock, size: 18, weight: 2.4)
-                                    .foregroundStyle(ground.ink)
-                                    .frame(width: 34, height: 34)
-                                    .background(ground.ink.opacity(0.08), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                                Text(verbatim: line).dxFace(.body, 15, weight: 600).foregroundStyle(ground.ink)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                            .padding(.leading, 10).padding(.trailing, 16)
-                            .frame(minHeight: 48)
-                            .background(Color(light: (0xFFFFFF, 0.72), dark: (0x182034, 0.8)), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-                            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Ground.reading.line, lineWidth: 1))
-                            .accessibilityElement(children: .combine)
-                            .dxArrive(0, delay: 2.1)
-                        }
-                        // After graduation the program keeps going: boosters on Days 45, 60 and 90, and Glim
-                        // checking in once a week if they want it (S27.18).
-                        if profile.progress?.graduatedAt != nil { weeklyCheckIn }
-                    }
+            // iPad and iPhone Duo open flat (1.1): the road on the leading side; on the trailing side the stop that's
+            // picked (today's to begin with) as its sheet would show it, then NRT and the weekly check-in.
+            WideSplit(leadingShare: 0.52) {
+                scroll { roadColumn(store: store, states: states, current: current, now: timeline.date, wide: true) }
+            } trailing: {
+                scroll { detailColumn(store: store, states: states, current: current, now: timeline.date) }
+            } narrow: {
+                scroll {
+                    roadColumn(store: store, states: states, current: current, now: timeline.date, wide: false)
                     nrtGroup(now: timeline.date)
                 }
-                .padding(.horizontal, DX.Layout.gutter)
-                .dxReadableColumn()
-                .padding(.top, 8)
-                .padding(.bottom, DX.Space.l)
             }
             .background(page.ignoresSafeArea())
             .dxGround(.mint, paint: false)
@@ -111,6 +74,105 @@ struct ProgramView: View {
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: { showPaywall = false })
         }
+    }
+
+    // MARK: Layout
+
+    private func scroll<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 12) { content() }
+                .padding(.horizontal, DX.Layout.gutter)
+                .dxReadableColumn()
+                .padding(.top, 8)
+                .padding(.bottom, DX.Space.l)
+        }
+    }
+
+    /// The phases, the picked phase's header and its road. On a wide screen a stop on the road picks what the
+    /// trailing column shows; on iPhone it opens the stop's sheet.
+    @ViewBuilder
+    private func roadColumn(store: ProgramStore, states: [String: ProgramUnlock.State], current: String?, now: Date,
+                            wide: Bool) -> some View {
+        if let content = store.content {
+            let currentPhase = selectedPhase(content, current: current, picked: nil)
+            let phase = selectedPhase(content, current: current, picked: pickedPhase)
+            phasePicker(content, states: states, selected: phase.id, current: currentPhase.id)
+            header(phase, states: states, now: now)
+            if let graduated = profile.progress?.graduatedAt { completeHeader(graduated) }
+            let nextPhase = content.phases.firstIndex { $0.id == phase.id }
+                .flatMap { $0 + 1 < content.phases.count ? content.phases[$0 + 1] : nil }
+            ProgramPathMap(stops: stops(phase, content: content, states: states, current: current, store: store, now: now),
+                           ground: ground,
+                           goal: nextPhase.map { next in
+                               .init(title: next.title, isDayXero: next.id == "dayxero",
+                                     subtitle: next.id == "dayxero"
+                                        ? profile.quitDay.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()) : nil)
+                           }) { stop in
+                if wide {
+                    withAnimation(motion.animation(DX.Move.settle)) { panelStop = stop.id }
+                    return
+                }
+                guard let session = content.session(stop.id) else { return }
+                sheet = StopSheet(session: session, title: stop.title, state: states[stop.id] ?? .locked,
+                                  needsUpgrade: stop.needsUpgrade)
+            }
+            // A different phase is a different road: its fill and stamps play in again.
+            .id(phase.id)
+            if phase.id == currentPhase.id, let line = teaseLine(phase, content: content, states: states, current: current, variant: store.variant) {
+                // v5 (022): the locked row on the hill, a lock tile and one line.
+                HStack(spacing: 12) {
+                    DXIcon(.lock, size: 18, weight: 2.4)
+                        .foregroundStyle(ground.ink)
+                        .frame(width: 34, height: 34)
+                        .background(ground.ink.opacity(0.08), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    Text(verbatim: line).dxFace(.body, 15, weight: 600).foregroundStyle(ground.ink)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.leading, 10).padding(.trailing, 16)
+                .frame(minHeight: 48)
+                .background(Color(light: (0xFFFFFF, 0.72), dark: (0x182034, 0.8)), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(DX.Ground.reading.line, lineWidth: 1))
+                .accessibilityElement(children: .combine)
+                .dxArrive(0, delay: 2.1)
+            }
+            // After graduation the program keeps going: boosters on Days 45, 60 and 90, and Glim
+            // checking in once a week if they want it (S27.18). On a wide screen it's in the trailing column.
+            if !wide, profile.progress?.graduatedAt != nil { weeklyCheckIn }
+        }
+    }
+
+    /// The wide screen's trailing column: the picked stop (today's, until another is tapped) as a card, then NRT
+    /// and, after graduation, the weekly check-in.
+    @ViewBuilder
+    private func detailColumn(store: ProgramStore, states: [String: ProgramUnlock.State], current: String?, now: Date) -> some View {
+        if let content = store.content, let item = panelItem(content, store: store, states: states, current: current) {
+            stopSheet(item, inline: true)
+                .background(DX.Ground.reading.background, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(DX.Ground.reading.line, lineWidth: 1))
+                // The header row of the leading column is about this tall; the card starts level with the road.
+                .padding(.top, 52)
+                .id(item.id)
+                .transition(.opacity)
+                .dxArrive(1)
+        }
+        if profile.progress?.graduatedAt != nil { weeklyCheckIn }
+        nrtGroup(now: now)
+    }
+
+    /// The stop the trailing column shows: the one tapped, if it's on the road in view; else today's; else the next
+    /// to open; else the road's last.
+    private func panelItem(_ content: ProgramContent, store: ProgramStore, states: [String: ProgramUnlock.State],
+                           current: String?) -> StopSheet? {
+        let phase = selectedPhase(content, current: current, picked: pickedPhase)
+        let ids = phase.sessionIds
+        let state: (String) -> ProgramUnlock.State = { states[$0] ?? .locked }
+        let isOpen: (String) -> Bool = { state($0) == .available || state($0) == .inProgress }
+        let isDone: (String) -> Bool = { if case .completed = state($0) { true } else { false } }
+        let picked = panelStop.flatMap { ids.contains($0) ? $0 : nil }
+        guard let id = picked ?? ids.first(where: isOpen) ?? ids.first(where: { !isDone($0) }) ?? ids.last,
+              let session = content.session(id) else { return nil }
+        return StopSheet(session: session, title: session.title.resolve(store.variant) ?? "", state: state(id),
+                         needsUpgrade: isOpen(id) && ProgramV2Access.needsUpgrade(id, isPro: entitlement.isPro))
     }
 
     // MARK: Phases
@@ -286,7 +348,9 @@ struct ProgramView: View {
 
     /// The stop's illustration, "Prep 3 · 6 min" or when it opens, its title, and one button: Start, Continue,
     /// Replay or Unlock. A stop that isn't open yet says when it will, with nothing to press.
-    private func stopSheet(_ item: StopSheet) -> some View {
+    /// `inline`: the same card in the wide screen's trailing column, where the button acts straight away and a stop
+    /// that isn't open has nothing to close.
+    private func stopSheet(_ item: StopSheet, inline: Bool = false) -> some View {
         let session = item.session
         let open = item.state == .available || item.state == .inProgress
         let done: Bool = if case .completed = item.state { true } else { false }
@@ -340,18 +404,22 @@ struct ProgramView: View {
             Spacer(minLength: 0)
             if let button {
                 Button(button) {
-                    afterSheet = item
-                    sheet = nil
+                    if inline {
+                        tap(item.session.id, state: item.state, title: item.title, needsUpgrade: item.needsUpgrade)
+                    } else {
+                        afterSheet = item
+                        sheet = nil
+                    }
                 }
                 .buttonStyle(.dx(.primary, on: .reading))
-            } else {
+            } else if !inline {
                 Button("Close") { sheet = nil }
                     .buttonStyle(.dx(.secondary, on: .reading))
             }
         }
         .padding(.horizontal, DX.Layout.gutter)
-        .padding(.top, DX.Space.xl)
-        .padding(.bottom, DX.Space.s)
+        .padding(.top, inline ? DX.Layout.gutter : DX.Space.xl)
+        .padding(.bottom, inline ? DX.Layout.gutter : DX.Space.s)
         .presentationDetents([.height(340), .medium])
         .presentationDragIndicator(.visible)
         .presentationBackground(DX.Ground.reading.background)

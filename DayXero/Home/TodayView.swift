@@ -64,20 +64,7 @@ struct TodayView: View {
                 } secondary: {
                     scroll(top: 0) { lower(day).padding(.top, top) }
                 } flat: {
-                    scroll(top: top, tracksHero: true) {
-                        hero(day, top: top)
-                        lower(day)
-                    }
-                    .overlay(alignment: .top) {
-                        if showSlim {
-                            TodaySlimHeader(model: day.hero)
-                                .dxReadableColumn()
-                                .background(alignment: .top) {
-                                    pageColor(day).opacity(0.94).background(.ultraThinMaterial).ignoresSafeArea(edges: .top)
-                                }
-                                .transition(.move(edge: .top).combined(with: .opacity))
-                        }
-                    }
+                    unfolded(day, top: top)
                 }
             }
             .background(pageBackground(day).ignoresSafeArea())
@@ -154,6 +141,36 @@ struct TodayView: View {
 
     // MARK: Layout
 
+    /// The screen when it isn't split by a half-open fold: on iPhone one scroll with the slim header once the scene
+    /// has gone; on a wide screen two columns.
+    private func unfolded(_ day: TodayDay, top: CGFloat) -> some View {
+        // iPad and iPhone Duo open flat (1.1): the scene and what matters now on the leading side, the
+        // rest of the day on the trailing side, each scrolling on its own.
+        WideSplit {
+            scroll(top: top) {
+                hero(day, top: top)
+                lower(day, part: .now)
+            }
+        } trailing: {
+            scroll(top: 0) { lower(day, part: .rest).padding(.top, top + 18) }
+        } narrow: {
+            scroll(top: top, tracksHero: true) {
+                hero(day, top: top)
+                lower(day)
+            }
+            .overlay(alignment: .top) {
+                if showSlim {
+                    TodaySlimHeader(model: day.hero)
+                        .dxReadableColumn()
+                        .background(alignment: .top) {
+                            pageColor(day).opacity(0.94).background(.ultraThinMaterial).ignoresSafeArea(edges: .top)
+                        }
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                }
+            }
+        }
+    }
+
     private func scroll<Content: View>(top: CGFloat, tracksHero: Bool = false, @ViewBuilder _ content: () -> Content) -> some View {
         let built = content()
         return ScrollViewReader { proxy in
@@ -223,19 +240,23 @@ struct TodayView: View {
         }
     }
 
+    /// Which of the day's cards a column shows: all of them (iPhone), or on a wide screen what matters now (under
+    /// the scene) and the rest of the day (the trailing column).
+    enum LowerPart { case all, now, rest }
+
     /// During prep, the sheet under the path; after Day Xero, the day's cards.
     @ViewBuilder
-    private func lower(_ day: TodayDay) -> some View {
+    private func lower(_ day: TodayDay, part: LowerPart = .all) -> some View {
         if day.state == .prep, let path = day.path {
-            prepLower(day, path: path)
+            prepLower(day, path: path, part: part)
         } else {
-            standardLower(day)
+            standardLower(day, part: part)
         }
     }
 
     /// The sheet under the path (20 Nov 2026): "Today" with the card that matters now and the rest of the day, or,
     /// with the chevron or a stone, one day's card. It overlaps the scene's last 28 pt with rounded top corners.
-    private func prepLower(_ day: TodayDay, path: TodayPathModel) -> some View {
+    private func prepLower(_ day: TodayDay, path: TodayPathModel, part: LowerPart = .all) -> some View {
         let index = min(pathDay ?? path.crew, path.days.count - 1)
         let shown = path.days[index]
         let today = day.clock.day(containing: day.now)
@@ -243,62 +264,68 @@ struct TodayView: View {
             : shown.date == today ? String(localized: "Today's program")
             : shown.date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
         return VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 12) {
-                Text(verbatim: title)
-                    .dxFace(.display, 19, weight: 700, tracking: -0.2)
-                    .foregroundStyle(TodayInk.ink)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .accessibilityAddTraits(.isHeader)
-                Button {
-                    withAnimation(motion.animation(DX.Move.settle)) {
-                        dayCardOpen.toggle()
-                        pathDay = nil
-                    }
-                } label: {
-                    DXIcon(.down, size: 18, weight: 2.4)
-                        .rotationEffect(.degrees(dayCardOpen ? 180 : 0))
+            if part != .rest {
+                HStack(spacing: 12) {
+                    Text(verbatim: title)
+                        .dxFace(.display, 19, weight: 700, tracking: -0.2)
                         .foregroundStyle(TodayInk.ink)
-                        .frame(width: 44, height: 44)
-                        .background(TodayInk.well, in: Circle())
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .accessibilityAddTraits(.isHeader)
+                    Button {
+                        withAnimation(motion.animation(DX.Move.settle)) {
+                            dayCardOpen.toggle()
+                            pathDay = nil
+                        }
+                    } label: {
+                        DXIcon(.down, size: 18, weight: 2.4)
+                            .rotationEffect(.degrees(dayCardOpen ? 180 : 0))
+                            .foregroundStyle(TodayInk.ink)
+                            .frame(width: 44, height: 44)
+                            .background(TodayInk.well, in: Circle())
+                    }
+                    .buttonStyle(.dxPress)
+                    .accessibilityLabel(dayCardOpen ? Text("Show only what's next") : Text("Show all of today's program"))
                 }
-                .buttonStyle(.dxPress)
-                .accessibilityLabel(dayCardOpen ? Text("Show only what's next") : Text("Show all of today's program"))
-            }
-            .padding(.leading, 2)
-            // The week, always in view: every prep day and Day Xero, with what's done. A day opens its card.
-            TodayWeekStrip(items: path.days.indices.map { i -> TodayWeekStrip.Item in
-                               let isDayXero = i >= path.stones.count
-                               let isToday = path.days[i].date == today
-                               return TodayWeekStrip.Item(id: i,
-                                            label: isToday ? String(localized: "Today")
-                                                : isDayXero ? String(localized: "Xero")
-                                                : path.days[i].date.formatted(.dateTime.weekday(.abbreviated)),
-                                            state: isDayXero ? .ahead : path.stones[i].state, isToday: isToday, isDayXero: isDayXero,
-                                            accessibility: isDayXero ? path.dayXeroLabel : path.stones[i].label)
-                           },
-                           selected: dayCardOpen ? index : nil) { picked in
-                withAnimation(motion.animation(DX.Move.settle)) {
-                    pathDay = picked
-                    dayCardOpen = true
+                .padding(.leading, 2)
+                // The week, always in view: every prep day and Day Xero, with what's done. A day opens its card.
+                TodayWeekStrip(items: path.days.indices.map { i -> TodayWeekStrip.Item in
+                                   let isDayXero = i >= path.stones.count
+                                   let isToday = path.days[i].date == today
+                                   return TodayWeekStrip.Item(id: i,
+                                                label: isToday ? String(localized: "Today")
+                                                    : isDayXero ? String(localized: "Xero")
+                                                    : path.days[i].date.formatted(.dateTime.weekday(.abbreviated)),
+                                                state: isDayXero ? .ahead : path.stones[i].state, isToday: isToday, isDayXero: isDayXero,
+                                                accessibility: isDayXero ? path.dayXeroLabel : path.stones[i].label)
+                               },
+                               selected: dayCardOpen ? index : nil) { picked in
+                    withAnimation(motion.animation(DX.Move.settle)) {
+                        pathDay = picked
+                        dayCardOpen = true
+                    }
                 }
+                // The day's program: folded, the card that's next; open, all five cards of the day's session.
+                programCard(day, path: path, index: index, expanded: dayCardOpen).id("lower")
             }
-            // The day's program: folded, the card that's next; open, all five cards of the day's session.
-            programCard(day, path: path, index: index, expanded: dayCardOpen).id("lower")
-            // The day's own tasks and logging stay under it whichever way the dropdown is.
-            if day.focus != .lesson {
-                focusCard(day).dxArrive(4)
+            if part != .now {
+                // The day's own tasks and logging stay under it whichever way the dropdown is.
+                if day.focus != .lesson {
+                    focusCard(day).dxArrive(4)
+                }
+                if day.night && day.focus != .recovery {
+                    logRows(day).todayCard().dxArrive(6)
+                }
+                timeline(day).padding(.top, part == .rest && day.focus == .lesson && !day.night ? 0 : 12)
             }
-            if day.night && day.focus != .recovery {
-                logRows(day).todayCard().dxArrive(6)
-            }
-            timeline(day).padding(.top, 12)
         }
         .padding(.horizontal, DX.Layout.gutter)
-        .padding(.top, 12)
+        .padding(.top, part == .rest ? 0 : 12)
         .padding(.bottom, DX.Space.s)
         .dxReadableColumn()
-        .background(pageColor(day), in: UnevenRoundedRectangle(topLeadingRadius: 28, topTrailingRadius: 28, style: .continuous))
-        .padding(.top, -28)
+        // On a wide screen the rest of the day sits on the page itself, not on a sheet under the scene.
+        .background(pageColor(day).opacity(part == .rest ? 0 : 1),
+                    in: UnevenRoundedRectangle(topLeadingRadius: 28, topTrailingRadius: 28, style: .continuous))
+        .padding(.top, part == .rest ? 0 : -28)
     }
 
     /// The program for one day of the path: its session and the session's cards, each finished, next (with its
@@ -366,28 +393,32 @@ struct TodayView: View {
     }
 
     /// The focus card, the prep countdown, the day's log and the rest of the day.
-    private func standardLower(_ day: TodayDay) -> some View {
+    private func standardLower(_ day: TodayDay, part: LowerPart = .all) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            if day.focus == .recovery {
-                Text("Now").dxFace(.display, 19, weight: 700, tracking: -0.2).foregroundStyle(TodayInk.ink)
-                    .padding(.leading, 2)
-                    .accessibilityAddTraits(.isHeader)
-                    .dxArrive(4)
+            if part != .rest {
+                if day.focus == .recovery {
+                    Text("Now").dxFace(.display, 19, weight: 700, tracking: -0.2).foregroundStyle(TodayInk.ink)
+                        .padding(.leading, 2)
+                        .accessibilityAddTraits(.isHeader)
+                        .dxArrive(4)
+                }
+                focusCard(day).id("lower").dxArrive(4)
+                if day.state == .prep, let stamps = day.stamps {
+                    TodayPrepStamps(daysToQuit: stamps.daysToQuit, quitDate: stamps.quitDate, done: stamps.done,
+                                    total: stamps.total, current: stamps.current)
+                        .dxArrive(5)
+                }
             }
-            focusCard(day).id("lower").dxArrive(4)
-            if day.state == .prep, let stamps = day.stamps {
-                TodayPrepStamps(daysToQuit: stamps.daysToQuit, quitDate: stamps.quitDate, done: stamps.done,
-                                total: stamps.total, current: stamps.current)
-                    .dxArrive(5)
+            if part != .now {
+                // Waves and water ride in the Now card by day; in the evening they keep their own card.
+                if day.night && day.focus != .recovery {
+                    logRows(day).todayCard().dxArrive(6)
+                }
+                timeline(day).padding(.top, part == .rest && !(day.night && day.focus != .recovery) ? 0 : 12)
             }
-            // Waves and water ride in the Now card by day; in the evening they keep their own card.
-            if day.night && day.focus != .recovery {
-                logRows(day).todayCard().dxArrive(6)
-            }
-            timeline(day).padding(.top, 12)
         }
         .padding(.horizontal, DX.Layout.gutter)
-        .padding(.top, day.night ? -24 : 18)
+        .padding(.top, part == .rest ? 0 : day.night ? -24 : 18)
         // Room for the floating tab bar is HomeView's bottom inset (UX-11).
         .padding(.bottom, DX.Space.s)
         .dxReadableColumn()

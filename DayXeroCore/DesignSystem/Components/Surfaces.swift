@@ -52,17 +52,23 @@ private struct AvoidFold: ViewModifier {
 // MARK: iPad
 
 public extension DX.Size {
-    /// The widest the app's content runs on iPad: the iPhone Duo's inner display, the widest screen every layout
-    /// has been checked on.
+    /// The widest a one-column flow runs on iPad (onboarding, the paywall, sessions, calm tools and every other
+    /// full-screen cover): the iPhone Duo's inner display, the widest screen every one-column layout has been checked on.
     static let padColumnWidth: CGFloat = 670
+
+    /// From this width the four tabs lay out in two columns (`WideSplit`, 1.1): every iPad in portrait or landscape,
+    /// iPhone Duo open flat (its inner display, dock and all), and a wide Split View or Stage Manager window. Every
+    /// iPhone, the Duo's cover, and a narrow iPad window keep the one-column iPhone layout.
+    static let splitMinWidth: CGFloat = 560
 }
 
 public extension View {
-    /// On iPad (19 Nov 2026, portrait and full screen only), keeps a screen's content in a centred column of
+    /// On iPad, keeps a one-column screen's content in a centred column of
     /// `DX.Size.padColumnWidth` by widening the horizontal safe area. Anything that ignores the safe area (grounds,
     /// skies, dimming layers) still runs to the screen's edges. On iPhone this does nothing.
     ///
-    /// A presentation starts a new hierarchy, so the app's root and every full-screen cover apply it (`dxCover`).
+    /// A presentation starts a new hierarchy, so onboarding, the paywall and every full-screen cover apply it
+    /// (`dxCover`). The home tabs don't: they use the whole width, in two columns (`WideSplit`).
     func dxPadColumn() -> some View {
         modifier(PadColumn())
     }

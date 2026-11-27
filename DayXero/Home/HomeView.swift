@@ -46,6 +46,8 @@ struct HomeView: View {
                 if edge == nil {
                     // S27.11: Today · Program · SOS · Progress.
                     V4TabBar(selection: v4Selection)
+                        // iPad portrait (1.1): the bar keeps an iPhone's width at the bottom middle, not the screen's.
+                        .frame(maxWidth: DX.Size.readableWidth)
                         .padding(.bottom, DX.Space.xxs)
                 } else {
                     dock(axis: .vertical)

@@ -32,58 +32,22 @@ struct CalmToolsView: View {
     /// week row last. Motion: the title arrives, then the tiles on the 90 ms stagger; each cast member settles into its
     /// scene 120 ms after its tile; the This week row fades in last and its minutes count up (850 ms).
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 0) {
-                // The sheet opened from SOS and Today keeps its header art.
-                if showsClose {
-                    CalmHeaderArt()
-                        .frame(maxWidth: .infinity)
-                        .padding(.top, DX.Space.xs)
-                }
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Calm tools")
-                        .dxType(.large).foregroundStyle(ground.ink)
-                        .accessibilityAddTraits(.isHeader)
-                        .dxArrive(0)
-                    Text("A few minutes instead of reaching for nicotine.").dxType(.footnote).foregroundStyle(ground.muted)
-                        .dxArrive(1)
-                }
-                .padding(.top, showsClose ? 0 : 22)
-                // CLIN-04: from SOS and Today, the reward card for the moment straight after finishing something.
-                if showsClose {
-                    Button { rewardCard = true } label: { RewardCardRow() }.buttonStyle(.plain)
-                        .padding(.top, 16)
-                }
-                // A plain Grid, not a lazy one: every tool is built, so each one is there for VoiceOver and UI tests.
-                let tools = CalmTool.shelf
-                Grid(horizontalSpacing: 12, verticalSpacing: 16) {
-                    ForEach(Array(stride(from: 0, to: tools.count, by: 2)), id: \.self) { start in
-                        GridRow(alignment: .top) {
-                            ForEach(start..<min(start + 2, tools.count), id: \.self) { index in
-                                Button { open = tools[index] } label: {
-                                    CalmToolCard(tool: tools[index], castDelay: Double(index + 2) * DX.Move.arriveStagger + 0.12)
-                                }
-                                .buttonStyle(.dxPress)
-                                .sensoryFeedback(.impact(weight: .light), trigger: open) { _, now in now == tools[index] }
-                                .dxArrive(index + 2)
-                            }
-                        }
-                    }
-                }
-                .padding(.top, 26)
-                weekRow
-                    .padding(.top, 16)
-                    .dxArrive(6)
-                if showsClose {
-                    HelpLine(compact: true, ground: ground).padding(.top, DX.Space.s)
+        Group {
+            if showsClose {
+                // The sheet from SOS and Today stays one column, as on iPhone.
+                scroll { oneColumn }
+            } else {
+                // The tab on iPad and iPhone Duo open flat (1.1): the title, Glim breathing and the week on the
+                // leading side; the four tools on the trailing side.
+                WideSplit(leadingShare: 0.42) {
+                    scroll { wideIntro }
+                } trailing: {
+                    scroll { toolGrid.padding(.top, 22) }
+                } narrow: {
+                    scroll { oneColumn }
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, DX.Layout.gutter)
-            .dxReadableColumn()
-            .padding(.bottom, DX.Space.l)
         }
-        .scrollBounceBehavior(.basedOnSize)
         .overlay(alignment: .topLeading) {
             if showsClose {
                 Button(action: onClose) { DXIcon(.close, size: 18, weight: 2.6) }
@@ -101,6 +65,91 @@ struct CalmToolsView: View {
                 if backToSOS {
                     onClose()
                     if !fromSOS { startSOS?() }
+                }
+            }
+        }
+    }
+
+    private func scroll<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) { content() }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, DX.Layout.gutter)
+                .dxReadableColumn()
+                .padding(.bottom, DX.Space.l)
+        }
+        .scrollBounceBehavior(.basedOnSize)
+    }
+
+    /// The list as on iPhone: header art (in the sheet), the title, the tools in two columns, This week.
+    @ViewBuilder
+    private var oneColumn: some View {
+        // The sheet opened from SOS and Today keeps its header art.
+        if showsClose {
+            CalmHeaderArt()
+                .frame(maxWidth: .infinity)
+                .padding(.top, DX.Space.xs)
+        }
+        titleBlock
+            .padding(.top, showsClose ? 0 : 22)
+        // CLIN-04: from SOS and Today, the reward card for the moment straight after finishing something.
+        if showsClose {
+            Button { rewardCard = true } label: { RewardCardRow() }.buttonStyle(.plain)
+                .padding(.top, 16)
+        }
+        toolGrid
+            .padding(.top, 26)
+        weekRow
+            .padding(.top, 16)
+            .dxArrive(6)
+        if showsClose {
+            HelpLine(compact: true, ground: ground).padding(.top, DX.Space.s)
+        }
+    }
+
+    /// The wide tab's leading column: the title, Glim breathing on its cloud in a panel of Glim's own night ground (the
+    /// cream cloud and halo need a dark ground to show), This week.
+    @ViewBuilder
+    private var wideIntro: some View {
+        titleBlock
+            .padding(.top, 22)
+        CalmHeaderArt()
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, DX.Space.m)
+            .background(DX.Ground.violet.background, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+            .padding(.top, 26)
+            .dxArrive(2)
+        weekRow
+            .padding(.top, 16)
+            .dxArrive(6)
+    }
+
+    private var titleBlock: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Calm tools")
+                .dxType(.large).foregroundStyle(ground.ink)
+                .accessibilityAddTraits(.isHeader)
+                .dxArrive(0)
+            Text("A few minutes instead of reaching for nicotine.").dxType(.footnote).foregroundStyle(ground.muted)
+                .dxArrive(1)
+        }
+    }
+
+    /// The four tools as tiles, two to a row.
+    private var toolGrid: some View {
+        // A plain Grid, not a lazy one: every tool is built, so each one is there for VoiceOver and UI tests.
+        let tools = CalmTool.shelf
+        return Grid(horizontalSpacing: 12, verticalSpacing: 16) {
+            ForEach(Array(stride(from: 0, to: tools.count, by: 2)), id: \.self) { start in
+                GridRow(alignment: .top) {
+                    ForEach(start..<min(start + 2, tools.count), id: \.self) { index in
+                        Button { open = tools[index] } label: {
+                            CalmToolCard(tool: tools[index], castDelay: Double(index + 2) * DX.Move.arriveStagger + 0.12)
+                        }
+                        .buttonStyle(.dxPress)
+                        .sensoryFeedback(.impact(weight: .light), trigger: open) { _, now in now == tools[index] }
+                        .dxArrive(index + 2)
+                    }
                 }
             }
         }

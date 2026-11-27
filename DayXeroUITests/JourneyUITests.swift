@@ -8,6 +8,10 @@ import XCTest
 final class JourneyUITests: XCTestCase {
     override func setUp() async throws {
         continueAfterFailure = false
+        // iPad store captures in landscape (1.1): CI sets DX_ORIENTATION=landscape on that leg.
+        if ProcessInfo.processInfo.environment["DX_ORIENTATION"] == "landscape" {
+            await MainActor.run { XCUIDevice.shared.orientation = .landscapeLeft }
+        }
     }
 
     func testOnboardingPaywallAndPrep() {

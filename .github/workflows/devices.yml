@@ -13,7 +13,11 @@ on:
         type: boolean
         default: false
       store_legs:
-        description: "With store: only these legs, comma-separated (e.g. duo-inner-dark). Empty runs all six."
+        description: "With store: only these legs, comma-separated (e.g. duo-inner-dark). Empty runs all seven."
+        type: string
+        default: ""
+      capture_tag:
+        description: "With store: push to ci-store-<leg>-<tag> instead of ci-store-<leg>, so a branch's captures don't replace another's"
         type: string
         default: ""
 
@@ -201,6 +205,12 @@ jobs:
             posture: none
             appearance: dark
             tests: calm
+          # 1.1: iPad turned on its side, where the tabs keep two columns and the dock stands on the trailing edge.
+          - name: ipad-landscape-light
+            device: ipad
+            posture: landscape
+            appearance: light
+            tests: all
           - name: duo-cover-light
             device: duo
             posture: cover
@@ -316,6 +326,7 @@ jobs:
         env:
           TEST_RUNNER_DX_SHOTS: ${{ github.workspace }}/shots
           TEST_RUNNER_DX_HOST_SHOTS: ${{ matrix.posture == 'inner' && '1' || '0' }}
+          TEST_RUNNER_DX_ORIENTATION: ${{ matrix.posture == 'landscape' && 'landscape' || 'portrait' }}
         run: |
           set -o pipefail
           mkdir -p shots
@@ -380,10 +391,14 @@ jobs:
 
       - name: Push screenshots
         if: always() && steps.leg.outputs.run == 'true'
+        env:
+          TAG: ${{ inputs.capture_tag }}
         run: |
           [ -n "$(ls shots 2>/dev/null)" ] || exit 0
+          BRANCH="ci-store-${{ matrix.name }}"
+          if [ -n "$TAG" ]; then BRANCH="$BRANCH-$(echo "$TAG" | tr -cd 'a-zA-Z0-9.-')"; fi
           cd shots
-          git init -q -b ci-store-${{ matrix.name }}
+          git init -q -b "$BRANCH"
           git config user.name "ci" && git config user.email "ci@users.noreply.github.com"
           git add . && git commit -qm "Store captures on ${{ matrix.name }} for ${GITHUB_SHA::7}"
-          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-store-${{ matrix.name }}
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" "$BRANCH"

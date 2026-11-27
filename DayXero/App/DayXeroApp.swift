@@ -38,8 +38,9 @@ struct DayXeroApp: App {
 
     var body: some Scene {
         WindowGroup {
+            // iPad: onboarding, the paywall and full-screen flows sit in a centred column (dxPadColumn); the home
+            // tabs use the whole width, in two columns (WideSplit, 1.1).
             RootView()
-                .dxPadColumn()
                 // v5: every switch is the kit toggle (coral on, the ink at 30% off).
                 .toggleStyle(.dx)
                 .environment(entitlement)
@@ -217,6 +218,7 @@ struct RootView: View {
                         model: PaywallModel(store: entitlement.store, entitlement: entitlement),
                         onClose: {},
                         spend: PaywallModel.Spend(perYear: 1825, currencyCode: "USD", products: [.cigarettes]))
+                .dxPadColumn()
         } else {
             content
         }
@@ -234,12 +236,13 @@ struct RootView: View {
     @ViewBuilder
     private var screen: some View {
         if underAge {
-            UnderAgeScreen().background(Read4.background.ignoresSafeArea())
+            UnderAgeScreen().background(Read4.background.ignoresSafeArea()).dxPadColumn()
         } else if let profile = profiles.first, !finishingOnboarding {
             if !entitlement.isPro || paywallPurchaseStarted {
                 HardPaywall(profile: profile, onPurchaseStarted: { paywallPurchaseStarted = true }) {
                     withAnimation(motion.animation(.easeInOut(duration: 0.3))) { paywallPurchaseStarted = false }
                 }
+                .dxPadColumn()
                 .transition(.opacity)
             } else {
                 home(profile)
@@ -249,6 +252,7 @@ struct RootView: View {
                 // "Start my prep week" queued Prep 1 (FirstLesson); Home opens it once it has faded in.
                 withAnimation(motion.animation(.easeInOut(duration: 0.3))) { finishingOnboarding = false }
             })
+            .dxPadColumn()
             .transition(.opacity)
         }
     }
@@ -258,7 +262,7 @@ struct RootView: View {
         #if DEBUG
         if let session = UserDefaults.standard.string(forKey: "dx.openSession") {
             // Screenshots: a program v2 session, at the step given by -dx.sessionStep.
-            SessionFlowView(sessionId: session, profile: profile)
+            SessionFlowView(sessionId: session, profile: profile).dxPadColumn()
         } else {
             HomeView(profile: profile)
                 .transition(.opacity)
