@@ -322,7 +322,19 @@ final class JourneyUITests: XCTestCase {
         if let dir = ProcessInfo.processInfo.environment["DX_SHOTS"], !dir.isEmpty {
             let test = (testRun?.test.name ?? "test").filter { $0.isLetter || $0.isNumber }
             try? FileManager.default.createDirectory(atPath: dir, withIntermediateDirectories: true)
-            try? shot.pngRepresentation.write(to: URL(fileURLWithPath: dir).appendingPathComponent("\(test)-\(name).png"))
+            let file = URL(fileURLWithPath: dir).appendingPathComponent("\(test)-\(name).png")
+            if ProcessInfo.processInfo.environment["DX_HOST_SHOTS"] == "1" {
+                // iPhone Duo open: XCUITest reads only the cover display, which is off, so its shot is black.
+                // Leave a request and let the runner take the shot of the inner display (devices.yml).
+                let request = file.deletingPathExtension().appendingPathExtension("req")
+                try? Data().write(to: request)
+                let deadline = Date().addingTimeInterval(20)
+                while FileManager.default.fileExists(atPath: request.path), Date() < deadline {
+                    RunLoop.current.run(until: .now.addingTimeInterval(0.25))
+                }
+            } else {
+                try? shot.pngRepresentation.write(to: file)
+            }
         }
     }
 }

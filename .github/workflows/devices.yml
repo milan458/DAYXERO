@@ -292,9 +292,26 @@ jobs:
         continue-on-error: true
         env:
           TEST_RUNNER_DX_SHOTS: ${{ github.workspace }}/shots
+          TEST_RUNNER_DX_HOST_SHOTS: ${{ matrix.posture == 'inner' && '1' || '0' }}
         run: |
           set -o pipefail
           mkdir -p shots
+          if [ "${{ matrix.posture }}" = "inner" ]; then
+            # The tests leave <name>.req where they want a shot; hinge takes it from the inner display.
+            export HINGE_DEVICE="${{ steps.sim.outputs.udid }}"
+            (
+              while true; do
+                for r in shots/*.req; do
+                  [ -e "$r" ] || continue
+                  hinge screenshot "${r%.req}.png" > /dev/null 2>&1 || echo "::warning::No inner-display shot for $(basename "$r")"
+                  rm -f "$r"
+                done
+                sleep 0.3
+              done
+            ) &
+            WATCH=$!
+            trap 'kill $WATCH 2>/dev/null || true' EXIT
+          fi
           T=DayXeroUITests/JourneyUITests
           if [ "${{ matrix.tests }}" = "calm" ]; then
             ONLY="-only-testing:$T/testEveryCalmToolOpens"
