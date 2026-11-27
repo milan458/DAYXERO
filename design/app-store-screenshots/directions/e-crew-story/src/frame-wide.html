@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DayXero App Store frame · Direction E · iPad and iPhone Duo</title>
+<!-- The iPad 13" and iPhone Duo sets: frame-wide.html?f=01&dev=ipad | duo-cover | duo-inner, served from the
+     e-crew-story folder (render-wide.mjs does that). The stage is 1320 px wide, as the iPhone set's, and as tall as the
+     device's canvas at that width (iPad 1760, Duo cover 1921, Duo inner 1877); it is scaled to the viewport width.
+     It loads frames-wide/NN-*.html, the same ten frames re-laid for these wider canvases, and swaps in
+     <x-waves> (waves.js, with the stage height), <x-char> (char.js), <x-device> and <x-lift> (device.js).
+     Positions near the ground are given from the bottom (style "bottom:") so every height lines up with the hills. -->
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+  body { -webkit-font-smoothing: antialiased; }
+  #stage { width: 1320px; transform-origin: 0 0; }
+  #stage * { box-sizing: content-box; }
+</style>
+<script src="char.js"></script>
+<script src="waves.js"></script>
+<script src="device.js"></script>
+<!-- moonDy keeps Glim's moon at the same height on every canvas, clear of frame 7's subhead and bubble. -->
+</head>
+<body>
+<div id="stage"></div>
+<script>
+(async function () {
+  const q = new URLSearchParams(location.search);
+  const id = (q.get('f') || '01').padStart(2, '0');
+  const dev = q.get('dev') || 'ipad';
+  const scale = innerWidth / 1320;
+  const H = Math.ceil(innerHeight / scale);
+  const list = await (await fetch('frames.json')).json();
+  const meta = list.find((m) => m.id === id);
+  document.title = meta.title + ' · ' + dev;
+  const html = await (await fetch('frames-wide/' + meta.file)).text();
+  const stage = document.getElementById('stage');
+  stage.innerHTML = html;
+  const root = stage.firstElementChild;
+  root.style.width = '1320px'; root.style.height = H + 'px';
+  root.dataset.dev = dev;
+  const attrs = (el) => Object.fromEntries([...el.attributes].map((a) => [a.name, a.value]));
+  stage.querySelectorAll('x-waves').forEach((el) => { el.outerHTML = window.dxWavesSVG(Number(el.getAttribute('frame')), { H, ys: 0.6, rs: 0.8, moonDy: 170 - (H - 1760) }); });
+  stage.querySelectorAll('x-device').forEach((el) => { el.outerHTML = window.DXDEVICE(dev, attrs(el), H); });
+  stage.querySelectorAll('x-lift').forEach((el) => { el.outerHTML = window.DXLIFT(dev, attrs(el)); });
+  stage.querySelectorAll('[data-only]').forEach((el) => { if (!el.dataset.only.split(' ').includes(dev)) el.remove(); });
+  stage.querySelectorAll('x-char').forEach((el) => {
+    el.outerHTML = window.DXCHAR({ who: el.getAttribute('who'), expr: el.getAttribute('expr'), size: Number(el.getAttribute('size')), stage: el.getAttribute('stage'), pose: el.getAttribute('pose'), dark: el.getAttribute('dark') });
+  });
+  stage.style.transform = 'scale(' + scale + ')';
+  document.body.style.background = root.style.background;
+  await document.fonts.ready;
+  await Promise.all([...document.images].map((i) => i.complete ? i.decode().catch(() => {}) : new Promise((ok) => { i.onload = i.onerror = ok; })));
+  document.body.dataset.ready = '1';
+})().catch((e) => { document.body.dataset.error = String(e); console.error(e); });
+</script>
+</body>
+</html>

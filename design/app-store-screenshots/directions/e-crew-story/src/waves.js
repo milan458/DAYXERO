@@ -12,8 +12,12 @@
 (function (root) {
   'use strict';
 
-  function DX_WAVES(frame) {
-    var FW = 1320, H = 2868, N = 10;
+  function DX_WAVES(frame, opt) {
+    /* opt (for the iPad and iPhone Duo sets): { H: stage height at 1320 wide, ys: how much the ground is squashed,
+       rs: how much the suns and moons shrink, moonDy: moves Glim's moon down }. With no opt this is the 1320 x 2868 iPhone stage, exactly as before. */
+    opt = opt || {};
+    var FW = 1320, H0 = 2868, H = opt.H || H0, YS = opt.ys || 1, RS = opt.rs || 1, MDY = opt.moonDy || 0, N = 10;
+    function Y(y) { return H - (H0 - y) * YS; }
     var k = Math.max(1, Math.min(N, Math.round(frame) || 1));
     var off = (k - 1) * FW;
 
@@ -67,7 +71,7 @@
       var L = LAYERS[name], e = seaAt(X, L.half);
       var hill = L.hill - sines(X, L.hp);
       var wave = L.sea - L.a * Math.sin(X * TAU / L.p + L.ph);
-      return hill + (wave - hill) * e;
+      return Y(hill + (wave - hill) * e);
     }
     function f1(v) { return Math.round(v * 10) / 10; }
     /* a smooth closed path under a ridge (Catmull-Rom through samples every 12 px), in frame-local coordinates */
@@ -96,41 +100,41 @@
     function G(i) { return i * FW; } // global x of frame i+1's left edge
 
     // frame 1: the morning sun behind Glim
-    add(sky, G(0) + 860, G(0) + 1300, { d: circ(G(0) + 1080 - off, 1430, 210), fill: '#FFD966', op: 1 });
+    add(sky, G(0) + 860, G(0) + 1300, { d: circ(G(0) + 1080 - off, Y(1430), 210 * RS), fill: '#FFD966', op: 1 });
     // frame 3: Xero's big peach sun, low on the left (the designer's disc)
-    add(sky, G(2) - 300, G(2) + 900, { d: circ(G(2) + 300 - off, 2010, 560), fill: '#FFB49A', op: 1 });
+    add(sky, G(2) - 300, G(2) + 900, { d: circ(G(2) + 300 - off, Y(2010), 560 * RS), fill: '#FFB49A', op: 1 });
     // frame 4: the lavender moon-disc on the right (the designer's)
-    add(sky, G(3) + 700, G(3) + 1700, { d: circ(G(3) + 1180 - off, 1560, 430), fill: '#C9BFF0', op: 1 });
+    add(sky, G(3) + 700, G(3) + 1700, { d: circ(G(3) + 1180 - off, Y(1560), 430 * RS), fill: '#C9BFF0', op: 1 });
     // seam 6/7: the sun sets between Jelli's evening sea and Glim's night
-    add(sky, G(6) - 420, G(6) + 420, { d: circ(G(6) - off, 1950, 330), fill: '#FFD9B0', op: 0.35 });
-    add(sky, G(6) - 300, G(6) + 300, { d: circ(G(6) - off, 1950, 190), fill: '#FFB38A', op: 1 });
+    add(sky, G(6) - 420, G(6) + 420, { d: circ(G(6) - off, Y(1950), 330 * RS), fill: '#FFD9B0', op: 0.35 });
+    add(sky, G(6) - 300, G(6) + 300, { d: circ(G(6) - off, Y(1950), 190 * RS), fill: '#FFB38A', op: 1 });
     // frame 7: the crescent moon (the designer's: a pale disc cut by the night) with two soft rings, and the stars
-    add(sky, G(6), G(6) + 500, { d: circ(G(6) + 300 - off, 905, 200), fill: '#FFE9A8', op: 0.05 });
-    add(sky, G(6), G(6) + 500, { d: circ(G(6) + 300 - off, 905, 140), fill: '#FFE9A8', op: 0.09 });
-    add(sky, G(6), G(6) + 500, { d: 'M' + (G(6) + 300 - off - 96) + ' 905 a96 96 0 1 0 192 0 a96 96 0 1 0 -192 0Z M' + (G(6) + 352 - off - 84) + ' 880 a84 84 0 1 1 168 0 a84 84 0 1 1 -168 0Z', fill: '#FFE9A8', op: 1, rule: 'evenodd' });
+    add(sky, G(6), G(6) + 500, { d: circ(G(6) + 300 - off, (Y(905) + MDY), 200 * RS), fill: '#FFE9A8', op: 0.05 });
+    add(sky, G(6), G(6) + 500, { d: circ(G(6) + 300 - off, (Y(905) + MDY), 140 * RS), fill: '#FFE9A8', op: 0.09 });
+    add(sky, G(6), G(6) + 500, { d: circ(G(6) + 300 - off, (Y(905) + MDY), 96 * RS) + ' M' + f1(G(6) + 352 - off - 84 * RS) + ' ' + f1((Y(905) + MDY) - 25 * RS) + ' a' + 84 * RS + ' ' + 84 * RS + ' 0 1 1 ' + 168 * RS + ' 0 a' + 84 * RS + ' ' + 84 * RS + ' 0 1 1 ' + (-168 * RS) + ' 0Z', fill: '#FFE9A8', op: 1, rule: 'evenodd' });
     var stars = '';
     for (var i = 0; i < 70; i++) {
-      var sx = G(6) - 160 + rnd() * (FW + 320), sy = 930 + rnd() * 950, sr = rnd() < 0.25 ? 6 : 3 + rnd() * 2;
+      var sx = G(6) - 160 + rnd() * (FW + 320), sy = Y(930 + rnd() * 950), sr = rnd() < 0.25 ? 6 : 3 + rnd() * 2;
       var fade = smooth((sx - (G(6) - 160)) / 260) * (1 - smooth((sx - (G(7) - 100)) / 260));
-      if (fade > 0.4 && Math.hypot(sx - (G(6) + 300), sy - 905) > 200) stars += circ(sx - off, sy, f1(sr)) + ' ';
+      if (fade > 0.4 && Math.hypot(sx - (G(6) + 300), sy - (Y(905) + MDY)) > 200 * RS) stars += circ(sx - off, sy, f1(sr)) + ' ';
     }
     add(sky, G(6) - 200, G(7) + 200, { d: stars, fill: '#FFF7EE', op: 0.85 });
     // seam 8/9: the sun comes up out of the calm sea into the rewards morning
-    add(sky, G(8) - 480, G(8) + 480, { d: circ(G(8) - off, 1930, 360), fill: '#FFF1C2', op: 0.5 });
-    add(sky, G(8) - 300, G(8) + 300, { d: circ(G(8) - off, 1930, 220), fill: '#FFD966', op: 1 });
+    add(sky, G(8) - 480, G(8) + 480, { d: circ(G(8) - off, Y(1930), 360 * RS), fill: '#FFF1C2', op: 0.5 });
+    add(sky, G(8) - 300, G(8) + 300, { d: circ(G(8) - off, Y(1930), 220 * RS), fill: '#FFD966', op: 1 });
     // frame 10: the finale sun (the designer's)
-    add(sky, G(9) + 800, G(9) + 1320, { d: circ(G(9) + 1090 - off, 1330, 165), fill: '#FFD966', op: 1 });
+    add(sky, G(9) + 800, G(9) + 1320, { d: circ(G(9) + 1090 - off, Y(1330), 165 * RS), fill: '#FFD966', op: 1 });
 
     // frame 2: the prep path. Seven stones on the front hill lead right to the Day Xero flag
     var path = '', stones = '';
-    for (var px = 70; px <= 1150; px += 10) { var gx = G(1) + px; path += (path ? ' L' : 'M') + (gx - off) + ' ' + f1(ridgeY('front', gx) + 70 + 26 * Math.sin(px / 150)); }
+    for (var px = 70; px <= 1150; px += 10) { var gx = G(1) + px; path += (path ? ' L' : 'M') + (gx - off) + ' ' + f1(ridgeY('front', gx) + (70 + 26 * Math.sin(px / 150)) * YS); }
     add(top, G(1), G(2), { d: path, fill: 'none', op: 0.8, stroke: '#FFF8EE', sw: 30 });
     for (var si = 0; si < 7; si++) {
-      var stx = G(1) + 110 + si * 165, sty = ridgeY('front', stx) + 70 + 26 * Math.sin((110 + si * 165) / 150);
+      var stx = G(1) + 110 + si * 165, sty = ridgeY('front', stx) + (70 + 26 * Math.sin((110 + si * 165) / 150)) * YS;
       stones += ell(stx - off, f1(sty), 44, 18) + ' ';
     }
     add(top, G(1), G(2), { d: stones, fill: '#FFF8EE', op: 1, stroke: '#0F6E43', sw: 6 });
-    var fx = G(1) + 1225, fy = ridgeY('front', fx) + 48;
+    var fx = G(1) + 1225, fy = ridgeY('front', fx) + 48 * YS;
     add(top, G(1) + 1100, G(2) + 120, { d: 'M' + f1(fx - off - 4) + ' ' + f1(fy) + ' v-150 h8 v150Z', fill: '#201D2E', op: 1 });
     add(top, G(1) + 1100, G(2) + 120, { d: 'M' + f1(fx - off + 4) + ' ' + f1(fy - 146) + ' l86 22 l-86 26Z', fill: '#FF7A55', op: 1 });
     add(top, G(1) + 1100, G(2) + 120, { d: ell(fx - off, f1(fy + 4), 70, 14), fill: '#0F6E43', op: 0.25 });
@@ -151,7 +155,7 @@
     // frame 7: fireflies over Glim's hills
     var ff = '', ffg = ''; rs = 29;
     for (var j = 0; j < 26; j++) {
-      var fxx = G(6) + 40 + rnd() * (FW - 80), fyy = ridgeY('mid', fxx) + 20 + rnd() * 560;
+      var fxx = G(6) + 40 + rnd() * (FW - 80), fyy = ridgeY('mid', fxx) + (20 + rnd() * 560) * YS;
       ff += circ(fxx - off, f1(fyy), 5) + ' '; ffg += circ(fxx - off, f1(fyy), 16) + ' ';
     }
     add(top, G(6), G(7), { d: ffg, fill: '#FFE27A', op: 0.22 });
@@ -159,20 +163,20 @@
     // frame 9: flowers in the rewards meadow
     var fl = ['', '', '']; rs = 3;
     for (var q = 0; q < 54; q++) {
-      var qx = G(8) + 30 + rnd() * (FW - 60), qy = ridgeY('front', qx) + 26 + rnd() * 150;
+      var qx = G(8) + 30 + rnd() * (FW - 60), qy = ridgeY('front', qx) + (26 + rnd() * 150) * YS;
       fl[q % 3] += circ(qx - off, f1(qy), f1(5 + rnd() * 3)) + ' ';
     }
     add(top, G(8), G(9), { d: fl[0], fill: '#FFF8EE', op: 0.95 });
     add(top, G(8), G(9), { d: fl[1], fill: '#FF8FA3', op: 0.95 });
     add(top, G(8), G(9), { d: fl[2], fill: '#FFD966', op: 1 });
     // frame 10: the sand island the crew stands on (the designer's), with the Day Xero flag
-    add(mid, G(9), G(10), { d: ell(G(9) + 640 - off, 2392, 560, 92), fill: '#FFE3B8', op: 1 });
-    add(mid, G(9), G(10), { d: ell(G(9) + 640 - off, 2408, 560, 84), fill: 'none', op: 1, stroke: '#E2C49C', sw: 7 });
-    add(mid, G(9), G(10), { d: 'M' + (G(9) + 1096 - off) + ' 2384 v-196 h10 v196Z', fill: '#201D2E', op: 1 });
-    add(mid, G(9), G(10), { d: 'M' + (G(9) + 1106 - off) + ' 2192 l96 25 l-96 30Z', fill: '#FF7A55', op: 1 });
+    add(mid, G(9), G(10), { d: ell(G(9) + 640 - off, f1(Y(2392)), 560, f1(92 * YS)), fill: '#FFE3B8', op: 1 });
+    add(mid, G(9), G(10), { d: ell(G(9) + 640 - off, f1(Y(2408)), 560, f1(84 * YS)), fill: 'none', op: 1, stroke: '#E2C49C', sw: 7 });
+    add(mid, G(9), G(10), { d: 'M' + (G(9) + 1096 - off) + ' ' + f1(Y(2384)) + ' v-196 h10 v196Z', fill: '#201D2E', op: 1 });
+    add(mid, G(9), G(10), { d: 'M' + (G(9) + 1106 - off) + ' ' + f1(Y(2384) - 192) + ' l96 25 l-96 30Z', fill: '#FF7A55', op: 1 });
 
     /* ---------- flatten to the template's fixed slots ---------- */
-    var out = { id: 'dxw' + k, frame: k };
+    var out = { id: 'dxw' + k, frame: k, H: H, H40: H + 40 };
     // the sky stays the designer's flat ground for the whole frame (a hard change at the seam, as on her canvas);
     // only the land and the sea run on across the seams
     SKY_X.forEach(function (x, i) { out['s' + i] = SKY[k - 1]; });
@@ -201,11 +205,11 @@
   }
   function deco(p) { return '<path d="{{' + p + '.d}}" fill="{{' + p + '.fill}}" fill-rule="{{' + p + '.rule}}" opacity="{{' + p + '.op}}" stroke="{{' + p + '.stroke}}" stroke-width="{{' + p + '.sw}}" stroke-linecap="round" stroke-linejoin="round"></path>'; }
   var WAVES_TEMPLATE =
-    '<svg aria-hidden="true" width="1320" height="2868" viewBox="0 0 1320 2868" style="position: absolute; left: 0; top: 0; display: block; overflow: hidden">' +
+    '<svg aria-hidden="true" width="1320" height="{{H}}" viewBox="0 0 1320 {{H}}" style="position: absolute; left: 0; top: 0; display: block; overflow: hidden">' +
     '<defs>' + grad('sky', 's', SKY_O, '') + grad('far', 'c', LAND_O, 'far.') + grad('mid', 'c', LAND_O, 'mid.') + grad('near', 'c', LAND_O, 'near.') + grad('front', 'c', LAND_O, 'front.') +
     '<filter id="{{id}}lift" x="-5%" y="-20%" width="110%" height="140%"><feDropShadow dx="0" dy="-6" stdDeviation="9" flood-color="#1A0B2E" flood-opacity=".14"></feDropShadow></filter>' +
     '</defs>' +
-    '<rect x="0" y="0" width="1320" height="2908" fill="url(#{{id}}sky)"></rect>' +
+    '<rect x="0" y="0" width="1320" height="{{H40}}" fill="url(#{{id}}sky)"></rect>' +
     SK.map(function (i) { return deco('sk' + i); }).join('') +
     '<path d="{{far.d}}" fill="url(#{{id}}far)"></path>' +
     '<path d="{{mid.d}}" fill="url(#{{id}}mid)" filter="url(#{{id}}lift)"></path>' +
@@ -225,5 +229,5 @@
 
   root.DX_WAVES = DX_WAVES;
   root.WAVES_TEMPLATE = WAVES_TEMPLATE;
-  root.dxWavesSVG = function (frame) { return fill(WAVES_TEMPLATE, DX_WAVES(frame)); };
+  root.dxWavesSVG = function (frame, opt) { return fill(WAVES_TEMPLATE, DX_WAVES(frame, opt)); };
 })(typeof window !== 'undefined' ? window : globalThis);

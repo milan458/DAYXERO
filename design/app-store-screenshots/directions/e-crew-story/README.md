@@ -22,6 +22,23 @@ It holds the same ten frames as artboards at 1320 × 2868, built from the same m
 | `export/contact-sheet-gapped.png` | All ten with 14 px gaps and rounded corners, as the product page spaces them |
 | `export/contact-sheet-search.png` | Frames 1–3 at 230 px, the size of a search result |
 
+### iPad and iPhone Duo (27 Nov)
+
+| File | What it is |
+|---|---|
+| `export/ipad-13/01.png … 10.png` | 2064 × 2752, the iPad 13" class |
+| `export/duo-cover/01.png … 10.png` | 1398 × 2034, iPhone Duo folded (cover display) |
+| `export/duo-inner/01.png … 10.png` | 2007 × 2853, iPhone Duo open (inner display), once its captures are in |
+| `export/contact-sheet-<set>.png` | All ten of that set, edge to edge |
+
+The same ten frames, story and captions as the iPhone set, re-laid for the wider canvases in `src/frames-wide/`. Each
+stage is 1320 wide and scaled in the browser, so nothing is resampled. The landscape is the same global wave line,
+flattened (`DX_WAVES(frame, { H, ys: 0.6, rs: 0.8, moonDy })`); the iPhone output is byte-identical to before. Each
+device shows a real capture from that device (`real-ipad/`, `real-duo-cover/`, `real-duo-inner/`), taken by the store
+leg of `devices.yml` on `claude/app-store-prep` (journey tests; the Duo inner display is shot by hinge). Frames 4 and 7
+lift a row out of the capture (`x-lift`, crop per set in capture pixels). Render with
+`node render-wide.mjs [--dev ipad|duo-cover|duo-inner] [NN…]`; it renders every set that has a `real-<set>/` folder.
+
 Every PNG is 8-bit RGB with no alpha channel and carries an sRGB chunk. `render.mjs` fails if Bricolage Grotesque or
 DM Sans hasn't loaded, or if any screenshot hasn't loaded.
 
