@@ -6,6 +6,7 @@ Safe to run again: anything that already exists is left as it is.
     subscription group "DayXero Pro" with dayxero.annual (3-day free trial) and dayxero.quarterly, the two plans the
     app sells (16 Nov 2026), plus dayxero.monthly and the non-consumable dayxero.lifetime, which are no longer on
     the paywall but stay for anyone who bought them. English names, prices in every territory, review screenshots.
+  "check" only reads App Store Connect and RevenueCat and prints what App Review will see.
   RevenueCat (RC_SECRET_KEY, RC_PROJECT_ID; skipped when not set):
     the four products, the "pro" entitlement, and the current "default" offering with
     $rc_annual, $rc_three_month, $rc_monthly and $rc_lifetime packages. Prints the app's public SDK key.
@@ -364,8 +365,128 @@ def revenuecat():
         print(f"::notice title=RevenueCat public SDK key::{keys[0]} (save it as the REVENUECAT_API_KEY repo secret)")
 
 
+# MARK: Check (read only)
+
+def check():
+    """Reads every plan, the 1.0 version and RevenueCat and prints what App Review will see. Changes nothing."""
+    app = app_id()
+    n_territories = len(territories())
+    out = []
+
+    def got(path):
+        status, data = asc("GET", path, allow=(404,))
+        return data.get("data") if status == 200 else None
+
+    try:
+        for g in all_pages(f"/v1/apps/{app}/subscriptionGroups?limit=50"):
+            gid, ga = g["id"], g["attributes"]
+            glocs = all_pages(f"/v1/subscriptionGroups/{gid}/subscriptionGroupLocalizations")
+            out.append(f"GROUP {ga['referenceName']}: localizations " +
+                       ", ".join(f"{l['attributes']['locale']}={l['attributes'].get('name')!r} ({l['attributes'].get('state')})" for l in glocs))
+            for sub in all_pages(f"/v1/subscriptionGroups/{gid}/subscriptions?limit=50"):
+                sid, a = sub["id"], sub["attributes"]
+                locs = all_pages(f"/v1/subscriptions/{sid}/subscriptionLocalizations")
+                prices = all_pages(f"/v1/subscriptions/{sid}/prices?limit=200&include=subscriptionPricePoint,territory")
+                avail = got(f"/v1/subscriptions/{sid}/subscriptionAvailability")
+                avail_n = len(all_pages(f"/v1/subscriptionAvailabilities/{avail['id']}/availableTerritories?limit=200")) if avail else 0
+                trial = all_pages(f"/v1/subscriptions/{sid}/introductoryOffers?limit=200")
+                shot = got(f"/v1/subscriptions/{sid}/appStoreReviewScreenshot")
+                usd = ""
+                _, pp = asc("GET", f"/v1/subscriptions/{sid}/prices?limit=200&include=subscriptionPricePoint&filter[territory]=USA")
+                for inc in pp.get("included", []):
+                    if inc["type"] == "subscriptionPricePoints":
+                        usd = inc["attributes"].get("customerPrice")
+                out.append(f"  SUB {a['productId']}: state {a.get('state')}, level {a.get('groupLevel')}, {a.get('subscriptionPeriod')}, "
+                           f"US ${usd}, {len(prices)} price rows, available in {avail_n}/{n_territories}, trial rows {len(trial)}"
+                           f"{' (' + trial[0]['attributes'].get('duration', '') + ')' if trial else ''}, "
+                           f"review screenshot {'yes ' + str((shot or {}).get('attributes', {}).get('assetDeliveryState', {}).get('state')) if shot else 'NO'}, "
+                           f"family {a.get('familySharable')}, review note {a.get('reviewNote')!r}")
+                for l in locs:
+                    la = l["attributes"]
+                    out.append(f"    {la['locale']}: {la.get('name')!r} / {la.get('description')!r} ({la.get('state')})")
+    except SystemExit:
+        out.append("(could not read this part; see the error above)")
+    try:
+        for iap in all_pages(f"/v1/apps/{app}/inAppPurchasesV2?limit=200"):
+            iid, a = iap["id"], iap["attributes"]
+            locs = all_pages(f"/v2/inAppPurchases/{iid}/inAppPurchaseLocalizations")
+            sched = got(f"/v2/inAppPurchases/{iid}/iapPriceSchedule")
+            usd = ""
+            if sched:
+                _, mp = asc("GET", f"/v1/inAppPurchasePriceSchedules/{sched['id']}/manualPrices?include=inAppPurchasePricePoint,territory&limit=50")
+                usd = ", ".join(sorted({i["attributes"].get("customerPrice", "") for i in mp.get("included", []) if i["type"] == "inAppPurchasePricePoints"}))
+            avail = got(f"/v2/inAppPurchases/{iid}/inAppPurchaseAvailability")
+            avail_n = len(all_pages(f"/v1/inAppPurchaseAvailabilities/{avail['id']}/availableTerritories?limit=200")) if avail else 0
+            shot = got(f"/v2/inAppPurchases/{iid}/appStoreReviewScreenshot")
+            out.append(f"IAP {a['productId']} ({a.get('inAppPurchaseType')}): state {a.get('state')}, base price {usd or 'NONE'}, "
+                       f"available in {avail_n}/{n_territories}, review screenshot "
+                       f"{'yes ' + str((shot or {}).get('attributes', {}).get('assetDeliveryState', {}).get('state')) if shot else 'NO'}, "
+                       f"family {a.get('familySharable')}, review note {a.get('reviewNote')!r}")
+            for l in locs:
+                la = l["attributes"]
+                out.append(f"    {la['locale']}: {la.get('name')!r} / {la.get('description')!r} ({la.get('state')})")
+    except SystemExit:
+        out.append("(could not read this part; see the error above)")
+    try:
+        for v in all_pages(f"/v1/apps/{app}/appStoreVersions?limit=10"):
+            va = v["attributes"]
+            b = got(f"/v1/appStoreVersions/{v['id']}/build")
+            out.append(f"VERSION {va.get('versionString')} {va.get('platform')}: {va.get('appStoreState')}, "
+                       f"build {(b or {}).get('attributes', {}).get('version', 'NONE')}")
+            rd = got(f"/v1/appStoreVersions/{v['id']}/appStoreReviewDetail")
+            if rd:
+                ra = rd["attributes"]
+                out.append(f"  review detail: contact {'set' if ra.get('contactEmail') else 'MISSING'}, demo account required "
+                           f"{ra.get('demoAccountRequired')}, notes {ra.get('notes')!r}")
+            else:
+                out.append("  review detail: NONE")
+    except SystemExit:
+        out.append("(could not read this part; see the error above)")
+    try:
+        _, rs = asc("GET", f"/v1/reviewSubmissions?filter[app]={app}&include=items&limit=20", allow=(404,))
+    except SystemExit:
+        out.append("(could not read this part; see the error above)")
+    try:
+        for r in rs.get("data", []):
+            out.append(f"REVIEW SUBMISSION {r['id']}: {r['attributes'].get('state')}, items {len(r.get('relationships', {}).get('items', {}).get('data', []))}")
+    except SystemExit:
+        out.append("(could not read this part; see the error above)")
+    try:
+        for info in all_pages(f"/v1/apps/{app}/appInfos"):
+            for l in all_pages(f"/v1/appInfos/{info['id']}/appInfoLocalizations?limit=50"):
+                la = l["attributes"]
+                out.append(f"APP INFO {info['attributes'].get('appStoreState')} {la['locale']}: privacy {la.get('privacyPolicyUrl')!r}")
+    except SystemExit:
+        out.append("(could not read this part; see the error above)")
+    try:
+        status, eula = asc("GET", f"/v1/apps/{app}/endUserLicenseAgreement", allow=(404,))
+        out.append("CUSTOM EULA: " + ("yes" if status == 200 and eula.get("data") else "none (Apple's standard EULA applies)"))
+    except SystemExit:
+        out.append("(could not read this part; see the error above)")
+    try:
+        if os.environ.get("RC_SECRET_KEY") and os.environ.get("RC_PROJECT_ID"):
+            products = {p["id"]: p for p in rc_items("/products")}
+            out.append("RC products: " + ", ".join(f"{p['store_identifier']} ({p.get('type')})" for p in products.values()))
+            for e in rc_items("/entitlements"):
+                _, ep = rc("GET", f"/entitlements/{e['id']}/products")
+                out.append(f"RC entitlement {e['lookup_key']}: " + ", ".join(p.get("store_identifier", "") for p in ep.get("items", [])))
+            for o in rc_items("/offerings"):
+                pk = []
+                for p in rc_items(f"/offerings/{o['id']}/packages"):
+                    _, pp = rc("GET", f"/packages/{p['id']}/products")
+                    pk.append(f"{p['lookup_key']}=" + "+".join(products.get(x.get("product", {}).get("id") or x.get("product_id", ""), {}).get("store_identifier", "?")
+                                                              for x in pp.get("items", [])))
+                out.append(f"RC offering {o['lookup_key']}{' (current)' if o.get('is_current') else ''}: " + ", ".join(pk))
+    except SystemExit:
+        out.append("(could not read this part; see the error above)")
+    print("\n".join(out))
+
+
 if __name__ == "__main__":
     step = sys.argv[1] if len(sys.argv) > 1 else "all"
+    if step == "check":
+        check()
+        raise SystemExit(0)
     if step in ("all", "appstore"):
         app = app_id()
         all_territories = territories()
