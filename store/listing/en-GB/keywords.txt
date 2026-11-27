@@ -1,1 +1,1 @@
-give up,stop,smoke free,e-cig,vape,cigarette,pouch,snus,craving,nrt,patches,gum,lozenge,habit
+give up,stop,smoke,e-cig,vape,cigarette,pouch,snus,craving,nrt,patches,gum,lozenge,habit,counter

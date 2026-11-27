@@ -1,1 +1,1 @@
-fumer,vapoter,cigarette,stop,puff,snus,sachet,patch,gomme,pastille,dépendance,habitude,compteur
+cigarette,vapoter,puff,nicotine,sevrage,sans,detox,snus,sachet,patch,gomme,pastille,dépendance

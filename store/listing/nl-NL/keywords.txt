@@ -1,1 +1,1 @@
-rookvrij,sigaret,vape,snus,nicotinezakjes,pleister,kauwgom,zuigtablet,verslaving,gewoonte,afkicken
+quit,smoking,sigaret,vape,snus,nicotinezakjes,pleister,kauwgom,zuigtablet,verslaving,afkicken,trek
