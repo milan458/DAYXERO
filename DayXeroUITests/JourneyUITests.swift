@@ -231,7 +231,9 @@ final class JourneyUITests: XCTestCase {
     private func visitTabs(_ app: XCUIApplication, prefix: String) {
         for tab in ["Program", "Progress", "Today"] {
             tap(app.buttons[tab].firstMatch)
-            RunLoop.current.run(until: .now.addingTimeInterval(1))   // let the tab cross-fade finish
+            // Let the tab cross-fade finish; the Program road plays in for about 2.6 s (today's stamp at 1.25 s,
+            // the locked stops and hills from 1.3 s, the tease row at 2.1 s), so wait that out before the shot.
+            RunLoop.current.run(until: .now.addingTimeInterval(tab == "Program" ? 3 : 1))
             snap(app, "\(prefix)-\(tab.lowercased())")
         }
     }
