@@ -17,9 +17,9 @@ on:
         type: boolean
         default: false
       listings:
-        description: "Instead of a build: store listing text from store/listing (show or apply), or the 20 Nov iPhone screenshots (shots-show or shots-apply)"
+        description: "Instead of a build: store listing text from store/listing (show or apply), or the 20 Nov iPhone screenshots (shots-show or shots-apply), or the header and search results art (creative-show or creative-apply)"
         type: choice
-        options: ["off", "show", "apply", "shots-show", "shots-apply"]
+        options: ["off", "show", "apply", "shots-show", "shots-apply", "creative-show", "creative-apply"]
         default: "off"
 
 permissions:
@@ -307,7 +307,14 @@ jobs:
           MODE: ${{ inputs.listings }}
         run: |
           python3 -m pip install --quiet pyjwt cryptography
-          if [[ "$MODE" == shots-* ]]; then
+          if [[ "$MODE" == creative-* ]]; then
+            # Header and search results art (direction C), one header and one search image per language, on its own branch.
+            git fetch --depth=1 origin claude/creative-assets
+            mkdir -p "$RUNNER_TEMP/creative"
+            for f in $(git ls-tree --name-only FETCH_HEAD store/creative-assets/); do git show "FETCH_HEAD:$f" > "$RUNNER_TEMP/creative/$(basename "$f")"; done
+            ls -la "$RUNNER_TEMP/creative"
+            python3 scripts/ci/asc_creative_assets.py "${MODE#creative-}" "$RUNNER_TEMP/creative"
+          elif [[ "$MODE" == shots-* ]]; then
             # The 20 Nov set (direction E, "Meet the crew") lives on its design branch, 1320 x 2868.
             SRC=design/app-store-screenshots/directions/e-crew-story/export/iphone-6.9
             git fetch --depth=1 origin claude/adoring-ptolemy-1jtu1h
