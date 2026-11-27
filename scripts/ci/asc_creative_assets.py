@@ -96,7 +96,13 @@ def icons(aid):
     _, version = targets(aid)
     code, data = req("GET", f"appStoreVersions/{version['id']}/build")
     b = (data.get("data") or {}) if code < 300 else {}
-    print("Build attached to", version["attributes"]["versionString"], ":", (b.get("attributes") or {}).get("version", "none"))
+    a = b.get("attributes") or {}
+    print("Build attached to", version["attributes"]["versionString"], ":", a.get("version", "none"), a.get("uploadedDate"))
+    t = (a.get("iconAssetToken") or {}).get("templateUrl")
+    if t and os.environ.get("DUMP_ICONS"):
+        import base64
+        with urllib.request.urlopen(t.replace("{w}", "256").replace("{h}", "256").replace("{f}", "png")) as r:
+            print(f"ICON attached-{a.get('version')} " + base64.b64encode(r.read()).decode())
 
 
 def show(_folder=None):
