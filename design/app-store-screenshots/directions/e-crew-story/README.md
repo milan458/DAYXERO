@@ -28,7 +28,7 @@ It holds the same ten frames as artboards at 1320 × 2868, built from the same m
 |---|---|
 | `export/ipad-13/01.png … 10.png` | 2064 × 2752, the iPad 13" class |
 | `export/duo-cover/01.png … 10.png` | 1398 × 2034, iPhone Duo folded (cover display) |
-| `export/duo-inner/01.png … 10.png` | 2007 × 2853, iPhone Duo open (inner display), once its captures are in |
+| `export/duo-inner/01.png … 10.png` | 2007 × 2853, iPhone Duo open (inner display). 07 is still to come: its Wind down capture came back as the home screen |
 | `export/contact-sheet-<set>.png` | All ten of that set, edge to edge |
 
 The same ten frames, story and captions as the iPhone set, re-laid for the wider canvases in `src/frames-wide/`. Each
