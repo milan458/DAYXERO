@@ -1,4 +1,4 @@
-Screen recording (physical iPhone, latest iOS): [paste video link here]
+Screen recording (physical iPhone, latest iOS): https://drive.google.com/file/d/1N9vKK7loN0yiEOhGJCtsO-MZILsrUF48/view
 It starts at launch and shows onboarding, the subscription screen, a purchase, and the paid program. Program lesson screens are protected from screen capture, so they show blank in the recording and lesson audio pauses while recording. This is intended to protect paid content; on a normal device they display and play as usual.
 
 1. Purpose and audience
