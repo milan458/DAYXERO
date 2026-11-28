@@ -8,8 +8,12 @@ on:
       step:
         description: "What to set up"
         type: choice
-        options: [all, appstore, revenuecat, check, group, notes]
+        options: [all, appstore, revenuecat, check, group, notes, attach]
         default: all
+      build:
+        description: "With attach: the TestFlight build number to put on version 1.0"
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -49,6 +53,7 @@ jobs:
           RC_SECRET_KEY: ${{ secrets.RC_SECRET_KEY }}
           RC_PROJECT_ID: ${{ secrets.RC_PROJECT_ID }}
           REVIEW_SCREENSHOT: ${{ runner.temp }}/paywall.png
+          BUILD_NUMBER: ${{ inputs.build }}
         run: python3 scripts/ci/store_setup.py ${{ inputs.step }}
 
       - name: Remove key

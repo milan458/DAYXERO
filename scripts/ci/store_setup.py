@@ -579,6 +579,38 @@ def review_notes():
     print(got_notes[:300])
 
 
+def attach_build(number):
+    """Attaches TestFlight build `number` to the iOS 1.0 version, then reads it back. Never submits."""
+    if not number:
+        print("::error::No build number given (the workflow's build input)")
+        raise SystemExit(1)
+    app = app_id()
+    versions = [v for v in all_pages(f"/v1/apps/{app}/appStoreVersions?filter[platform]=IOS&limit=50")
+                if v["attributes"].get("versionString") == "1.0"]
+    if len(versions) != 1:
+        print(f"::error::Expected one iOS 1.0 version, found {len(versions)}")
+        raise SystemExit(1)
+    vid = versions[0]["id"]
+    print(f"VERSION 1.0: {versions[0]['attributes'].get('appStoreState')}")
+    _, cur = asc("GET", f"/v1/appStoreVersions/{vid}/build", allow=(404,))
+    print(f"Build before: {((cur or {}).get('data') or {}).get('attributes', {}).get('version')}")
+    builds = all_pages(f"/v1/builds?filter[app]={app}&filter[version]={number}&limit=10")
+    if len(builds) != 1:
+        print(f"::error::Expected one build {number}, found {len(builds)}")
+        raise SystemExit(1)
+    b = builds[0]
+    a = b["attributes"]
+    print(f"Build {number}: {a.get('processingState')}, expired {a.get('expired')}, "
+          f"usesNonExemptEncryption {a.get('usesNonExemptEncryption')}")
+    if a.get("processingState") != "VALID" or a.get("expired"):
+        print("::error::That build isn't ready to attach")
+        raise SystemExit(1)
+    asc("PATCH", f"/v1/appStoreVersions/{vid}/relationships/build", {"data": {"type": "builds", "id": b["id"]}})
+    _, back = asc("GET", f"/v1/appStoreVersions/{vid}/build")
+    got = back["data"]["attributes"].get("version")
+    print(f"Build now: {got}; match: {got == number}")
+
+
 if __name__ == "__main__":
     step = sys.argv[1] if len(sys.argv) > 1 else "all"
     if step == "check":
@@ -586,6 +618,9 @@ if __name__ == "__main__":
         raise SystemExit(0)
     if step == "notes":
         review_notes()
+        raise SystemExit(0)
+    if step == "attach":
+        attach_build(os.environ.get("BUILD_NUMBER", "").strip())
         raise SystemExit(0)
     if step == "group":
         add_group_to_draft()
