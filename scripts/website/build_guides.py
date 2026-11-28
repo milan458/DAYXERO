@@ -11,7 +11,33 @@ import sys
 
 SITE = pathlib.Path(sys.argv[1])
 BASE = "https://dayxero.app"
-DATE = "2026-10-29"
+PUBLISHED = "2026-10-29"
+# Last real change to each page. Bump a page's date here only when its content changes.
+UPDATED = {
+    "/": "2026-11-28",
+    "/guides/": "2026-11-28",
+    "/quit-vaping/": "2026-11-28",
+    "/quit-smoking/": "2026-11-28",
+    "/quit-nicotine-pouches/": "2026-11-28",
+    "/nicotine-withdrawal-timeline/": "2026-11-28",
+    "/nicotine-cravings/": "2026-11-28",
+    "/about/": "2026-11-28",
+}
+
+
+def updated(path):
+    return UPDATED.get(path, PUBLISHED)
+
+
+def human_date(iso):
+    import datetime
+    d = datetime.date.fromisoformat(iso)
+    return f"{d.day} {d.strftime('%B %Y')}"
+
+
+# The named author on every guide. Change the name here and rebuild to update every page.
+AUTHOR_NAME = "Milan"
+AUTHOR_ROLE = "Founder of DayXero"
 CONTACT_EMAIL = "hello@dayxero.in"
 
 SOURCES = {
@@ -21,7 +47,31 @@ SOURCES = {
     "sf": ("Smokefree.gov (US National Cancer Institute)", "https://smokefree.gov/"),
     "teen": ("Smokefree Teen: Quit vaping", "https://teen.smokefree.gov/"),
     "ntcp": ("India National Tobacco Control Programme (MoHFW)", "https://ntcp.mohfw.gov.in/"),
+    "cdc_vaping": ("CDC: Vaping and quitting", "https://www.cdc.gov/tobacco/e-cigarettes/quitting.html"),
+    "cdc_withdrawal": ("CDC Tips From Former Smokers: 7 common withdrawal symptoms",
+                       "https://www.cdc.gov/tobacco/campaign/tips/quit-smoking/7-common-withdrawal-symptoms/"),
+    "nci_withdrawal": ("National Cancer Institute: Handling nicotine withdrawal and triggers when you quit",
+                       "https://www.cancer.gov/about-cancer/causes-prevention/risk/tobacco/withdrawal-fact-sheet"),
+    "sf_withdrawal": ("Smokefree.gov: Nicotine withdrawal", "https://smokefree.gov/challenges-when-quitting/withdrawal"),
+    "nhs_nrt": ("NHS Better Health: Quit smoking with nicotine replacement therapies",
+                "https://www.nhs.uk/better-health/quit-smoking/ready-to-quit-smoking/quit-with-nicotine-replacement-therapies-nrt/"),
+    "who_benefits": ("World Health Organization: Health benefits of smoking cessation",
+                     "https://www.who.int/news-room/q-a-detail/health-benefits-of-smoking-cessation"),
+    "cochrane_nrt": ("Cochrane Review (2023): Different doses, durations and modes of delivery of nicotine replacement therapy",
+                     "https://pubmed.ncbi.nlm.nih.gov/37335995/"),
+    "graham_2021": ("Graham et al. (2021), JAMA Internal Medicine: a text message program to quit vaping, randomized trial",
+                    "https://jamanetwork.com/journals/jamainternalmedicine/fullarticle/2779740"),
+    "taylor_2007": ("Taylor, Ussher and Faulkner (2007), Addiction: exercise and cigarette cravings, a systematic review",
+                    "https://pubmed.ncbi.nlm.nih.gov/17286639/"),
+    "fda_zyn": ("US FDA: FDA authorizes marketing of 20 ZYN nicotine pouch products (January 2025)",
+                "https://www.fda.gov/news-events/press-announcements/fda-authorizes-marketing-20-zyn-nicotine-pouch-products-after-extensive-scientific-review"),
 }
+
+
+def cite(key, text):
+    """An inline link to one of SOURCES, for the sentence that relies on it."""
+    return f'<a href="{SOURCES[key][1]}" rel="noopener" target="_blank">{text}</a>'
+
 
 HELPLINES = """
 <h2 id="help">Free help, wherever you are</h2>
@@ -87,7 +137,8 @@ guide(
 <p>A useful rule of thumb: if you vape within 30 minutes of waking up, you're likely quite dependent, and nicotine replacement can make the first weeks much easier.</p>
 
 <h2 id="step-4">Step 4: Ask about nicotine replacement</h2>
-<p>Licensed nicotine replacement therapy (NRT) such as patches, gum, lozenges and mouth spray gives you controlled doses of nicotine without the vape, and is designed to be stepped down. Combining a patch with a fast-acting product for breakthrough cravings works better than either one alone for smokers. Research on NRT specifically for quitting vaping is newer, but clinicians commonly use it. A pharmacist can help you pick a starting dose.</p>
+<p>Licensed nicotine replacement therapy (NRT) such as patches, gum, lozenges and mouth spray gives you controlled doses of nicotine without the vape, and is designed to be stepped down. Combining a patch with a fast-acting product for breakthrough cravings """ + cite("cochrane_nrt", "works better than either one alone") + """ for smokers. Research on NRT specifically for quitting vaping is newer, but clinicians commonly use it. A pharmacist can help you pick a starting dose.</p>
+<p>Support by text message helps too. In a """ + cite("graham_2021", "2021 randomized trial") + """ of young adults who vaped, 24.1% of those who got a quit-vaping text program had stopped seven months later, against 18.6% of those who didn't.</p>
 
 <h2 id="step-5">Step 5: Clear out and tell people</h2>
 <p>The night before your Quit Day, get rid of devices, pods, spare disposables and chargers. Tell a few people you trust, and ask friends not to offer you a vape. Removing easy access matters most in the first week.</p>
@@ -122,7 +173,7 @@ guide(
          "Nicotine suppresses appetite, so many people feel hungrier after quitting. Planning regular meals, "
          "keeping healthy snacks around and staying active helps keep this in check."),
     ],
-    sources=["nhs", "teen", "sf", "ntcp"],
+    sources=["cdc_vaping", "graham_2021", "cochrane_nrt", "nhs_nrt", "teen", "nci_withdrawal", "ntcp"],
     related=["nicotine-withdrawal-timeline", "nicotine-cravings", "quit-nicotine-pouches"],
 )
 
@@ -155,18 +206,18 @@ guide(
 <h2 id="aids">Step 3: Choose your stop-smoking aids</h2>
 <p>Using a stop-smoking aid makes quitting much more likely to succeed than willpower alone. The main options are:</p>
 <ul>
-  <li><strong>Nicotine replacement therapy (NRT):</strong> patches, gum, lozenges, inhalators and mouth spray. Combining a patch with a fast-acting product works better than a single product.</li>
+  <li><strong>Nicotine replacement therapy (NRT):</strong> patches, gum, lozenges, inhalators and mouth spray. Combining a patch with a fast-acting product """ + cite("cochrane_nrt", "works better than a single product") + """.</li>
   <li><strong>Prescription medicines:</strong> such as varenicline, cytisine or bupropion, depending on what's available where you live. A doctor can tell you whether one suits you.</li>
   <li><strong>Behavioural support:</strong> a quitline, a local stop-smoking service or an app. Support combined with medicine gives the best results.</li>
 </ul>
 <p>In some countries, such as the UK, health services also recommend vapes as a quit aid for adults who smoke. Vapes are banned in India, and in any case the end goal is to be free of nicotine altogether.</p>
 
 <h2 id="first-weeks">Step 4: Get through the first two weeks</h2>
-<p>The first few days are usually the hardest. Withdrawal symptoms such as irritability, anxiety, poor concentration and trouble sleeping tend to peak in the first week and ease over two to four weeks. Individual cravings are short, usually a few minutes. Have a plan for them: <a href="/nicotine-cravings/">urge surfing</a>, slow breathing, a glass of water, a short walk.</p>
+<p>The first few days are usually the hardest. Withdrawal symptoms such as irritability, anxiety, poor concentration and trouble sleeping """ + cite("nci_withdrawal", "tend to peak in the first week") + """ and ease over two to four weeks. Individual cravings are short, usually a few minutes. Have a plan for them: <a href="/nicotine-cravings/">urge surfing</a>, slow breathing, a glass of water, a short walk.</p>
 <p>Not even one puff is the safest rule early on. But if you do slip, don't treat it as failure. Work out what triggered it and keep going. Most people who quit for good made more than one attempt.</p>
 
 <h2 id="body">What happens to your body when you quit</h2>
-<p>According to the World Health Organization, the benefits begin almost immediately:</p>
+<p>According to the """ + cite("who_benefits", "World Health Organization") + """, the benefits begin almost immediately:</p>
 <div class="table-wrap"><table>
   <thead><tr><th>Time after quitting</th><th>What changes</th></tr></thead>
   <tbody>
@@ -200,7 +251,7 @@ guide(
          "It varies a lot, and many people need more than one attempt. Each attempt teaches you more about your "
          "triggers, which makes the next one more likely to stick."),
     ],
-    sources=["who", "nhs", "cdc", "sf", "ntcp"],
+    sources=["who_benefits", "cochrane_nrt", "nhs_nrt", "nci_withdrawal", "cdc_withdrawal", "who", "ntcp"],
     related=["nicotine-withdrawal-timeline", "nicotine-cravings", "quit-vaping"],
 )
 
@@ -262,7 +313,7 @@ guide(
          "Nicotine gum is a licensed stop-smoking medicine with set doses and instructions for stepping down, "
          "which makes it a useful tool for tapering off nicotine. Pouches aren't designed for that."),
     ],
-    sources=["nhs", "sf", "cdc"],
+    sources=["fda_zyn", "nhs_nrt", "cochrane_nrt", "nci_withdrawal", "cdc_withdrawal"],
     related=["nicotine-withdrawal-timeline", "nicotine-cravings", "quit-vaping"],
 )
 
@@ -289,7 +340,8 @@ guide(
     <tr><td>After 3 months</td><td>Cravings become rare and much easier to ignore.</td></tr>
   </tbody>
 </table></div>
-<p>Everyone is different. How much nicotine you used, and how constantly, affects how strong withdrawal feels.</p>
+<p>The US National Cancer Institute says symptoms are """ + cite("nci_withdrawal", "usually worst in the first week, peaking in the first three days") + """. Everyone is different. How much nicotine you used, and how constantly, affects how strong withdrawal feels.</p>
+<p>Quitting Zyn or another pouch? See <a href="/quit-nicotine-pouches/">how long it takes to quit Zyn and other nicotine pouches</a>, with a taper plan.</p>
 
 <h2 id="symptoms">Common symptoms and what helps</h2>
 <ul>
@@ -328,7 +380,7 @@ guide(
          "Nicotine suppresses appetite and changes how you taste food, so appetite often rises after quitting. "
          "Regular meals and filling snacks help."),
     ],
-    sources=["nhs", "sf", "cdc", "who"],
+    sources=["nci_withdrawal", "cdc_withdrawal", "sf_withdrawal", "nhs", "who"],
     related=["nicotine-cravings", "quit-vaping", "quit-smoking"],
 )
 
@@ -360,7 +412,7 @@ guide(
 <h2 id="quick">Quick techniques that work</h2>
 <ul>
   <li><strong>Delay:</strong> tell yourself you'll wait ten minutes. The craving often passes first.</li>
-  <li><strong>Move:</strong> a short walk or a few minutes of activity can reduce cravings.</li>
+  <li><strong>Move:</strong> a short walk or a few minutes of activity """ + cite("taylor_2007", "can reduce cravings") + """.</li>
   <li><strong>Drink water</strong> or chew sugar-free gum to keep your mouth busy.</li>
   <li><strong>Change your surroundings:</strong> leave the room or step outside somewhere new.</li>
   <li><strong>Text someone</strong> who knows you're quitting.</li>
@@ -398,7 +450,7 @@ guide(
          "Urge surfing is a mindfulness technique where you notice a craving, feel where it is in your body and "
          "breathe through it as it rises and falls, instead of fighting it or giving in."),
     ],
-    sources=["nhs", "sf", "teen"],
+    sources=["taylor_2007", "cdc_withdrawal", "nci_withdrawal", "nhs", "teen"],
     related=["nicotine-withdrawal-timeline", "quit-vaping", "quit-smoking"],
 )
 
@@ -588,6 +640,8 @@ def ld_json(obj):
 
 ORG = {"@type": "Organization", "@id": f"{BASE}/#organization", "name": "DayXero", "url": f"{BASE}/",
        "logo": f"{BASE}/logo.png", "email": CONTACT_EMAIL}
+AUTHOR = {"@type": "Person", "@id": f"{BASE}/#author", "name": AUTHOR_NAME, "jobTitle": AUTHOR_ROLE,
+          "url": f"{BASE}/about/#author", "worksFor": {"@id": f"{BASE}/#organization"}}
 
 
 def page(path, title, meta, og_type, og_title, ld, main, current, sticky=False, noindex=False, theme_color="#FBF7F1"):
@@ -626,7 +680,7 @@ for g in GUIDES:
       <span class="chip">{html.escape(g['kicker'])}</span>
       <h1 class="d">{html.escape(g['h1'])}</h1>
       <p class="lead">{html.escape(g['intro'])}</p>
-      <p class="byline">By <a href="/about/#editorial">the DayXero team</a> · Updated <time datetime="{DATE}">29 October 2026</time></p>
+      <p class="byline">By <a href="/about/#author">{html.escape(AUTHOR_NAME)}</a>, {html.escape(AUTHOR_ROLE.lower().replace("dayxero", "DayXero"))} · Updated <time datetime="{updated(path)}">{human_date(updated(path))}</time> · <a href="/about/#editorial">How we write our guides</a></p>
     </header>
     <div class="wrap g-body">
 {toc(g['body'], [("beta-cta", "Try it in the app"), ("faq-heading", "Frequently asked questions"), ("sources", "Sources")])}
@@ -674,9 +728,10 @@ for g in GUIDES:
     ld = {"@context": "https://schema.org", "@graph": [
         ORG,
         {"@type": "Article", "headline": g["h1"], "description": g["meta"], "url": url,
-         "mainEntityOfPage": url, "datePublished": DATE, "dateModified": DATE,
+         "mainEntityOfPage": url, "datePublished": PUBLISHED, "dateModified": updated(path),
          "image": f"{BASE}/og-image.png", "inLanguage": "en",
-         "author": {"@id": f"{BASE}/#organization"}, "publisher": {"@id": f"{BASE}/#organization"}},
+         "author": AUTHOR, "publisher": {"@id": f"{BASE}/#organization"},
+         "citation": [SOURCES[s][1] for s in g["sources"]]},
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{BASE}/"},
             {"@type": "ListItem", "position": 2, "name": "Guides", "item": f"{BASE}/guides/"},
@@ -692,7 +747,7 @@ hub_main = f"""  <main class="pg-main">
       <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <span aria-current="page">Guides</span></nav>
       <span class="chip">Free guides</span>
       <h1 class="d">Quit nicotine guides.</h1>
-      <p class="lead">Practical, evidence-based guides to quitting vaping, smoking and nicotine pouches, getting through withdrawal and handling cravings. Written by the DayXero team, based on guidance from the WHO, NHS and CDC.</p>
+      <p class="lead">Practical, evidence-based guides to quitting vaping, smoking and nicotine pouches, getting through withdrawal and handling cravings. Written by <a href="/about/#author">{html.escape(AUTHOR_NAME)}</a>, from guidance by the WHO, NHS, CDC and the US National Cancer Institute, with links to the studies behind it. <a href="/about/#editorial">How we write them</a>.</p>
     </header>
     <section class="wrap related">
       <div class="guide-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))">
@@ -704,7 +759,7 @@ hub_main = f"""  <main class="pg-main">
 hub_ld = {"@context": "https://schema.org", "@graph": [
     ORG,
     {"@type": "CollectionPage", "name": "Quit Nicotine Guides", "url": f"{BASE}/guides/",
-     "publisher": {"@id": f"{BASE}/#organization"},
+     "dateModified": updated("/guides/"), "publisher": {"@id": f"{BASE}/#organization"},
      "hasPart": [{"@type": "Article", "headline": g["h1"], "url": f"{BASE}/{g['slug']}/"} for g in GUIDES]},
     {"@type": "BreadcrumbList", "itemListElement": [
         {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{BASE}/"},
@@ -747,12 +802,16 @@ info_page(
   <li><strong>Private by default.</strong> Your quit data stays on your phone. See our <a href="/privacy/">privacy policy</a>.</li>
 </ul>
 
+<h2 id="author">Who makes DayXero</h2>
+<p>DayXero is built by {html.escape(AUTHOR_NAME)}, an independent app maker and product manager. {html.escape(AUTHOR_NAME)} designs the app and writes and updates every guide on this site.</p>
+
 <h2 id="editorial">How we write our guides</h2>
-<p>The <a href="/guides/">DayXero guides</a> are written by the DayXero team. Every guide follows the same rules:</p>
+<p>The <a href="/guides/">DayXero guides</a> are written by {html.escape(AUTHOR_NAME)}. Every guide follows the same rules:</p>
 <ul>
-  <li><strong>Based on public health guidance.</strong> We work from the World Health Organization, the NHS, the US CDC and National Cancer Institute (Smokefree.gov), and India's National Tobacco Control Programme. Each guide lists its sources.</li>
+  <li><strong>Based on public health guidance and research.</strong> We work from the World Health Organization, the NHS, the US CDC and National Cancer Institute (Smokefree.gov), and India's National Tobacco Control Programme, plus published studies and Cochrane reviews. Each guide links the specific pages and studies it relies on, next to the sentence that uses them and in a list at the end.</li>
   <li><strong>Plain and practical.</strong> We write for someone who wants to quit this week, not for a textbook.</li>
-  <li><strong>Dated and updated.</strong> Each guide shows the date it was last updated. We review guides when health guidance changes.</li>
+  <li><strong>Dated and updated.</strong> Each guide shows the date its content last changed. We review guides when health guidance changes, and we don't change a date without changing the guide.</li>
+  <li><strong>Not yet medically reviewed.</strong> No doctor has reviewed these guides yet. When a clinician does, we'll name them here and on each guide.</li>
   <li><strong>Information, not medical advice.</strong> Our guides don't replace a doctor or pharmacist, especially for nicotine replacement doses, pregnancy, heart conditions or anyone under 18.</li>
 </ul>
 <p>Spotted a mistake or an out-of-date fact? Email {MAIL} and we'll check it and correct the guide.</p>
@@ -891,7 +950,7 @@ for ip in INFO_PAGES:
       <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <span aria-current="page">{html.escape(ip['h1'])}</span></nav>
       <h1 class="d" style="margin-top: 20px">{html.escape(ip['h1'])}</h1>
       <p class="lead">{html.escape(ip['intro'])}</p>
-      <p class="byline">Updated <time datetime="{DATE}">29 October 2026</time></p>
+      <p class="byline">Updated <time datetime="{updated(path)}">{human_date(updated(path))}</time></p>
     </header>
     <div class="wrap g-body" style="padding-bottom: 96px">
 {toc(ip['body'], [])}
@@ -904,7 +963,7 @@ for ip in INFO_PAGES:
     ld = {"@context": "https://schema.org", "@graph": [
         ORG,
         {"@type": ip["ld_type"], "name": ip["h1"], "description": ip["meta"], "url": url,
-         "dateModified": DATE, "inLanguage": "en", "publisher": {"@id": f"{BASE}/#organization"}},
+         "dateModified": updated(path), "inLanguage": "en", "publisher": {"@id": f"{BASE}/#organization"}},
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{BASE}/"},
             {"@type": "ListItem", "position": 2, "name": ip["h1"], "item": url}]},
@@ -1062,7 +1121,7 @@ sitemap = ['<?xml version="1.0" encoding="UTF-8"?>',
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
 for path in (["/", "/beta/", "/guides/"] + [f"/{g['slug']}/" for g in GUIDES]
              + [f"/{ip['slug']}/" for ip in INFO_PAGES]):
-    sitemap += ["  <url>", f"    <loc>{BASE}{path}</loc>", f"    <lastmod>{DATE}</lastmod>", "  </url>"]
+    sitemap += ["  <url>", f"    <loc>{BASE}{path}</loc>", f"    <lastmod>{updated(path)}</lastmod>", "  </url>"]
 sitemap.append("</urlset>")
 (SITE / "sitemap.xml").write_text("\n".join(sitemap) + "\n")
 print("wrote", len(GUIDES) + len(INFO_PAGES) + 3, "pages")

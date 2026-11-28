@@ -35,13 +35,15 @@ What to do with each section:
 
 ## Plan
 
-Week 1, fixes only, no new pages:
-1. Homepage H1 and section headings say "quit vaping, smoking and nicotine pouches"; the brand line stays as a subhead.
-2. Named author byline on guides, an author section on About, and an editorial policy (how guides are written, sourced and updated).
-3. Real "last updated" dates, and each guide links specific source pages and studies, not homepages.
-4. Fix hello@dayxero.in in the structured data; 301 (not 307) for missing trailing slashes; keep workers.dev and preview hosts out of Google.
-5. Submit the sitemap in Search Console; add the site to Bing Webmaster Tools.
+Week 1, fixes only, no new pages (built 28 Nov 2026 unless marked):
+1. Done: the homepage H1 opens with "Quit vaping, smoking and nicotine pouches"; the brand line stays as the big headline.
+2. Done: guides carry a named byline (`AUTHOR_NAME` in scripts/website/build_guides.py, Person in the structured data), About has a "Who makes DayXero" section (#author) and a fuller editorial policy (#editorial), including that no clinician has reviewed the guides yet.
+3. Done: each page has its own "last updated" date (`UPDATED` in build_guides.py, also used for the sitemap's lastmod). Each guide links specific source pages and studies inline and in its Sources list.
+4. Done: website/_redirects sends /about to /about/ (and every other page folder) with a 301. website/_headers adds `X-Robots-Tag: noindex` on workers.dev and preview hosts. Left as is: hello@dayxero.in in the structured data, because it is the address the whole site and the privacy policy use.
+5. Yours: submit https://dayxero.app/sitemap.xml in Search Console (Sitemaps), and add the site to Bing Webmaster Tools (import from Search Console).
 6. On App Store launch: App Store link and Smart App Banner on every page, App Store URL in the structured data.
+
+Every new page from week 2 on: add it to build_guides.py (or the sitemap), give it a date in `UPDATED`, and add its folder to website/_redirects.
 
 Weeks 2-9, about 16 new pages at 2 a week:
 - Pouches: Zyn withdrawal timeline; quit Zyn cold turkey or taper; Zyn taper plan (6 mg to 3 mg); Zyn vs nicotine gum or lozenge.

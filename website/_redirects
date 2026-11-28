@@ -1,0 +1,15 @@
+# Permanent (301) redirects to the trailing-slash URLs that the sitemap and canonical tags use.
+# Without these, Cloudflare's asset handling redirects /about to /about/ with a temporary 307.
+# Add a line here for every new page folder. See docs/SEO.md.
+/beta /beta/ 301
+/beta/confirmed /beta/confirmed/ 301
+/guides /guides/ 301
+/quit-vaping /quit-vaping/ 301
+/quit-smoking /quit-smoking/ 301
+/quit-nicotine-pouches /quit-nicotine-pouches/ 301
+/nicotine-withdrawal-timeline /nicotine-withdrawal-timeline/ 301
+/nicotine-cravings /nicotine-cravings/ 301
+/about /about/ 301
+/contact /contact/ 301
+/privacy /privacy/ 301
+/terms /terms/ 301
