@@ -611,6 +611,80 @@ def attach_build(number):
     print(f"Build now: {got}; match: {got == number}")
 
 
+def resubmit(go):
+    """Checks version 1.0 has the expected build and the review notes with the video link, then (only with go)
+    resubmits the review submission Apple sent back. Reads everything back."""
+    import base64
+    want = os.environ.get("BUILD_NUMBER", "").strip()
+    app = app_id()
+    versions = [v for v in all_pages(f"/v1/apps/{app}/appStoreVersions?filter[platform]=IOS&limit=50")
+                if v["attributes"].get("versionString") == "1.0"]
+    if len(versions) != 1:
+        print(f"::error::Expected one iOS 1.0 version, found {len(versions)}")
+        raise SystemExit(1)
+    vid = versions[0]["id"]
+    print(f"VERSION 1.0: {versions[0]['attributes'].get('appStoreState')}")
+    _, b = asc("GET", f"/v1/appStoreVersions/{vid}/build")
+    build = b["data"]["attributes"].get("version")
+    print(f"Build on 1.0: {build} (want {want or 'any'})")
+    _, rd = asc("GET", f"/v1/appStoreVersions/{vid}/appStoreReviewDetail")
+    notes = rd["data"]["attributes"].get("notes") or ""
+    link_ok = "drive.google.com/file/d/" in notes and "paste video link" not in notes
+    print(f"Review notes: {len(notes)} characters, video link in place: {link_ok}")
+    print(notes.splitlines()[0] if notes else "(no notes)")
+    gid = [g for g in all_pages(f"/v1/apps/{app}/subscriptionGroups?limit=50") if g["attributes"]["referenceName"] == GROUP]
+    for g in gid:
+        for sub in all_pages(f"/v1/subscriptionGroups/{g['id']}/subscriptions?limit=50"):
+            print(f"PLAN {sub['attributes'].get('productId')}: {sub['attributes'].get('state')}")
+    subs = all_pages(f"/v1/reviewSubmissions?filter[app]={app}&limit=50")
+    for r in subs:
+        print(f"SUBMISSION {r['id']}: {r['attributes'].get('state')} {r['attributes'].get('platform')}")
+    open_subs = [r for r in subs if r["attributes"].get("state") in ("UNRESOLVED_ISSUES", "READY_FOR_REVIEW")
+                 and r["attributes"].get("platform") in (None, "IOS")]
+
+    def items(sid):
+        got = all_pages(f"/v1/reviewSubmissions/{sid}/items?limit=50")
+        for it in got:
+            try:
+                decoded = base64.b64decode(it["id"] + "=" * (-len(it["id"]) % 4)).decode()
+            except Exception:
+                decoded = "?"
+            a = it["attributes"]
+            print(f"  ITEM [{decoded}]: {a.get('state')} resolved={a.get('resolved')} removed={a.get('removed')}")
+        return got
+
+    for r in open_subs:
+        print(f"Items of {r['id']}:")
+        items(r["id"])
+    problems = []
+    if want and build != want:
+        problems.append(f"build on 1.0 is {build}, not {want}")
+    if not link_ok:
+        problems.append("the video link isn't in the review notes")
+    if len(open_subs) != 1:
+        problems.append(f"expected one open submission, found {len(open_subs)}")
+    if problems:
+        print("::error::Not submitting: " + "; ".join(problems))
+        raise SystemExit(1)
+    if not go:
+        print("Check only: everything is in place; nothing submitted")
+        return
+    sid = open_subs[0]["id"]
+    for it in all_pages(f"/v1/reviewSubmissions/{sid}/items?limit=50"):
+        a = it["attributes"]
+        if a.get("state") in ("REJECTED", "UNRESOLVED_ISSUES") and not a.get("resolved") and not a.get("removed"):
+            asc("PATCH", f"/v1/reviewSubmissionItems/{it['id']}",
+                {"data": {"type": "reviewSubmissionItems", "id": it["id"], "attributes": {"resolved": True}}})
+            print(f"Marked item {it['id']} resolved")
+    asc("PATCH", f"/v1/reviewSubmissions/{sid}",
+        {"data": {"type": "reviewSubmissions", "id": sid, "attributes": {"submitted": True}}})
+    _, back = asc("GET", f"/v1/reviewSubmissions/{sid}")
+    print(f"SUBMITTED: submission {sid} is now {back['data']['attributes'].get('state')}")
+    items(sid)
+    _, v = asc("GET", f"/v1/appStoreVersions/{vid}")
+    print(f"VERSION 1.0 now: {v['data']['attributes'].get('appStoreState')}")
+
+
 if __name__ == "__main__":
     step = sys.argv[1] if len(sys.argv) > 1 else "all"
     if step == "check":
@@ -618,6 +692,9 @@ if __name__ == "__main__":
         raise SystemExit(0)
     if step == "notes":
         review_notes()
+        raise SystemExit(0)
+    if step in ("resubmit-check", "resubmit"):
+        resubmit(step == "resubmit")
         raise SystemExit(0)
     if step == "attach":
         attach_build(os.environ.get("BUILD_NUMBER", "").strip())

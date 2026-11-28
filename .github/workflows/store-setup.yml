@@ -8,7 +8,7 @@ on:
       step:
         description: "What to set up"
         type: choice
-        options: [all, appstore, revenuecat, check, group, notes, attach]
+        options: [all, appstore, revenuecat, check, group, notes, attach, resubmit-check, resubmit]
         default: all
       build:
         description: "With attach: the TestFlight build number to put on version 1.0"
