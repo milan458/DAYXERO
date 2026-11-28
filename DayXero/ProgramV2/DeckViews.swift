@@ -141,6 +141,9 @@ struct DeckHandView: View {
     let next: String?
     /// "6:00 PM" while the next card is an evening card that hasn't opened yet.
     var waitingUntil: String?
+    /// Cards already played today, which can be played again on their own.
+    var replayable: Set<String> = []
+    var onReplay: ((String) -> Void)?
     let onPlay: () -> Void
     let onClose: () -> Void
 
@@ -212,6 +215,7 @@ struct DeckHandView: View {
                         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
                         .accessibilityIdentifier("program.deck.play")
                 }
+                againMenu
             }
             .dxArrive(0, delay: 1.6)
         }
@@ -227,6 +231,28 @@ struct DeckHandView: View {
             }
             try? await Task.sleep(for: .milliseconds(200))
             front = true
+        }
+    }
+
+    /// "Play a card again": any card already played today, on its own.
+    @ViewBuilder private var againMenu: some View {
+        let picks = cards.enumerated().filter { replayable.contains($0.element.id) }
+        if let onReplay, !picks.isEmpty {
+            Menu {
+                ForEach(picks, id: \.element.id) { i, card in
+                    Button(String(localized: "Card \(i + 1) · \(ctx.text(card.title))")) { onReplay(card.id) }
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    DXIcon(.play, size: 15)
+                    Text("Play a card again")
+                }
+                .dxFace(.body, 15, weight: 600)
+                .foregroundStyle(ground.ink)
+                .frame(maxWidth: .infinity, minHeight: DX.Layout.touchTarget)
+                .contentShape(Rectangle())
+            }
+            .accessibilityIdentifier("program.deck.again")
         }
     }
 
@@ -619,6 +645,16 @@ struct DeckListenView: View {
                                 }
                                 .frame(maxWidth: .infinity)
                                 .padding(.top, 12)
+                                if narrator?.heldForCapture ?? false {
+                                    // Play does nothing while the screen is recorded; say why rather than look broken.
+                                    Text("The audio waits while your screen is being recorded or shared. It plays when that stops.")
+                                        .dxType(.footnote).foregroundStyle(ink)
+                                        .multilineTextAlignment(.center)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.top, 10)
+                                        .accessibilityIdentifier("program.listen.held")
+                                }
                                 if reading {
                                     VStack(alignment: .leading, spacing: 12) {
                                         ForEach(Array(paragraphs.enumerated()), id: \.offset) { i, paragraph in
@@ -670,7 +706,7 @@ struct DeckListenView: View {
                 if let recording { UserDefaults.standard.removeObject(forKey: Self.positionKey(recording)) }
             }
             n.nowPlayingTitle = ctx.text(card.title)
-            // Carry on from where this card was left (main, 16 Nov), unless it is a replay.
+            // Carry on from where this card was left (main, 16 Nov), unless it is a replay, which starts over.
             if let recording, !ctx.isReplay {
                 let saved = UserDefaults.standard.double(forKey: Self.positionKey(recording))
                 if saved > 1 { n.seek(to: saved) }
@@ -679,11 +715,11 @@ struct DeckListenView: View {
             withAnimation(motion.reduce ? nil : .linear(duration: 0.01).delay(0.2)) { grown = true }
             Task {
                 try? await Task.sleep(for: .seconds(1.2))
-                if !Task.isCancelled, !ctx.isReplay { narrator?.play() }
+                if !Task.isCancelled { narrator?.play() }
             }
         }
         .onDisappear {
-            if let recording, let narrator, !narrator.finished {
+            if let recording, let narrator, !narrator.finished, !ctx.isReplay {
                 UserDefaults.standard.set(narrator.elapsed(), forKey: Self.positionKey(recording))
             }
             narrator?.stop()
@@ -1186,6 +1222,8 @@ struct DeckCardPlayedView: View {
     let next: DeckCard?
     /// "6:00 PM" when the next card is an evening card that hasn't opened yet.
     var nextOpensAt: String?
+    /// The button's words when this screen ends a one-card replay.
+    var doneLabel: String?
     let ctx: BeatContext
     let onNext: () -> Void
     let onLater: () -> Void
@@ -1294,6 +1332,7 @@ struct DeckCardPlayedView: View {
     }
 
     private var primaryTitle: String {
+        if let doneLabel { return doneLabel }
         guard let next else { return String(localized: "See today's recap") }
         _ = next
         return String(localized: "Play card \(position + 1)")

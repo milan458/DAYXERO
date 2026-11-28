@@ -344,6 +344,8 @@ struct TodayProgramCard: View {
         var note: String?
         var action: String?
         var run: (() -> Void)?
+        /// A finished card's "Play again": replays that one card.
+        var again: (() -> Void)?
     }
 
     let sessionId: String
@@ -498,7 +500,20 @@ struct TodayProgramCard: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityElement(children: .combine)
-            if step.mark == .done {
+            if step.mark == .done, let again = step.again {
+                Button(action: again) {
+                    Text("Play again")
+                        .dxFace(.body, 12, weight: 700)
+                        .foregroundStyle(Self.doneText)
+                        .padding(.horizontal, 12).frame(height: 30)
+                        .background(DX.Fill.done.opacity(0.14), in: Capsule())
+                        .frame(minHeight: DX.Layout.touchTarget)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.dxPress)
+                .accessibilityLabel(Text("Play \(step.title) again"))
+                .accessibilityIdentifier("today.card.again")
+            } else if step.mark == .done {
                 Text("Completed")
                     .dxFace(.body, 12, weight: 700)
                     .foregroundStyle(Self.doneText)

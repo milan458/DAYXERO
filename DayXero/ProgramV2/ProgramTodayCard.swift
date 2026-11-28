@@ -6,6 +6,8 @@ import SwiftUI
 struct SessionOpen: Identifiable, Hashable {
     let id: String
     var isReplay = false
+    /// A replay of one card: the session opens on this card and closes after it.
+    var card: String?
 }
 
 /// The program path needs the full program: no session is free (16 Nov 2026). A free trial opens Prep 1 to 3, one a

@@ -11,6 +11,9 @@ struct SessionFlowView: View {
     let profile: UserProfile
     /// Replays show saved answers, never change unlock state, never re-run commits and don't count as finishing.
     var isReplay = false
+    /// Program v3: a replay of this one card. It opens on the card and closes after its played screen, so the cards
+    /// after it stay as they are.
+    var startCard: String?
 
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
@@ -25,6 +28,10 @@ struct SessionFlowView: View {
     @State private var index = 0
     @State private var record: SessionRecord?
     @State private var completed = false
+    /// Program v3: where a one-card replay starts; Back doesn't go before it.
+    @State private var firstStep = 0
+    /// Program v3: a played card picked on the hand, replayed on its own.
+    @State private var replaying: SessionOpen?
     /// Read the card stack or listen to the recording (MON-04). Reading is the default.
     @AppStorage(LessonFormat.key) private var lessonFormat = LessonFormat.read.rawValue
 
@@ -58,7 +65,14 @@ struct SessionFlowView: View {
         .animation(motion.animation(DX.Move.settle), value: stepGround)
         .animation(motion.animation(DX.Move.settle), value: index)
         .onAppear(perform: start)
+        .dxCover(item: $replaying) { item in
+            SessionFlowView(sessionId: item.id, profile: profile, isReplay: true, startCard: item.card)
+                .captureShielded()
+        }
     }
+
+    /// Program v3: this is a replay of one card.
+    private var replaysOneCard: Bool { isReplay && startCard != nil && firstStep > 0 }
 
     /// The deck's own screens carry their close button; beats keep the lesson bar.
     private func showsHeader(_ step: FlowStep) -> Bool {
@@ -191,6 +205,11 @@ struct SessionFlowView: View {
         } else {
             resume = min(max(record.currentStep, 1), steps.count - 1)
         }
+        // One card replayed on its own: straight to its first step.
+        if isReplay, let startCard, let first = owners.firstIndex(of: startCard) {
+            index = first
+            firstStep = first
+        }
         #if DEBUG
         if UserDefaults.standard.object(forKey: "dx.sessionStep") != nil {
             index = min(max(UserDefaults.standard.integer(forKey: "dx.sessionStep"), 0), steps.count - 1)
@@ -287,6 +306,7 @@ struct SessionFlowView: View {
 
     private func advance() {
         guard index + 1 < steps.count else { dismiss(); return }
+        if replaysOneCard, case let .played(id) = steps[index], id == startCard { dismiss(); return }
         index += 1
         saveStep()
         finishIfCompletion()
@@ -301,14 +321,15 @@ struct SessionFlowView: View {
     }
 
     private func goBack() {
-        guard let session, Self.canGoBack(from: index, in: steps, beats: allBeats(session)) else { return }
+        guard let session, Self.canGoBack(from: index, in: steps, beats: allBeats(session)),
+              !(replaysOneCard && index <= firstStep) else { return }
         index -= 1
         saveStep()
     }
 
     /// The Back action for a step's own "go back" link, or nil where Back isn't offered.
     private func backAction(_ session: ProgramContent.Session) -> (() -> Void)? {
-        guard Self.canGoBack(from: index, in: steps, beats: allBeats(session)) else { return nil }
+        guard Self.canGoBack(from: index, in: steps, beats: allBeats(session)), !(replaysOneCard && index <= firstStep) else { return nil }
         return { goBack() }
     }
 
@@ -463,6 +484,8 @@ struct SessionFlowView: View {
             DeckHandView(session: session, ctx: ctx, cards: order, played: playedCards(),
                          next: owners.indices.contains(resume) ? owners[resume] : nil,
                          waitingUntil: owners.indices.contains(resume) ? opensLater(owners[resume], in: session) : nil,
+                         replayable: Self.deckProgress(session, store: store)?.played ?? [],
+                         onReplay: { replaying = SessionOpen(id: session.id, isReplay: true, card: $0) },
                          onPlay: playFromHand, onClose: close)
         case let .card(id):
             if let place = deckPosition(id, in: session) {
@@ -472,10 +495,12 @@ struct SessionFlowView: View {
             }
         case let .played(id):
             if let place = deckPosition(id, in: session) {
-                let next = nextCard(after: id, in: session)
+                let alone = replaysOneCard && id == startCard
+                let next = alone ? nil : nextCard(after: id, in: session)
                 DeckCardPlayedView(card: place.card, position: place.position, total: place.total,
-                                   next: next, nextOpensAt: opensLater(next?.id, in: session),
-                                   ctx: ctx, onNext: advance, onLater: later)
+                                   next: next, nextOpensAt: alone ? nil : opensLater(next?.id, in: session),
+                                   doneLabel: alone ? String(localized: "Done") : nil,
+                                   ctx: ctx, onNext: advance, onLater: alone ? { dismiss() } : later)
             }
         }
     }

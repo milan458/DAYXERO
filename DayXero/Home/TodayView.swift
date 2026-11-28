@@ -115,7 +115,7 @@ struct TodayView: View {
         .dxCover(item: $session, onDismiss: {
             NotificationCenter.default.post(name: .dxSessionClosed, object: nil)
         }) { item in
-            SessionFlowView(sessionId: item.id, profile: profile, isReplay: item.isReplay)
+            SessionFlowView(sessionId: item.id, profile: profile, isReplay: item.isReplay, startCard: item.card)
                 .captureShielded()
         }
         .dxCover(item: $celebrating) { milestone in
@@ -334,7 +334,9 @@ struct TodayView: View {
             let cardMeta = String(localized: "Card \(i + 1) · \(card.minutes) min")
             let title = card.title.resolve(store.variant).map { ProgramInline.resolve($0, store.variant) } ?? ""
             if finished || (isOpen && (progress?.played.contains(card.id) ?? false)) {
-                return .init(id: card.id, mark: .done, meta: cardMeta, title: title)
+                // A played card can always be played again, on its own, without touching the day's place.
+                return .init(id: card.id, mark: .done, meta: cardMeta, title: title,
+                             again: { session = SessionOpen(id: id, isReplay: true, card: card.id) })
             }
             guard isOpen else {
                 return .init(id: card.id, mark: .locked, meta: cardMeta, title: title, note: status)
