@@ -9,6 +9,7 @@ Safe to run again: anything that already exists is left as it is.
   "check" only reads App Store Connect and RevenueCat and prints what App Review will see.
   "group" adds the subscription group's version to the draft review submission, which a first subscription needs
   and the website can't do; it never submits.
+  "notes" puts store/review/notes.txt into version 1.0's App Review notes; it never submits.
   RevenueCat (RC_SECRET_KEY, RC_PROJECT_ID; skipped when not set):
     the four products, the "pro" entitlement, and the current "default" offering with
     $rc_annual, $rc_three_month, $rc_monthly and $rc_lifetime packages. Prints the app's public SDK key.
@@ -554,10 +555,37 @@ def add_group_to_draft():
     print(f"DRAFT state now {r['data']['attributes'].get('state')} (not submitted by this step)")
 
 
+def review_notes():
+    """Puts store/review/notes.txt into the 1.0 version's App Review notes. Never submits."""
+    notes = open(os.path.join(os.path.dirname(__file__), "..", "..", "store", "review", "notes.txt")).read().strip()
+    if len(notes) > 4000:
+        print(f"::error::Notes are {len(notes)} characters; App Store Connect allows 4000")
+        raise SystemExit(1)
+    app = app_id()
+    versions = [v for v in all_pages(f"/v1/apps/{app}/appStoreVersions?filter[platform]=IOS&limit=50")
+                if v["attributes"].get("versionString") == "1.0"]
+    if len(versions) != 1:
+        print(f"::error::Expected one iOS 1.0 version, found {len(versions)}")
+        raise SystemExit(1)
+    vid = versions[0]["id"]
+    print(f"VERSION 1.0: {versions[0]['attributes'].get('appStoreState')}")
+    _, rd = asc("GET", f"/v1/appStoreVersions/{vid}/appStoreReviewDetail")
+    rid = rd["data"]["id"]
+    asc("PATCH", f"/v1/appStoreReviewDetails/{rid}",
+        {"data": {"type": "appStoreReviewDetails", "id": rid, "attributes": {"notes": notes}}})
+    _, back = asc("GET", f"/v1/appStoreReviewDetails/{rid}")
+    got_notes = back["data"]["attributes"].get("notes") or ""
+    print(f"Notes now {len(got_notes)} characters; match file: {got_notes.strip() == notes}")
+    print(got_notes[:300])
+
+
 if __name__ == "__main__":
     step = sys.argv[1] if len(sys.argv) > 1 else "all"
     if step == "check":
         check()
+        raise SystemExit(0)
+    if step == "notes":
+        review_notes()
         raise SystemExit(0)
     if step == "group":
         add_group_to_draft()

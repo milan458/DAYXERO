@@ -8,7 +8,7 @@ on:
       step:
         description: "What to set up"
         type: choice
-        options: [all, appstore, revenuecat, check, group]
+        options: [all, appstore, revenuecat, check, group, notes]
         default: all
 
 permissions:

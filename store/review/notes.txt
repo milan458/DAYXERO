@@ -1,0 +1,26 @@
+Screen recording (physical iPhone, latest iOS): [paste video link here]
+It starts at launch and shows onboarding, the subscription screen, a purchase, and the paid program. Program lesson screens are protected from screen capture, so they show blank in the recording and lesson audio pauses while recording. This is intended to protect paid content; on a normal device they display and play as usual.
+
+1. Purpose and audience
+DayXero helps adults (18+) quit nicotine: vaping, smoking and pouches. It gives a daily quit program of short guided lessons, a quit counter, craving tools, progress insights and a nicotine replacement (NRT) planner. The problem it solves: most people who try to quit relapse in the first weeks without a plan or support. The app is in English; listings in other languages say so.
+
+2. Setup and main features
+- No account and no sign-in. All data stays on the device.
+- Onboarding asks about the person's nicotine use and quit date.
+- After onboarding a subscription screen appears without a close button; the program is the product. It shows price, trial, renewal terms, Terms of Use, Privacy Policy and Restore Purchases. Please subscribe with the review sandbox account.
+- Plans: DayXero Pro Annual ($39.99/year, 3-day free trial) and DayXero Pro 3 Months ($19.99 every 3 months).
+- Paid features: Today (daily lesson and tasks), Program (all lessons with audio), Insights, and the NRT planner. The subscription screen can also be opened, and closed, from Settings and locked features.
+- Also: Home Screen widgets and a Live Activity for the quit counter. Background audio is used only so lesson audio keeps playing with the screen locked.
+
+3. External services
+- Apple StoreKit for purchases.
+- RevenueCat: subscription status and receipt validation.
+- Superwall: shows the subscription screen.
+- PostHog: anonymous product analytics, off until the person agrees.
+No login provider, no AI service, no ads, no tracking. Lesson content and audio are in the app.
+
+4. Regional differences
+The app works the same in every region. The NRT planner includes label schedules taken from US, UK, Australian and German product information, and anyone can type in their own pack's schedule instead. Prices follow App Store pricing per country.
+
+5. Regulated content
+DayXero is education and habit support, not a medical device and not treatment. It does not calculate, recommend or change any dose. In the NRT planner the person picks a product they already use and copies the step-down schedule printed on their own pack, from official product information (US Drug Facts on DailyMed, UK product information on eMC, Australian and German product information), or types their own. Each NRT screen tells them to follow their pack's label and ask a pharmacist or doctor. Health claims cite their sources (Cochrane, CDC, NHS), and a health disclaimer is in the app. No third-party protected material is used.
