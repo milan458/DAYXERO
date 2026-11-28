@@ -1,0 +1,8 @@
+# Keep the Worker's workers.dev address and its preview URLs out of search results,
+# so Google only indexes https://dayxero.app. Covers dayxero.<account>.workers.dev
+# and preview hosts such as <version>-dayxero.<account>.workers.dev.
+https://:worker.:account.workers.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:worker.:account.workers.dev/*
+  X-Robots-Tag: noindex
